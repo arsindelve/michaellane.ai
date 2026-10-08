@@ -1,0 +1,139 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Exhibit from './Exhibit.astro';
+import AgentDiagram from './AgentDiagram.astro';
+
+interface Props {
+  entry: CollectionEntry<'work'>;
+  label: string;
+  flip?: boolean;
+  eager?: boolean;
+}
+
+const { entry, label, flip = false, eager = false } = Astro.props;
+const d = entry.data;
+const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelve';
+---
+
+<article class:list={['ex wrap', { flip }]}>
+  <div class="ex-media">
+    {
+      d.cover ? (
+        <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} eager={eager} />
+      ) : (
+        <Exhibit url={primary}>
+          <AgentDiagram />
+        </Exhibit>
+      )
+    }
+  </div>
+  <div class="ex-text">
+    <p class="label">{label}</p>
+    <h2>{d.title}</h2>
+    <p class="kicker">{d.kicker}</p>
+    <p class="summary">{d.summary}</p>
+    {
+      d.me && d.ai && (
+        <dl class="credit">
+          <div>
+            <dt>Me</dt>
+            <dd>{d.me}</dd>
+          </div>
+          <div>
+            <dt>AI</dt>
+            <dd>{d.ai}</dd>
+          </div>
+        </dl>
+      )
+    }
+    <p class="ex-links">
+      <a class="cta" href={`/work/${entry.id}`}>Case study →</a>
+      {d.links.slice(0, 2).map((l) => <a href={l.url}>{l.label}</a>)}
+    </p>
+  </div>
+</article>
+
+<style>
+  .ex {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 3.5rem;
+    align-items: center;
+  }
+  .ex.flip .ex-media {
+    order: 2;
+  }
+  /* Set by Exhibit when a live game is loaded: give it the whole row. */
+  .ex:global(.playing) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .ex:global(.playing) .ex-media {
+    order: 0;
+    scroll-margin-top: 1.5rem;
+  }
+  .ex h2 {
+    font-size: clamp(2rem, 3.4vw, 2.8rem);
+    margin-top: 0.75rem;
+  }
+  .kicker {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 1.2rem;
+    margin: 0.5rem 0 1rem;
+  }
+  .summary {
+    color: var(--ink-2);
+    font-size: 1.05rem;
+  }
+  .credit {
+    margin: 1.5rem 0;
+    display: grid;
+    gap: 0.9rem;
+    border-left: 2px solid var(--accent);
+    padding-left: 1rem;
+  }
+  .credit dt {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .credit dd {
+    margin: 0.15rem 0 0;
+    font-size: 0.95rem;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+  .ex-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    margin-top: 1.5rem;
+  }
+  .cta {
+    color: var(--on-accent);
+    background: var(--accent);
+    text-decoration: none;
+    padding: 0.55rem 1rem;
+    border-radius: 3px;
+  }
+  .cta:hover {
+    color: var(--bg);
+    background: var(--ink);
+  }
+  @media (max-width: 960px) {
+    .ex,
+    .ex.flip {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .ex.flip .ex-media {
+      order: 0;
+    }
+  }
+</style>

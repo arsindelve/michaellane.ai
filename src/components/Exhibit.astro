@@ -1,0 +1,163 @@
+---
+// A screenshot in a browser frame. If `embed` is given, clicking "Play here"
+// swaps the screenshot for the live site in an iframe (on phones it opens a new tab).
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src?: ImageMetadata;
+  alt?: string;
+  url: string;
+  embed?: { url: string; label: string };
+  eager?: boolean;
+}
+
+const { src, alt = '', url, embed, eager = false } = Astro.props;
+const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
+---
+
+<figure class="exhibit" data-embed={embed?.url}>
+  <div class="chrome" aria-hidden="true">
+    <span class="dots"><i></i><i></i><i></i></span>
+    <span class="addr">{host}</span>
+  </div>
+  <div class="stage">
+    {
+      src ? (
+        <Image
+          src={src}
+          alt={alt}
+          widths={[640, 960, 1440, 2000]}
+          sizes="(max-width: 760px) 100vw, 1100px"
+          loading={eager ? 'eager' : 'lazy'}
+        />
+      ) : (
+        <slot />
+      )
+    }
+    {
+      embed && (
+        <button type="button" class="play">
+          <span class="tri" aria-hidden="true" />
+          {embed.label} here
+        </button>
+      )
+    }
+  </div>
+</figure>
+
+<script>
+  for (const fig of document.querySelectorAll<HTMLElement>('.exhibit[data-embed]')) {
+    const button = fig.querySelector<HTMLButtonElement>('.play');
+    button?.addEventListener('click', () => {
+      const url = fig.dataset.embed!;
+      if (window.matchMedia('(max-width: 760px)').matches) {
+        window.open(url, '_blank', 'noopener');
+        return;
+      }
+      const stage = fig.querySelector('.stage')!;
+      const frame = document.createElement('iframe');
+      frame.src = url;
+      frame.title = button.textContent?.trim() ?? 'Live project';
+      frame.allow = 'fullscreen; clipboard-write; autoplay';
+      stage.replaceChildren(frame);
+      fig.classList.add('live');
+      // Give the live game the whole row, not half of it.
+      fig.closest('.ex')?.classList.add('playing');
+      fig.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      frame.focus();
+    });
+  }
+</script>
+
+<style>
+  .exhibit {
+    margin: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid var(--rule);
+    box-shadow:
+      0 30px 80px -30px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(255, 255, 255, 0.02);
+  }
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 0.9rem;
+    background: var(--chrome);
+    border-bottom: 1px solid var(--rule);
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--ink) 22%, transparent);
+  }
+  .addr {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: var(--bg);
+    padding: 0.2rem 0.75rem;
+    border-radius: 4px;
+    flex: 1;
+    max-width: 22rem;
+  }
+  .stage {
+    position: relative;
+    aspect-ratio: 16 / 10;
+  }
+  .stage :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+  .stage :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    background: #000;
+  }
+  .play {
+    position: absolute;
+    left: 50%;
+    bottom: 1.5rem;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font: 500 0.9rem var(--mono);
+    color: var(--on-accent);
+    background: var(--accent);
+    border: 0;
+    border-radius: 999px;
+    padding: 0.8rem 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.7);
+    white-space: nowrap;
+    transition: transform 0.15s ease;
+  }
+  .play:hover {
+    transform: translateX(-50%) translateY(-2px);
+  }
+  .tri {
+    width: 0;
+    height: 0;
+    border-left: 9px solid var(--on-accent);
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+  }
+  .exhibit.live .stage {
+    aspect-ratio: auto;
+    height: min(82vh, 860px);
+  }
+</style>

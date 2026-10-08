@@ -1,0 +1,276 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Exhibit from '../../components/Exhibit.astro';
+import AgentDiagram from '../../components/AgentDiagram.astro';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+  return all.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, next: all[(i + 1) % all.length] },
+  }));
+}
+
+const { entry, next } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const primary = d.embed?.url ?? d.links[0]?.url;
+---
+
+<Base title={`${d.title} · Michael Lane`} description={d.summary}>
+  <article class="cs">
+    <header class="cs-head wrap">
+      <p class="label"><a href="/#exhibits">← All work</a> · {d.years}</p>
+      <h1>{d.title}</h1>
+      <p class="kicker">{d.kicker}</p>
+      <p class="summary">{d.summary}</p>
+    </header>
+
+    {
+      primary && (d.cover || d.kind === 'exhibit') && (
+        <div class="cs-media wrap">
+          {d.cover ? (
+            <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} eager />
+          ) : (
+            <Exhibit url={primary}>
+              <AgentDiagram />
+            </Exhibit>
+          )}
+        </div>
+      )
+    }
+
+    <div class="cs-grid wrap">
+      <aside class="meta">
+        <dl>
+          <div>
+            <dt class="label">Role</dt>
+            <dd>{d.role}</dd>
+          </div>
+          {
+            d.stack.length > 0 && (
+              <div>
+                <dt class="label">Stack</dt>
+                <dd>
+                  <ul class="chips">
+                    {d.stack.map((s) => (
+                      <li>{s}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            )
+          }
+          {
+            d.links.length > 0 && (
+              <div>
+                <dt class="label">Links</dt>
+                <dd class="links">
+                  {d.links.map((l) => (
+                    <a href={l.url}>{l.label} ↗</a>
+                  ))}
+                </dd>
+              </div>
+            )
+          }
+        </dl>
+      </aside>
+
+      <div class="body">
+        {
+          d.stats.length > 0 && (
+            <dl class="stats">
+              {d.stats.map((s) => (
+                <div>
+                  <dt>{s.n}</dt>
+                  <dd>{s.label}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+
+        {
+          d.me && d.ai && (
+            <dl class="credit">
+              <div>
+                <dt>What I did</dt>
+                <dd>{d.me}</dd>
+              </div>
+              <div>
+                <dt>What AI did</dt>
+                <dd>{d.ai}</dd>
+              </div>
+            </dl>
+          )
+        }
+
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    </div>
+
+    <nav class="next wrap">
+      <a href={`/work/${next.id}`}>
+        <span class="label">Next</span>
+        <span class="t">{next.data.title} →</span>
+      </a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .cs-head {
+    padding-block: 3rem 3rem;
+  }
+  .cs-head .label a {
+    text-decoration: none;
+    color: var(--ink-2);
+  }
+  .cs-head h1 {
+    font-size: clamp(2.6rem, 6vw, 4.8rem);
+    letter-spacing: -0.025em;
+    margin-top: 1.25rem;
+  }
+  .kicker {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 1.4rem;
+    margin: 0.75rem 0 1.25rem;
+  }
+  .summary {
+    max-width: 44rem;
+    color: var(--ink-2);
+    font-size: 1.25rem;
+  }
+  .cs-media {
+    margin-bottom: 4rem;
+  }
+  .cs-grid {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: 4rem;
+  }
+  .meta dl {
+    margin: 0;
+    display: grid;
+    gap: 1.75rem;
+    position: sticky;
+    top: 2rem;
+  }
+  .meta dd {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+    color: var(--ink-2);
+  }
+  .links {
+    display: grid;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+  }
+  .body {
+    max-width: 44rem;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1.5rem;
+    margin: 0 0 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .stats dt {
+    font-size: 2.8rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .stats dd {
+    margin: 0.6rem 0 0;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .credit {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 0 0 3rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-2);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .credit dt {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .credit dd {
+    margin: 0.4rem 0 0;
+    font-size: 1rem;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+  .prose :global(h2) {
+    font-size: 1.75rem;
+    margin: 2.75rem 0 1rem;
+  }
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .prose :global(p),
+  .prose :global(li) {
+    color: var(--ink-2);
+  }
+  .prose :global(strong) {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.3rem;
+  }
+  .prose :global(li) {
+    margin-bottom: 0.6rem;
+  }
+  .prose :global(code) {
+    font-family: var(--mono);
+    font-size: 0.85em;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    padding: 0.05em 0.35em;
+    border-radius: 3px;
+  }
+  .next {
+    margin-top: 6rem;
+  }
+  .next a {
+    display: block;
+    text-decoration: none;
+    border-top: 1px solid var(--rule);
+    padding-top: 2rem;
+  }
+  .next .t {
+    display: block;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 860px) {
+    .cs-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .meta dl {
+      position: static;
+    }
+    .credit {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,132 @@
+---
+// PlayZork's architecture: narrow agents propose, an arbiter decides, the game answers.
+---
+
+<svg class="agents" viewBox="0 0 800 500" role="img" aria-labelledby="agents-title agents-desc">
+  <title id="agents-title">PlayZork architecture</title>
+  <desc id="agents-desc">
+    Several issue agents and an explorer agent each propose one action. An arbiter picks exactly one, which is sent
+    to Zork. The game's response updates shared memory: the map, the issues and lessons learned.
+  </desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="head"></path>
+    </marker>
+  </defs>
+
+  <!-- proposers -->
+  <g class="node">
+    <rect x="40" y="40" width="160" height="56" rx="6"></rect>
+    <text x="120" y="64">Issue agent</text><text x="120" y="82" class="sm">"get past the troll"</text>
+  </g>
+  <g class="node">
+    <rect x="230" y="40" width="160" height="56" rx="6"></rect>
+    <text x="310" y="64">Issue agent</text><text x="310" y="82" class="sm">"find a light source"</text>
+  </g>
+  <g class="node">
+    <rect x="420" y="40" width="160" height="56" rx="6"></rect>
+    <text x="500" y="64">Issue agent</text><text x="500" y="82" class="sm">"open the grating"</text>
+  </g>
+  <g class="node explorer">
+    <rect x="610" y="40" width="150" height="56" rx="6"></rect>
+    <text x="685" y="64">Explorer</text><text x="685" y="82" class="sm">"go somewhere new"</text>
+  </g>
+
+  <g class="flow">
+    <path d="M120 96 C120 150 360 150 385 196" marker-end="url(#arr)"></path>
+    <path d="M310 96 C310 150 390 160 395 196" marker-end="url(#arr)"></path>
+    <path d="M500 96 C500 150 410 160 405 196" marker-end="url(#arr)"></path>
+    <path d="M685 96 C685 150 440 150 415 196" marker-end="url(#arr)"></path>
+  </g>
+  <text x="400" y="150" class="note">each proposes one action, with a reason</text>
+
+  <!-- arbiter -->
+  <g class="node arbiter">
+    <rect x="300" y="200" width="200" height="60" rx="6"></rect>
+    <text x="400" y="226">Arbiter</text><text x="400" y="244" class="sm">chooses exactly one</text>
+  </g>
+
+  <path class="flow solid" d="M400 260 L400 316" marker-end="url(#arr)"></path>
+
+  <g class="node game">
+    <rect x="320" y="320" width="160" height="56" rx="6"></rect>
+    <text x="400" y="346">Zork</text><text x="400" y="364" class="sm">&gt; SOUTH</text>
+  </g>
+
+  <!-- memory loop -->
+  <path class="flow dashed" d="M480 348 C640 348 700 300 700 200 C700 150 690 120 685 100" marker-end="url(#arr)"></path>
+  <path class="flow dashed" d="M320 348 C160 348 100 300 100 200 C100 150 115 120 120 100" marker-end="url(#arr)"></path>
+
+  <g class="node mem">
+    <rect x="200" y="420" width="400" height="50" rx="6"></rect>
+    <text x="400" y="451">Memory: map graph · open issues · failed actions · lessons from deaths</text>
+  </g>
+  <path class="flow dashed" d="M400 376 L400 416" marker-end="url(#arr)"></path>
+</svg>
+
+<style>
+  .agents {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: radial-gradient(ellipse at 50% 30%, var(--bg-2) 0%, var(--bg) 70%);
+    font-family: var(--mono);
+  }
+  .node rect {
+    fill: var(--bg-2);
+    stroke: color-mix(in srgb, var(--ink) 28%, transparent);
+    stroke-width: 1;
+  }
+  .node text {
+    fill: var(--ink);
+    font-size: 15px;
+    text-anchor: middle;
+  }
+  .node text.sm {
+    fill: var(--muted);
+    font-size: 11.5px;
+  }
+  .explorer rect {
+    stroke: var(--accent-2);
+  }
+  .arbiter rect {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    fill: color-mix(in srgb, var(--accent) 12%, var(--bg-2));
+  }
+  .game rect {
+    fill: var(--bg);
+    stroke: var(--accent);
+  }
+  .game text.sm {
+    fill: var(--accent);
+  }
+  .mem rect {
+    stroke-dasharray: 4 4;
+  }
+  .mem text {
+    font-size: 12.5px;
+    fill: var(--ink-2);
+  }
+  .flow path,
+  path.flow {
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1.3;
+  }
+  path.flow.dashed {
+    stroke-dasharray: 5 5;
+    stroke: color-mix(in srgb, var(--muted) 70%, transparent);
+  }
+  .head {
+    fill: var(--muted);
+  }
+  .note {
+    fill: var(--muted);
+    font-size: 11.5px;
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: var(--bg);
+    stroke-width: 6px;
+  }
+</style>

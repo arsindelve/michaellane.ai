@@ -1,0 +1,195 @@
+---
+import Base from '../layouts/Base.astro';
+import { person, roles, projects, education } from '../data/site';
+---
+
+<Base title="Résumé · Michael Lane" description="Résumé of Michael Lane, VP of Engineering.">
+  <article class="resume wrap">
+    <p class="print-hint label">
+      This page prints cleanly to PDF. <button type="button" onclick="window.print()">Print / save as PDF</button>
+    </p>
+
+    <header>
+      <h1>{person.name}</h1>
+      <p class="tag">Engineering leader · AI, LLM and SaaS platforms</p>
+      <p class="contact">
+        {person.location} · <a href={`mailto:${person.email}`}>{person.email}</a> ·
+        <a href={person.linkedin}>linkedin.com/in/michaelnlane</a> · <a href={person.github}>github.com/arsindelve</a>
+      </p>
+    </header>
+
+    <section>
+      <h2>Summary</h2>
+      <p>
+        Engineering executive with 17 years leading teams and 19 years shipping production software. Most recently VP
+        of Software Development at Rev, leading a 60-person organization across AI, SaaS and mobile, including the #1
+        G2-ranked legal AI assistant. Hands-on with LLM systems, RAG and multi-agent architectures, and with
+        AI-assisted development in my own work.
+      </p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      {
+        roles.map((r) => (
+          <div class="r">
+            <div class="r-head">
+              <h3>
+                {r.title} · {r.company}
+              </h3>
+              <span class="label">
+                {r.start} – {r.end}
+              </span>
+            </div>
+            <p>{r.summary}</p>
+            {r.points && (
+              <ul>
+                {r.points.map((pt) => (
+                  <li>{pt}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))
+      }
+    </section>
+
+    <section>
+      <h2>Selected projects</h2>
+      <ul class="proj">
+        {
+          projects.map((p) => (
+            <li>
+              <strong>{p.name}</strong> ({p.years}). {p.blurb.split('. ')[0]}.
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <ul class="proj">
+        {
+          education.map((e) => (
+            <li>
+              <strong>{e.degree}</strong>, {e.school}, {e.when}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section>
+      <h2>Also</h2>
+      <p>Private pilot · Competitive hockey · English, French, Spanish</p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .resume {
+    max-width: 48rem;
+    padding-block: 2rem 0;
+    font-size: 1rem;
+  }
+  .print-hint {
+    border: 1px dashed var(--rule);
+    padding: 0.75rem 1rem;
+    margin-bottom: 2.5rem;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .print-hint button {
+    font: inherit;
+    margin-left: 0.5rem;
+    background: var(--ink);
+    color: var(--bg);
+    border: 0;
+    padding: 0.35rem 0.7rem;
+    cursor: pointer;
+  }
+  h1 {
+    font-size: 2.6rem;
+  }
+  .tag {
+    font-size: 1.2rem;
+    color: var(--ink-2);
+    margin: 0.25rem 0 0.4rem;
+  }
+  .contact {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  section {
+    margin-top: 1.75rem;
+  }
+  h2 {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.9rem;
+  }
+  .r {
+    margin-bottom: 1rem;
+  }
+  .r-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .r h3 {
+    font-size: 1.05rem;
+  }
+  .r p,
+  .r li,
+  .proj li {
+    color: var(--ink-2);
+    margin-bottom: 0.25rem;
+  }
+  .r ul,
+  .proj {
+    margin: 0.2rem 0 0;
+    padding-left: 1.1rem;
+  }
+
+  @media print {
+    :global(.site-header),
+    :global(.site-footer),
+    .print-hint {
+      display: none !important;
+    }
+    :global(body) {
+      background: #fff;
+      color: #000;
+      font-size: 10pt;
+    }
+    .resume {
+      padding: 0;
+      font-size: 10pt;
+    }
+    h1 {
+      font-size: 22pt;
+    }
+    section {
+      margin-top: 10pt;
+      break-inside: avoid-page;
+    }
+    .r {
+      break-inside: avoid;
+      margin-bottom: 6pt;
+    }
+    a {
+      text-decoration: none;
+    }
+  }
+  @page {
+    margin: 0.55in;
+  }
+</style>

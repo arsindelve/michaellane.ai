@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="How this site was built · Michael Lane"
+  description="This site was built with Claude Code. Here is who did what."
+>
+  <article class="wrap prose-page">
+    <p class="label">Colophon</p>
+    <h1>How this site was built</h1>
+
+    <p>
+      I built this site with <a href="https://claude.com/claude-code">Claude Code</a>, Anthropic’s coding agent. I
+      want to be specific about what that means, because “built with AI” has started to mean everything from “I typed
+      one prompt” to nothing at all.
+    </p>
+
+    <h2>What I did</h2>
+    <ul>
+      <li>Decided what the site is for and who it’s for: people hiring a VP of Engineering.</li>
+      <li>
+        Answered a long interview about my career, my projects and what I would and wouldn’t say publicly. Claude
+        asked; I decided.
+      </li>
+      <li>
+        Chose the stack (Astro, S3, CloudFront) and the concept. The first version Claude built was a résumé in
+        disguise; I threw it out and asked for a showcase.
+      </li>
+      <li>Decided every piece of content that stayed.</li>
+      <li>Reviewed every page, rejected plenty of it, and edited the copy until it sounded like me.</li>
+    </ul>
+
+    <h2>What Claude did</h2>
+    <ul>
+      <li>
+        Read my old portfolio, my LinkedIn, my GitHub and the sites for my projects, and pointed out what was missing
+        and what didn’t hold up.
+      </li>
+      <li>Wrote the code: the Astro components, the styles and the deploy setup.</li>
+      <li>Drafted the copy from my own material, for me to cut and rewrite.</li>
+      <li>Checked its own work in a browser, at desktop and phone widths, in light and dark mode.</li>
+    </ul>
+
+    <h2>Why say so</h2>
+    <p>
+      Because it’s true, and because it’s the job now. An engineering leader in 2026 should know first-hand what these
+      tools are good at, where they go wrong, and how much judgment they still need. The same goes for the
+      <a href="/#ai">projects on the home page</a>: each one says who did what.
+    </p>
+
+    <p>The source is on <a href="https://github.com/arsindelve/michaellane.ai">GitHub</a>.</p>
+  </article>
+</Base>
+
+<style>
+  .prose-page {
+    max-width: calc(var(--measure) + 3rem);
+    padding-block: 3rem 0;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    margin: 0.75rem 0 2rem;
+  }
+  h2 {
+    font-size: 1.45rem;
+    margin: 2.5rem 0 0.9rem;
+  }
+  ul {
+    padding-left: 1.2rem;
+  }
+  li {
+    margin-bottom: 0.6rem;
+  }
+</style>
