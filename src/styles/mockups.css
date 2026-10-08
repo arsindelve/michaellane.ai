@@ -639,7 +639,7 @@
 }
 
 
-/* ───────────── Background mockup: WAVES (soft sweeping curves, after secondnature.com) ───────────── */
+/* ───────────── Background mockup: WAVES (soft sweeping curves) ───────────── */
 :root:root:root[data-bg='waves'] main {
   overflow-x: clip;
 }

@@ -21,7 +21,7 @@ const work = defineCollection({
       // Name of a recorded session in public/anim/ (see scripts/animate.mjs); shown instead of the cover.
       animation: z.string().optional(),
       // A short slideshow of screenshots, shown instead of the cover. `path` updates the frame's address bar.
-      slides: z.array(z.object({ src: image(), alt: z.string(), path: z.string().default('') })).optional(),
+      slides: z.array(z.object({ src: image(), alt: z.string(), path: z.string().default(''), caption: z.string().optional() })).optional(),
       // A drawn diagram, for exhibits with nothing to screenshot.
       diagram: z.enum(['agents', 'breaker']).optional(),
       // A live, embeddable version of the thing itself.

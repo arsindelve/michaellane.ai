@@ -12,12 +12,13 @@ interface Props {
   // A recorded session in public/anim/, played instead of the still screenshot.
   anim?: string;
   // A crossfading slideshow of screenshots; each slide's path updates the address bar.
-  slides?: Array<{ src: ImageMetadata; alt: string; path: string }>;
+  slides?: Array<{ src: ImageMetadata; alt: string; path: string; caption?: string }>;
   eager?: boolean;
 }
 
 const { src, alt = '', url, embed, anim, slides, eager = false } = Astro.props;
-const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
+// Slideshows show the bare domain, and each slide adds its own path.
+const host = slides?.length ? new URL(url).host : new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
 ---
 
 <figure class:list={['exhibit', { carousel: slides?.length }]} data-embed={embed?.url} data-host={host}>
@@ -28,7 +29,7 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
       slides && (
         <span class="pager" role="tablist" aria-label="Screenshots">
           {slides.map((s, i) => (
-            <button type="button" class:list={['pip', { on: i === 0 }]} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-label={`Screenshot ${i + 1} of ${slides.length}`} data-path={s.path} />
+            <button type="button" class:list={['pip', { on: i === 0 }]} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-label={`Screenshot ${i + 1} of ${slides.length}`} data-path={s.path} data-caption={s.caption} />
           ))}
         </span>
       )
@@ -46,7 +47,11 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
             sizes="(max-width: 760px) 100vw, 1100px"
             loading={eager && i === 0 ? 'eager' : 'lazy'}
           />
-        ))
+        )).concat(
+          slides.some((s) => s.caption)
+            ? [<p class="slide-cap" aria-live="polite">{slides[0].caption}</p>]
+            : [],
+        )
       ) : anim ? (
         <picture>
           <source srcset={`/anim/${anim}-still.webp`} media="(prefers-reduced-motion: reduce)" />
@@ -99,6 +104,8 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
         p.setAttribute('aria-selected', String(i === at));
       });
       if (addr) addr.textContent = (fig.dataset.host ?? '') + (pips[at]?.dataset.path ?? '');
+      const cap = fig.querySelector('.slide-cap');
+      if (cap) cap.textContent = pips[at]?.dataset.caption ?? '';
     };
     pips.forEach((p, i) => p.addEventListener('click', () => show(i)));
     fig.addEventListener('mouseenter', () => (paused = true));
@@ -186,6 +193,18 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
   }
   .stage :global(.slide.on) {
     opacity: 1;
+  }
+  .slide-cap {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 2;
+    max-width: calc(100% - 2rem);
+    margin: 0;
+    padding: 0.45rem 0.75rem;
+    background: var(--ink);
+    color: #fff;
+    font: 600 0.88rem/1.35 var(--body);
   }
   .pager {
     display: flex;
