@@ -8,7 +8,8 @@ years: 2024 – now
 role: Creator, architect, lead developer
 stack: [C#, .NET, AWS Lambda, DynamoDB, React, OpenAI, Ollama, Docker]
 cover: ../../assets/shots/newzork.png
-coverAlt: A session of Zork AI. Asked whether the mailbox gets lonely, the narrator describes a philosophical debate about its own mailbox-ness.
+coverAlt: A recorded Zork AI session. The player tries to eat the mailbox, take the house, hear a joke and kick the house, and the AI narrator answers each in character.
+animation: zork
 embed:
   url: https://newzork.ai
   label: Play Zork

@@ -31,7 +31,7 @@ const primary = d.embed?.url ?? d.links[0]?.url;
       primary && (d.cover || d.kind === 'exhibit') && (
         <div class="cs-media wrap">
           {d.cover ? (
-            <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} eager />
+            <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} anim={d.animation} eager />
           ) : (
             <Exhibit url={primary}>
               <AgentDiagram />

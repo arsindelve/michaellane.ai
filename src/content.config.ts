@@ -18,6 +18,8 @@ const work = defineCollection({
       stack: z.array(z.string()).default([]),
       cover: image().optional(),
       coverAlt: z.string().optional(),
+      // Name of a recorded session in public/anim/ (see scripts/animate.mjs); shown instead of the cover.
+      animation: z.string().optional(),
       // A live, embeddable version of the thing itself.
       embed: z.object({ url: z.string().url(), label: z.string() }).optional(),
       links: z.array(z.object({ label: z.string(), url: z.string().url() })).default([]),

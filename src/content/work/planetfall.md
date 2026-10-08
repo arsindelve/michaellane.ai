@@ -8,7 +8,8 @@ years: 2024 – now
 role: Creator, architect, lead developer
 stack: [C#, .NET, AWS Lambda, DynamoDB, React, OpenAI]
 cover: ../../assets/shots/planetfall.png
-coverAlt: A session of Planetfall AI on Deck Nine of the Feinstein. Asked to sing the Stellar Patrol anthem, the narrator notes the acoustics are surprisingly good for a spaceship.
+coverAlt: A recorded Planetfall AI session on Deck Nine. The player sings the Stellar Patrol anthem, asks a scrub brush for career advice and questions a slime-trailing alien ambassador about his celery.
+animation: planetfall
 embed:
   url: https://planetfall.ai
   label: Play Planetfall

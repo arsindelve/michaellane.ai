@@ -9,10 +9,12 @@ interface Props {
   alt?: string;
   url: string;
   embed?: { url: string; label: string };
+  // A recorded session in public/anim/, played instead of the still screenshot.
+  anim?: string;
   eager?: boolean;
 }
 
-const { src, alt = '', url, embed, eager = false } = Astro.props;
+const { src, alt = '', url, embed, anim, eager = false } = Astro.props;
 const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
 ---
 
@@ -23,7 +25,19 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
   </div>
   <div class="stage">
     {
-      src ? (
+      anim ? (
+        <picture>
+          <source srcset={`/anim/${anim}-still.webp`} media="(prefers-reduced-motion: reduce)" />
+          <img
+            src={`/anim/${anim}.webp`}
+            alt={alt}
+            width="1280"
+            height="800"
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </picture>
+      ) : src ? (
         <Image
           src={src}
           alt={alt}
@@ -112,6 +126,10 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
   .stage {
     position: relative;
     aspect-ratio: 16 / 10;
+  }
+  .stage :global(picture) {
+    display: block;
+    height: 100%;
   }
   .stage :global(img) {
     display: block;

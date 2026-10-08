@@ -19,7 +19,7 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
   <div class="ex-media">
     {
       d.cover ? (
-        <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} eager={eager} />
+        <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} anim={d.animation} eager={eager} />
       ) : (
         <Exhibit url={primary}>
           <AgentDiagram />
