@@ -16,9 +16,6 @@ slides:
   - { src: ../../assets/shots/dvtd/3-how-it-works.png, path: "", caption: "How it works: every order gives back, and so does every product", alt: "How It Works: every order gives back, plus more giving back from each product's own cause." }
   - { src: ../../assets/shots/dvtd/4-causes-brands.png, path: "", caption: "Shop by cause or by brand", alt: "Our Causes and Our Brands, with a carousel of partner brand logos." }
   - { src: ../../assets/shots/dvtd/5-join-rewards.png, path: "", caption: "Affiliates and rewards replaced the old Jeweler model", alt: "Join Us as an affiliate, and DVTD Rewards for customers." }
-links:
-  - { label: "Before: Premier Designs, June 2020", url: "https://web.archive.org/web/20200606184518/http://premierdesigns.com/", short: Before }
-  - { label: "After: DVTD, late 2020", url: "https://web.archive.org/web/20201231222449/http://premierdesigns.com/", short: After }
 stats:
   - { n: "7", label: "months to plan for one exact, immovable date" }
   - { n: "6", label: "people on the team, me included" }
@@ -28,9 +25,19 @@ stats:
 
 ## The moment
 
-About a hundred people in the room and more on the live stream. Our VP of Marketing finished the reveal, turned, and pointed at me. I flipped the switch, gave a thumbs up back, and DVTD was live.
+About a hundred people in the room. More watching on the live stream. Our VP of Marketing walked them through the new company, the new brands, the new mission, and then got to the part nobody in the audience could see coming.
 
-We had picked that date in January. It didn't move.
+The point.
+
+Across the room, straight at me.
+
+I flipped it. One switch, after seven months of work by six people: a new storefront, a new back office, a new portal for ten thousand sellers, ten servers warmed up and waiting.
+
+Thumbs up.
+
+And we were live. Just like that.
+
+No spinner, no apology, no "give us a minute." The old site was gone and the new business was open, in front of everyone, on the day we'd circled in January. That's the whole job, really: make the hardest moment of the project look like nothing happened.
 
 ## From jewelry parties to a marketplace with a mission
 
