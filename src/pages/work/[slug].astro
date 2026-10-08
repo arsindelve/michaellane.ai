@@ -105,7 +105,7 @@ const lensHtml = lens
   : '';
 const d = entry.data;
 const { Content } = await render(entry);
-const primary = d.embed?.url ?? d.links[0]?.url;
+const primary = d.embed?.url ?? d.frameUrl ?? d.links[0]?.url;
 ---
 
 <Base title={`${d.title} · Michael Lane`} description={d.summary}>
@@ -120,7 +120,7 @@ const primary = d.embed?.url ?? d.links[0]?.url;
 
     {
       primary && (d.cover || d.kind === 'exhibit') && (
-        <div class="cs-media wrap">
+        <div class:list={['cs-media wrap', { small: d.mediaSize === 'small' }]}>
           {d.cover ? (
             <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} anim={d.animation} slides={d.slides} eager />
           ) : (
@@ -265,6 +265,11 @@ const primary = d.embed?.url ?? d.links[0]?.url;
   }
   .cs-media {
     margin-bottom: 4rem;
+  }
+  /* Small media: a modest, centered frame. */
+  .cs-media.small :global(.exhibit) {
+    max-width: 40rem;
+    margin-inline: auto;
   }
   .cs-grid {
     display: grid;

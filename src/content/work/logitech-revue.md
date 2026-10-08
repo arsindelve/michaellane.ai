@@ -7,6 +7,15 @@ summary: At Logitech I managed the local and offshore teams on the Logitech Revu
 years: 2009 – 2011
 role: Software Development Manager
 stack: [Google TV, Android, iPhone, Remote control APIs, Scrum]
+cover: ../../assets/shots/revue/4-boot.jpg
+coverAlt: A Logitech Revue booting on a large TV, with the Logitech Revue with Google TV logo.
+frameUrl: https://commons.wikimedia.org/wiki/Category:Logitech_Revue
+mediaSize: small
+slides:
+  - { src: ../../assets/shots/revue/4-boot.jpg, path: "", caption: "Logitech Revue with Google TV, 2010", alt: "A Logitech Revue booting on a large TV." }
+  - { src: ../../assets/shots/revue/1-remotes-android.jpg, path: "", caption: "One box, many controllers: keyboard, Harmony remote and an Android phone", alt: "The Revue box with its keyboard controller, a Harmony remote and an Android phone running the remote app." }
+  - { src: ../../assets/shots/revue/2-harmony.jpg, path: "", caption: "Every one of them spoke to the same remote-control APIs", alt: "Keyboard, mini controller, Harmony remote and an Android phone arranged on a table." }
+  - { src: ../../assets/shots/revue/3-keyboard.jpg, path: "", caption: "The full keyboard controller, with touchpad", alt: "The Revue's full keyboard controller with a built-in touchpad." }
 links:
   - { label: "CNET: Logitech confesses to ‘gigantic’ mistake", url: "https://web.archive.org/web/20210205020129/https://www.cnet.com/news/logitech-confesses-to-gigantic-mistake-with-google-tv/" }
   - { label: "TechCrunch: …to the tune of $100 million", url: "https://techcrunch.com/2011/11/11/logitech-falls-prey-to-googles-beta-mentality-to-the-tune-of-100-million/" }
@@ -30,3 +39,5 @@ Commercially? Badly. In November 2011, Logitech's CEO called the Revue a "gigant
 In fairness to the box, it wanted you to search, browse and install apps on your TV with a remote in 2010. Today that's every TV sold. Being early is indistinguishable from being wrong, right up until it isn't.
 
 The engineering was incredible, and I'd do it again. I still loved being on the team that built it.
+
+*Photos: Brian Bilek, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Logitech_Revue,_remotes,_and_Android_control_(5115587931).jpg).*

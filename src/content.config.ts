@@ -20,6 +20,10 @@ const work = defineCollection({
       coverAlt: z.string().optional(),
       // Name of a recorded session in public/anim/ (see scripts/animate.mjs); shown instead of the cover.
       animation: z.string().optional(),
+      // What the browser frame's address bar shows, when it differs from the first link (e.g. an archive).
+      frameUrl: z.string().url().optional(),
+      // 'small' keeps photos from filling the whole page width on the case study.
+      mediaSize: z.enum(['full', 'small']).default('full'),
       // A short slideshow of screenshots, shown instead of the cover. `path` updates the frame's address bar.
       slides: z.array(z.object({ src: image(), alt: z.string(), path: z.string().default(''), caption: z.string().optional() })).optional(),
       // A drawn diagram, for exhibits with nothing to screenshot.
