@@ -1,0 +1,129 @@
+---
+// AdventureBreaker's loop: walk the spine, attack each state, and funnel every response
+// through cheap deterministic checks before the LLM critic, into the findings ledger.
+const nodes = [130, 310, 490, 670];
+const layers = [
+  { name: 'L0  Contract', cost: 'free', w: 540 },
+  { name: 'L1  Consistency', cost: 'free', w: 460 },
+  { name: 'L2  Anchors', cost: 'free', w: 380 },
+  { name: 'L3  LLM critic', cost: 'AI judge', w: 300 },
+];
+---
+
+<svg class="breaker" viewBox="0 0 800 500" role="img" aria-labelledby="breaker-title breaker-desc">
+  <title id="breaker-title">AdventureBreaker architecture</title>
+  <desc id="breaker-desc">
+    A spine replays the walkthrough through deep game states. At each state, ribs save, attack with adversarial
+    probes, and restore. Every response passes through three free checks (contract, consistency, anchors) and then an
+    LLM critic, and confirmed bugs go into a findings ledger.
+  </desc>
+  <defs>
+    <marker id="b-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="head"></path>
+    </marker>
+  </defs>
+
+  <text x="40" y="44" class="tag">spine · walk the walkthrough</text>
+  <path class="spine" d="M60 70 L748 70" marker-end="url(#b-arr)"></path>
+  {
+    nodes.map((x) => (
+      <g>
+        <path class="rib" d={`M${x} 70 L${x + 28} 118 M${x} 70 L${x + 62} 108`} />
+        <circle class="probe" cx={x + 28} cy="121" r="4" />
+        <circle class="probe" cx={x + 62} cy="111" r="4" />
+        <circle class="state" cx={x} cy="70" r="8" />
+      </g>
+    ))
+  }
+  <text x="40" y="160" class="tag">ribs · save → attack → restore, at every state</text>
+
+  <path class="flow" d="M400 172 L400 204" marker-end="url(#b-arr)"></path>
+
+  {
+    layers.map((l, i) => (
+      <g class:list={['layer', { critic: i === 3 }]}>
+        <rect x={400 - l.w / 2} y={210 + i * 50} width={l.w} height="40" rx="4" />
+        <text x={400 - l.w / 2 + 16} y={235 + i * 50} class="lname">
+          {l.name}
+        </text>
+        <text x={400 + l.w / 2 - 16} y={235 + i * 50} class="lcost">
+          {l.cost}
+        </text>
+      </g>
+    ))
+  }
+
+  <path class="flow" d="M400 404 L400 428" marker-end="url(#b-arr)"></path>
+
+  <g class="ledger">
+    <rect x="250" y="434" width="300" height="44" rx="4"></rect>
+    <text x="400" y="461">findings ledger · AB-001 … AB-122</text>
+  </g>
+</svg>
+
+<style>
+  .breaker {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: radial-gradient(ellipse at 50% 30%, var(--bg-2) 0%, var(--bg) 70%);
+    font-family: var(--mono);
+  }
+  .tag {
+    fill: var(--muted);
+    font-size: 12px;
+  }
+  .spine {
+    stroke: var(--ink);
+    stroke-width: 2.5;
+    fill: none;
+  }
+  .state {
+    fill: var(--ink);
+  }
+  .rib {
+    stroke: var(--accent-2);
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .probe {
+    fill: var(--accent-2);
+  }
+  .flow {
+    stroke: var(--muted);
+    stroke-width: 1.3;
+    fill: none;
+  }
+  .head {
+    fill: var(--muted);
+  }
+  .layer rect {
+    fill: var(--bg-2);
+    stroke: color-mix(in srgb, var(--ink) 25%, transparent);
+  }
+  .layer text {
+    fill: var(--ink);
+    font-size: 13px;
+  }
+  .layer .lcost {
+    fill: var(--muted);
+    text-anchor: end;
+  }
+  .layer.critic rect {
+    fill: var(--accent);
+    stroke: var(--accent);
+  }
+  .layer.critic text {
+    fill: var(--on-accent);
+  }
+  .ledger rect {
+    fill: var(--bg);
+    stroke: var(--ink);
+    stroke-dasharray: 4 4;
+  }
+  .ledger text {
+    fill: var(--ink);
+    font-size: 12.5px;
+    text-anchor: middle;
+  }
+</style>

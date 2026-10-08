@@ -7,6 +7,7 @@ summary: Research on LLM agents in long-horizon problems. A single model with me
 years: 2025 – now
 role: Researcher
 stack: [Python, LangChain, LangGraph, Ollama, Qwen 2.5 14B, SQLite]
+diagram: agents
 links:
   - { label: Source on GitHub, url: "https://github.com/arsindelve/PlayZork" }
   - { label: "Zenodo · DOI 10.5281/zenodo.18224702", url: "https://doi.org/10.5281/zenodo.18224702" }

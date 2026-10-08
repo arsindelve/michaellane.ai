@@ -20,10 +20,13 @@ const work = defineCollection({
       coverAlt: z.string().optional(),
       // Name of a recorded session in public/anim/ (see scripts/animate.mjs); shown instead of the cover.
       animation: z.string().optional(),
+      // A drawn diagram, for exhibits with nothing to screenshot.
+      diagram: z.enum(['agents', 'breaker']).optional(),
       // A live, embeddable version of the thing itself.
       embed: z.object({ url: z.string().url(), label: z.string() }).optional(),
       links: z.array(z.object({ label: z.string(), url: z.string().url() })).default([]),
       stats: z.array(z.object({ n: z.string(), label: z.string() })).default([]),
+      quote: z.object({ text: z.string(), by: z.string() }).optional(),
       // Who did what, stated plainly.
       me: z.string().optional(),
       ai: z.string().optional(),

@@ -20,6 +20,9 @@ stats:
   - { n: "1983", label: "the original, by Steve Meretzky" }
   - { n: "1", label: "puzzle left: playable up to the finale" }
   - { n: "1", label: "review from the original author" }
+quote:
+  text: "It's quite wonderful; all the new text feels quite at home in the spirit of the game."
+  by: Steve Meretzky, creator of Planetfall, after playing an early build
 me: Rebuilding the game's world, characters and puzzles on the engine, and deciding how much personality the narrator is allowed to add.
 ai: The voices of the narrator, Floyd and Blather. In development, AI agents write much of the code against the test suite while I review.
 ---
@@ -36,4 +39,4 @@ The rebuild is playable up to the final puzzle.
 
 ## The best review I've had
 
-Steve Meretzky, who wrote Planetfall in 1983, played an early build. He liked it. He also found bugs.
+Steve Meretzky, who wrote Planetfall in 1983, played an early build. His verdict: "It's quite wonderful; all the new text feels quite at home in the spirit of the game." He also found bugs.

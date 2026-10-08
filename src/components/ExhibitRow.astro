@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import Exhibit from './Exhibit.astro';
 import AgentDiagram from './AgentDiagram.astro';
+import BreakerDiagram from './BreakerDiagram.astro';
 
 interface Props {
   entry: CollectionEntry<'work'>;
@@ -22,7 +23,7 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
         <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} anim={d.animation} eager={eager} />
       ) : (
         <Exhibit url={primary}>
-          <AgentDiagram />
+          {d.diagram === 'breaker' ? <BreakerDiagram /> : <AgentDiagram />}
         </Exhibit>
       )
     }
@@ -32,6 +33,14 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
     <h2>{d.title}</h2>
     <p class="kicker">{d.kicker}</p>
     <p class="summary">{d.summary}</p>
+    {
+      d.quote && (
+        <blockquote class="quote">
+          <p>“{d.quote.text}”</p>
+          <cite>{d.quote.by}</cite>
+        </blockquote>
+      )
+    }
     {
       d.me && d.ai && (
         <dl class="credit">
@@ -85,6 +94,22 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
   .summary {
     color: var(--ink-2);
     font-size: 1.05rem;
+  }
+  .quote {
+    margin: 1.5rem 0;
+  }
+  .quote p {
+    font-size: 1.3rem;
+    line-height: 1.35;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin: 0 0 0.5rem;
+  }
+  .quote cite {
+    font-style: normal;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--muted);
   }
   .credit {
     margin: 1.5rem 0;

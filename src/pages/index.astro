@@ -13,6 +13,12 @@ const work = all.filter((e) => e.data.kind === 'work');
 const shift = [
   { year: '2024', what: 'ZorkAI', how: 'I wrote the engine. AI was the narrator.', ai: 0.15 },
   { year: '2025', what: 'ZorkAI, Planetfall', how: 'AI agents write code against my tests. I review.', ai: 0.55 },
+  {
+    year: '2026',
+    what: 'AdventureBreaker',
+    how: 'An AI playtester built to break my AI narrator. AI wrote most of it; I designed it.',
+    ai: 0.75,
+  },
   { year: '2026', what: 'Unopened Worlds, this site', how: 'AI writes the implementation. I own every decision.', ai: 0.9 },
 ];
 
@@ -207,9 +213,8 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
     padding: 0;
     margin: 3.5rem 0 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.25rem;
-    max-width: 60rem;
   }
   .shift li {
     display: flex;
@@ -408,8 +413,8 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
       gap: 2rem;
     }
     .shift {
-      grid-template-columns: 1fr;
-      gap: 1.75rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.75rem 1.25rem;
     }
   }
   @media (max-width: 760px) {
