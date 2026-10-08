@@ -7,6 +7,12 @@ summary: As VP of Software Development I led the engineering organization behind
 years: 2024 – 2026
 role: VP of Software Development
 stack: [LLMs, RAG, Multi-agent systems, Speech-to-text]
+cover: ../../assets/shots/rev/g2-leader.png
+coverAlt: Rev's legal page announcing it was number one in G2's Summer 2025 report for AI Legal Assistant, with the G2 Grid.
+frameUrl: https://www.rev.com/
+slides:
+  - { src: ../../assets/shots/rev/g2-leader.png, path: "", caption: "#1 in G2’s Summer 2025 report for AI Legal Assistant", alt: "Rev's page announcing number one in G2's Summer 2025 report for AI Legal Assistant, with Rev alone at the top right of the G2 Grid's Leaders quadrant and a trial lawyer's review." }
+  - { src: ../../assets/shots/rev/about-vp.png, path: "", caption: "Rev’s leadership page: VP Development", alt: "Rev's About page leadership grid with Michael Lane, VP Development, between the VP of Marketing and the VP of AI and R&D." }
 links:
   - { label: rev.com, url: "https://www.rev.com" }
 stats:

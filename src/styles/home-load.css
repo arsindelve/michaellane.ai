@@ -1,0 +1,54 @@
+/* ───────────── Home page load: the headline comes into focus word by word, then the rest fades up. ───────────── */
+
+.hero h1 .w {
+  display: inline-block;
+}
+
+@keyframes ld-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+@keyframes ld-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes ld-ink {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(0.35em);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1 .w {
+    animation: ld-ink 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(0.15s + var(--i) * 0.08s);
+  }
+  /* The second half of the line takes its time. */
+  .hero h1 .hl .w {
+    animation-duration: 1.2s;
+    animation-delay: calc(0.45s + var(--i) * 0.11s);
+  }
+  :is(.hero .lede, .hero .split, .hero .shift, .hero .shift-key) {
+    animation: ld-rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .hero .lede {
+    animation-delay: 1.6s;
+  }
+  .hero .split {
+    animation-delay: 1.8s;
+  }
+  .hero .shift {
+    animation-delay: 2s;
+  }
+  .hero .shift-key {
+    animation-delay: 2.15s;
+  }
+  body:has(.hero h1 .w) .site-header {
+    animation: ld-fade 1s ease both 0.1s;
+  }
+}

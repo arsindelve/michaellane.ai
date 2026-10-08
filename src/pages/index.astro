@@ -33,7 +33,10 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
   </div>
 
   <section class="hero wrap" data-room="Entrance">
-    <h1>I lead engineering organizations. I also <span class="hl">breathe new life into old worlds.</span></h1>
+    <h1 aria-label="I lead engineering organizations. I also breathe new life into old worlds.">
+      {'I lead engineering organizations. I also'.split(' ').map((w, i) => <><span class="w" aria-hidden="true" style={`--i:${i}`}>{w}</span>{' '}</>)}
+      <span class="hl" aria-hidden="true">{'breathe new life into old worlds.'.split(' ').map((w, i, a) => <><span class="w" style={`--i:${i + 6}`}>{w}</span>{i < a.length - 1 && ' '}</>)}</span>
+    </h1>
     <p class="lede">
       VP of Engineering, most recently at Rev, where I led 60 people across AI, SaaS and mobile. I’ve been writing
       software since middle school, and every year I hand more of the implementation to AI. What I don’t hand over is the
@@ -72,7 +75,7 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
   <section id="work" class="work wrap" data-room="The Day Job">
     <div class="work-head">
       <p class="label">The day job</p>
-      <h2>Work I’ve led</h2>
+      <h2 class="sec-title">Work I’ve led</h2>
       <p class="intro">What I build with a team. Below it, what I build on my own time.</p>
     </div>
     <div class="cards-wrap">
@@ -116,6 +119,7 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
 
   <section id="education" class="edu wrap" data-room="The Library">
     <p class="label">Education</p>
+    <h2 class="sec-title">Education</h2>
     <div class="edu-grid">
       {
         education.map((e) => (
@@ -155,11 +159,10 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
     </div>
   </div>
 
-  <div class="room-sep wrap" data-room="The Exhibit Hall" aria-hidden="true">
-    <p class="rs-room">The Exhibit Hall</p>
-  </div>
+  <div class="room-sep wrap" data-room="The Exhibit Hall" aria-hidden="true"></div>
 
   <section id="exhibits" class="exhibits">
+    <div class="wrap ex-head"><h2 class="sec-title">Research and Renaissance</h2></div>
     {
       exhibits.map((e, i) => (
         <ExhibitRow
@@ -296,9 +299,10 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
   }
 
   .exhibits {
+    --ex-gap: 8rem;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 8rem;
+    gap: var(--ex-gap);
   }
   .ex-links {
     display: flex;
@@ -429,9 +433,26 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
     color: var(--muted);
     font-size: 0.98rem;
   }
-  .work-head h2 {
+  .sec-title {
     font-size: clamp(2rem, 3.6vw, 3rem);
     margin-top: 0.75rem;
+  }
+  .edu .sec-title {
+    margin-bottom: 2.5rem;
+  }
+  /* A grid item with auto side margins shrinks to fit; this one spans the column like the rows below. */
+  .ex-head {
+    width: 100%;
+    /* The exhibit rows are spaced far apart; the heading sits closer to the first one. */
+    margin-bottom: calc(3rem - var(--ex-gap, 8rem));
+  }
+  /* The same blue rule that sits under Education's heading. */
+  .exhibits .sec-title {
+    margin: 0;
+    max-width: none;
+    text-align: left;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--accent);
   }
   .intro {
     color: var(--ink-2);
@@ -639,7 +660,7 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
 
   @media (max-width: 960px) {
     .exhibits {
-      gap: 5rem;
+      --ex-gap: 5rem;
     }
     .cards {
       grid-auto-columns: 100%;

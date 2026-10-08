@@ -720,7 +720,7 @@
   display: none;
 }
 :root:root:root[data-bg='waves'] .edu {
-  padding-top: 8rem;
+  padding-top: 5rem;
 }
 /* Exhibit Hall: soft half-circles peeking in from alternating sides. */
 :root:root:root[data-bg='waves'] .exhibits {
@@ -870,4 +870,9 @@
   content: '→';
   margin-left: 0.35rem;
   color: var(--accent);
+}
+
+/* The Exhibit Hall separator no longer has a label; it only carries the band's wavy edge. */
+:root:root:root[data-style='rooms'] .room-sep[data-room='The Exhibit Hall'] {
+  padding-block: 3rem 0;
 }
