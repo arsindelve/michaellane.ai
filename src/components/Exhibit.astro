@@ -11,21 +11,43 @@ interface Props {
   embed?: { url: string; label: string };
   // A recorded session in public/anim/, played instead of the still screenshot.
   anim?: string;
+  // A crossfading slideshow of screenshots; each slide's path updates the address bar.
+  slides?: Array<{ src: ImageMetadata; alt: string; path: string }>;
   eager?: boolean;
 }
 
-const { src, alt = '', url, embed, anim, eager = false } = Astro.props;
+const { src, alt = '', url, embed, anim, slides, eager = false } = Astro.props;
 const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
 ---
 
-<figure class="exhibit" data-embed={embed?.url}>
-  <div class="chrome" aria-hidden="true">
-    <span class="dots"><i></i><i></i><i></i></span>
-    <span class="addr">{host}</span>
+<figure class:list={['exhibit', { carousel: slides?.length }]} data-embed={embed?.url} data-host={host}>
+  <div class="chrome">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="addr" aria-hidden="true">{host}{slides?.[0]?.path}</span>
+    {
+      slides && (
+        <span class="pager" role="tablist" aria-label="Screenshots">
+          {slides.map((s, i) => (
+            <button type="button" class:list={['pip', { on: i === 0 }]} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-label={`Screenshot ${i + 1} of ${slides.length}`} data-path={s.path} />
+          ))}
+        </span>
+      )
+    }
   </div>
   <div class="stage">
     {
-      anim ? (
+      slides ? (
+        slides.map((s, i) => (
+          <Image
+            src={s.src}
+            alt={s.alt}
+            class:list={['slide', { on: i === 0 }]}
+            widths={[640, 960, 1440, 2000]}
+            sizes="(max-width: 760px) 100vw, 1100px"
+            loading={eager && i === 0 ? 'eager' : 'lazy'}
+          />
+        ))
+      ) : anim ? (
         <picture>
           <source srcset={`/anim/${anim}-still.webp`} media="(prefers-reduced-motion: reduce)" />
           <img
@@ -49,20 +71,44 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
         <slot />
       )
     }
-    {
-      embed && (
-        <button type="button" class="play">
-          <span class="tri" aria-hidden="true" />
-          {embed.label} here
-        </button>
-      )
-    }
   </div>
 </figure>
+{
+  embed && (
+    <button type="button" class="play">
+      <span class="tri" aria-hidden="true" />
+      {embed.label} here
+    </button>
+  )
+}
 
 <script>
+  // Carousels: crossfade on a timer, pause on hover, jump with the pips in the address bar.
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for (const fig of document.querySelectorAll<HTMLElement>('.exhibit.carousel')) {
+    const slides = [...fig.querySelectorAll<HTMLElement>('.slide')];
+    const pips = [...fig.querySelectorAll<HTMLButtonElement>('.pip')];
+    const addr = fig.querySelector('.addr');
+    let at = 0;
+    let paused = false;
+    const show = (n: number) => {
+      at = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle('on', i === at));
+      pips.forEach((p, i) => {
+        p.classList.toggle('on', i === at);
+        p.setAttribute('aria-selected', String(i === at));
+      });
+      if (addr) addr.textContent = (fig.dataset.host ?? '') + (pips[at]?.dataset.path ?? '');
+    };
+    pips.forEach((p, i) => p.addEventListener('click', () => show(i)));
+    fig.addEventListener('mouseenter', () => (paused = true));
+    fig.addEventListener('mouseleave', () => (paused = false));
+    if (!still) setInterval(() => !paused && show(at + 1), 3800);
+  }
+
   for (const fig of document.querySelectorAll<HTMLElement>('.exhibit[data-embed]')) {
-    const button = fig.querySelector<HTMLButtonElement>('.play');
+    const next = fig.nextElementSibling;
+    const button = next?.classList.contains('play') ? (next as HTMLButtonElement) : null;
     button?.addEventListener('click', () => {
       const url = fig.dataset.embed!;
       if (window.matchMedia('(max-width: 760px)').matches) {
@@ -75,6 +121,7 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
       frame.title = button.textContent?.trim() ?? 'Live project';
       frame.allow = 'fullscreen; clipboard-write; autoplay';
       stage.replaceChildren(frame);
+      button.hidden = true;
       fig.classList.add('live');
       // Give the live game the whole row, not half of it.
       fig.closest('.ex')?.classList.add('playing');
@@ -122,10 +169,48 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
     border-radius: 4px;
     flex: 1;
     max-width: 22rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .stage {
     position: relative;
     aspect-ratio: 16 / 10;
+  }
+  .stage :global(.slide) {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+  }
+  .stage :global(.slide.on) {
+    opacity: 1;
+  }
+  .pager {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+  }
+  .pip {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--ink) 22%, transparent);
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      width 0.2s;
+  }
+  .pip:hover {
+    background: color-mix(in srgb, var(--ink) 45%, transparent);
+  }
+  .pip.on {
+    width: 20px;
+    border-radius: 4px;
+    background: var(--accent);
   }
   .stage :global(picture) {
     display: block;
@@ -145,27 +230,26 @@ const host = new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
     display: block;
     background: #000;
   }
+  /* A normal button beneath the screenshot, never on top of it. */
   .play {
-    position: absolute;
-    left: 50%;
-    bottom: 1.5rem;
-    transform: translateX(-50%);
     display: inline-flex;
     align-items: center;
+    margin-top: 1.1rem;
     gap: 0.6rem;
-    font: 500 0.9rem var(--mono);
+    font: 600 0.98rem var(--body);
     color: var(--on-accent);
     background: var(--accent);
     border: 0;
-    border-radius: 999px;
-    padding: 0.8rem 1.3rem;
+    padding: 0.75rem 1.2rem;
     cursor: pointer;
-    box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.7);
     white-space: nowrap;
-    transition: transform 0.15s ease;
+    transition: background-color 0.15s ease;
   }
   .play:hover {
-    transform: translateX(-50%) translateY(-2px);
+    background: var(--ink);
+  }
+  .play[hidden] {
+    display: none;
   }
   .tri {
     width: 0;

@@ -14,16 +14,16 @@ embed:
   url: https://newzork.ai
   label: Play Zork
 links:
-  - { label: newzork.ai, url: "https://newzork.ai" }
-  - { label: planetfall.ai, url: "https://planetfall.ai" }
+  - { label: newzork.ai, url: "https://newzork.ai", short: NewZork }
+  - { label: planetfall.ai, url: "https://planetfall.ai", short: Planetfall }
   - { label: Source on GitHub, url: "https://github.com/arsindelve/ZorkAI" }
 stats:
   - { n: "3,400+", label: "tests pinning down original behavior" }
   - { n: "700+", label: "commits since October 2024" }
   - { n: "300+", label: "merged pull requests" }
   - { n: "2", label: "games live on one engine" }
-me: The architecture, the game engine, the decision about when the model is and isn't allowed to speak, and most of the early code.
-ai: The narrator, in production. In development, AI agents now write much of the code against the test suite, and I review it.
+me: The architecture, the game engine, the decision about when the model is and isn't allowed to speak, and, in 2024, every line of code.
+ai: The narrator, in production. Since 2025, AI agents write much of the new code against the test suite, and I review it.
 ---
 
 ## The idea

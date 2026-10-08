@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import '../styles/mockups.css';
+import FooterMocks from '../components/FooterMocks.astro';
 
 interface Props {
   title: string;
@@ -13,7 +15,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-style="rooms" data-bg="waves" data-btn="b" data-footer="c">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,6 +30,25 @@ const {
       href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400..800;1,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      // Style mockups: ?style=poster|museum|blueprint (remembered per browser). Removed once one is chosen.
+      try {
+        // Rooms + waves are the design now; ?style= only previews other mockups and is not remembered.
+        localStorage.removeItem('style');
+        const s = new URLSearchParams(location.search).get('style');
+        if (s) document.documentElement.dataset.style = s;
+        const cd = new URLSearchParams(location.search).get('code');
+        if (cd) document.documentElement.dataset.code = cd;
+        const ft = new URLSearchParams(location.search).get('footer');
+        if (ft) document.documentElement.dataset.footer = ft;
+        const bt = new URLSearchParams(location.search).get('btn');
+        if (bt) document.documentElement.dataset.btn = bt;
+        const bg = new URLSearchParams(location.search).get('bg');
+        if (bg) document.documentElement.dataset.bg = bg;
+        const f = new URLSearchParams(location.search).get('flourish');
+        if (f) document.documentElement.dataset.flourish = f;
+      } catch {}
+    </script>
   </head>
   <body>
     <header class="site-header wrap">
@@ -48,5 +69,49 @@ const {
         adventures. <a href="https://github.com/arsindelve/michaellane.ai">Source</a>.
       </p>
     </footer>
+    <FooterMocks />
+    <script>
+      // Mockup motion. Content is always visible at rest; motion only settles it into place.
+      const root = document.documentElement;
+      if (root.dataset.style && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+              for (const big of e.target.querySelectorAll<HTMLElement>('.card .big')) {
+                const node = big.firstChild;
+                const m = node?.textContent?.match(/^(\D*)(\d+)(.*)$/s);
+                if (!node || !m) continue;
+                const [, pre, num, post] = m;
+                const end = Number(num);
+                const t0 = performance.now();
+                const tick = (t: number) => {
+                  const k = Math.min(1, (t - t0) / 1100);
+                  node.textContent = pre + Math.round(end * (1 - Math.pow(1 - k, 3))) + post;
+                  if (k < 1) requestAnimationFrame(tick);
+                };
+                requestAnimationFrame(tick);
+              }
+            }
+          },
+          { threshold: 0.15 },
+        );
+        root.classList.add('motion');
+        for (const el of document.querySelectorAll('.shift, .work, .edu, .ex, .coda, .contact, .room-sep')) io.observe(el);
+      }
+      // Transcript mockup: the status line shows the room you're in.
+      if (root.dataset.style === 'transcript') {
+        const loc = document.querySelector('.sl-loc');
+        const where = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) if (e.isIntersecting && loc) loc.textContent = (e.target as HTMLElement).dataset.room ?? '';
+          },
+          { rootMargin: '-40% 0px -55% 0px' },
+        );
+        for (const el of document.querySelectorAll('[data-room]:not(.room-sep)')) where.observe(el);
+      }
+    </script>
   </body>
 </html>

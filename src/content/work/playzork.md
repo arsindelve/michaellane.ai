@@ -9,8 +9,8 @@ role: Researcher
 stack: [Python, LangChain, LangGraph, Ollama, Qwen 2.5 14B, SQLite]
 diagram: agents
 links:
-  - { label: Source on GitHub, url: "https://github.com/arsindelve/PlayZork" }
-  - { label: "Zenodo · DOI 10.5281/zenodo.18224702", url: "https://doi.org/10.5281/zenodo.18224702" }
+  - { label: Source on GitHub, url: "https://github.com/arsindelve/PlayZork", short: Source }
+  - { label: "Zenodo · DOI 10.5281/zenodo.18224702", short: Paper, url: "https://doi.org/10.5281/zenodo.18224702" }
 stats:
   - { n: "½", label: "turn time after cutting calls from 10 + 2N to 5 + N" }
   - { n: "45s", label: "for bare Claude Opus 4.7 to clear my escape room" }

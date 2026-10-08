@@ -1,0 +1,322 @@
+---
+// Hero mockups for the empty right side, chosen by data-flourish on <html>:
+//   worlds — the 32 Infocom grey-box worlds, two of them breathing again
+//   prompt — a working text-adventure prompt that plays itself until you type
+import { person } from '../data/site';
+
+const games: Array<[string, string, number]> = [
+  ['enchanter', 'Enchanter', 1983], ['sorcerer', 'Sorcerer', 1984], ['spellbreaker', 'Spellbreaker', 1985],
+  ['wishbringer', 'Wishbringer', 1985], ['ballyhoo', 'Ballyhoo', 1986],
+  ['nord-and-bert', 'Nord and Bert Couldn’t Make Head or Tail of It', 1987], ['bureaucracy', 'Bureaucracy', 1987],
+  ['border-zone', 'Border Zone', 1987], ['zork-zero', 'Zork Zero', 1988], ['zork-i', 'Zork I', 1980],
+  ['zork-ii', 'Zork II', 1981], ['zork-iii', 'Zork III', 1982], ['beyond-zork', 'Beyond Zork', 1987],
+  ['trinity', 'Trinity', 1986], ['infidel', 'Infidel', 1983], ['plundered-hearts', 'Plundered Hearts', 1987],
+  ['lurking-horror', 'The Lurking Horror', 1987], ['leather-goddesses', 'Leather Goddesses of Phobos', 1986],
+  ['planetfall', 'Planetfall', 1983], ['stationfall', 'Stationfall', 1987], ['amfv', 'A Mind Forever Voyaging', 1985],
+  ['hitchhiker', 'The Hitchhiker’s Guide to the Galaxy', 1984], ['suspended', 'Suspended', 1983],
+  ['starcross', 'Starcross', 1982], ['seastalker', 'Seastalker', 1984], ['moonmist', 'Moonmist', 1986],
+  ['the-witness', 'The Witness', 1983], ['sherlock', 'Sherlock: The Riddle of the Crown Jewels', 1988],
+  ['deadline', 'Deadline', 1981], ['cutthroats', 'Cutthroats', 1984], ['hollywood-hijinx', 'Hollywood Hijinx', 1986],
+  ['suspect', 'Suspect', 1984],
+];
+// In release order: the arrangement is the history.
+const worlds = [...games].sort((a, b) => a[2] - b[2] || a[1].localeCompare(b[1]));
+const live: Record<string, string> = { 'zork-i': '/work/zorkai', planetfall: '/work/planetfall' };
+---
+
+<div class="flourish">
+  <figure class="fl-worlds">
+    <ol class="grid">
+      {
+        worlds.map(([slug, title, year]) => (
+          <li class:list={{ live: slug in live }}>
+            <a
+              href={live[slug] ?? `https://unopenedworlds.com/${slug}`}
+              data-title={title}
+              data-year={year}
+              aria-label={`${title}, ${year}`}
+            >
+              <span class="yr">{String(year).slice(2)}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+    <figcaption>
+      <span class="cap-title">32 Infocom worlds, 1980–1988.</span>
+      <span class="cap-note">Two are breathing again: Zork I and Planetfall.</span>
+    </figcaption>
+  </figure>
+
+  <div class="fl-prompt">
+    <div class="pr-log" aria-live="polite">
+      <p class="pr-cmd">&gt; look</p>
+      <p>You are in Michael Lane’s portfolio. Exits lead to WORK, EXHIBITS and RÉSUMÉ. Try EXAMINE MICHAEL.</p>
+    </div>
+    <form class="pr-form">
+      <label class="pr-sign" for="pr-input">&gt;</label>
+      <input id="pr-input" class="pr-input" autocomplete="off" spellcheck="false" placeholder="type a command" />
+    </form>
+  </div>
+</div>
+
+<script define:vars={{ email: person.email }}>
+  // The 32 worlds: hovering a box names it in the caption.
+  const fig = document.querySelector('.fl-worlds');
+  const capTitle = fig?.querySelector('.cap-title');
+  const capNote = fig?.querySelector('.cap-note');
+  const restT = capTitle?.textContent;
+  const restN = capNote?.textContent;
+  for (const a of fig?.querySelectorAll('a') ?? []) {
+    const show = () => {
+      capTitle.textContent = `${a.dataset.title}, ${a.dataset.year}.`;
+      capNote.textContent = a.closest('.live')
+        ? 'Breathing again. Open the case study.'
+        : 'Still sealed. See it on unopenedworlds.com.';
+    };
+    a.addEventListener('mouseenter', show);
+    a.addEventListener('focus', show);
+    a.addEventListener('mouseleave', () => {
+      capTitle.textContent = restT;
+      capNote.textContent = restN;
+    });
+  }
+
+  // The prompt: a tiny parser in Infocom's manner. It plays a few turns itself until you type.
+  const log = document.querySelector('.pr-log');
+  const form = document.querySelector('.pr-form');
+  const input = document.querySelector('.pr-input');
+  if (log && form && input) {
+    const go = (sel) => setTimeout(() => document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' }), 500);
+    const verbs = [
+      [/^(l|look)$/, () => 'You are in Michael Lane’s portfolio. Exits lead to WORK, EXHIBITS and RÉSUMÉ. Try EXAMINE MICHAEL.'],
+      [
+        /^(x|examine) (michael|me|him|lane)$/,
+        () =>
+          'An engineering leader who has been writing software since middle school. Most recently VP of Engineering at Rev, leading 60 people across AI, SaaS and mobile.',
+      ],
+      [
+        /^(i|inventory)$/,
+        () =>
+          'You are carrying: a QuickBASIC dungeon crawler (1992), an AI narrator, an MBA (4.0), an MSc in AI (in progress) and 32 sealed Infocom games.',
+      ],
+      [/^(go )?(n|north|work)$/, () => (go('#work'), 'You head north, toward the work.')],
+      [/^(go )?(d|down|exhibits?)$/, () => (go('#exhibits'), 'You descend into the Exhibit Hall.')],
+      [/^(go )?(e|east|education|library)$/, () => (go('#education'), 'You wander east, into the library.')],
+      [/^(play|open) zork( i)?$/, () => (go('#exhibits'), 'The white house is right where you left it. Scroll down and press PLAY.')],
+      [/^(play|open) planetfall$/, () => (go('#exhibits'), 'Floyd is waiting in the second exhibit. Press PLAY.')],
+      [/^(read )?(resume|résumé|cv)$/, () => (setTimeout(() => (location.href = '/resume'), 600), 'You pick up the résumé.')],
+      [/^(contact|email|hire( michael)?|talk to michael)$/, () => `Michael can be reached at ${email}.`],
+      [/^xyzzy$/, () => 'A hollow voice says “fool.”'],
+      [/^(open|read|examine|x) (the )?(mailbox|leaflet)$/, () => 'The mailbox is at newzork.ai, west of a white house. Scroll down and press PLAY.'],
+      [/^hello( sailor)?$/, () => 'Nothing happens here.'],
+      [/^(help|\?)$/, () => 'Try LOOK, EXAMINE MICHAEL, INVENTORY, NORTH, DOWN, PLAY ZORK, RÉSUMÉ or HIRE MICHAEL.'],
+    ];
+    const reply = (cmd) => {
+      const c = cmd.trim().toLowerCase().replace(/\s+/g, ' ');
+      if (!c) return 'I beg your pardon?';
+      for (const [re, fn] of verbs) if (re.test(c)) return fn();
+      return `I don’t know the word “${c.split(' ').pop()}.”`;
+    };
+    const add = (cmd, text) => {
+      const p = document.createElement('p');
+      p.className = 'pr-cmd';
+      p.textContent = `> ${cmd}`;
+      const r = document.createElement('p');
+      r.textContent = text;
+      log.append(p, r);
+      log.scrollTop = log.scrollHeight;
+    };
+
+    let stop = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      stop = true;
+      add(input.value, reply(input.value));
+      input.value = '';
+    });
+    input.addEventListener('focus', () => (stop = true));
+
+    // Self-play: types a few commands, character by character, until the visitor takes over.
+    const script = ['examine michael', 'inventory', 'xyzzy'];
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    (async () => {
+      await sleep(1800);
+      for (const cmd of script) {
+        for (let i = 1; i <= cmd.length; i++) {
+          if (stop) return;
+          input.value = cmd.slice(0, i);
+          await sleep(70);
+        }
+        await sleep(350);
+        if (stop) return;
+        input.value = '';
+        add(cmd, reply(cmd));
+        await sleep(2600);
+      }
+    })();
+  }
+</script>
+
+<style>
+  .flourish {
+    display: none;
+    position: absolute;
+    top: 4.5rem;
+    right: 2rem;
+    width: min(30%, 400px);
+    z-index: 2;
+  }
+  .flourish > * {
+    display: none;
+  }
+
+  /* The 32 worlds */
+  .fl-worlds {
+    margin: 0;
+  }
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .grid a {
+    display: flex;
+    align-items: flex-end;
+    aspect-ratio: 3 / 4;
+    padding: 4px 5px;
+    border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+    background: var(--bg);
+    text-decoration: none;
+    transition:
+      background-color 0.2s,
+      border-color 0.2s,
+      transform 0.2s;
+  }
+  .grid a:hover,
+  .grid a:focus-visible {
+    border-color: var(--ink);
+    background: color-mix(in srgb, var(--ink) 6%, var(--bg));
+    transform: translateY(-2px);
+    outline: none;
+  }
+  .yr {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--muted);
+    line-height: 1;
+  }
+  .live a {
+    background: var(--accent);
+    border-color: var(--accent);
+    animation: breathe 3.6s ease-in-out infinite;
+  }
+  .live + .live a,
+  .live ~ li.live a {
+    animation-delay: 1.8s;
+  }
+  .live a:hover,
+  .live a:focus-visible {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .live .yr {
+    color: var(--on-accent);
+  }
+  @keyframes breathe {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent);
+      transform: scale(1.06);
+    }
+  }
+  figcaption {
+    display: grid;
+    gap: 0.2rem;
+    margin-top: 1rem;
+    font-size: 0.92rem;
+    min-height: 3.2em;
+  }
+  .cap-title {
+    font-weight: 600;
+  }
+  .cap-note {
+    color: var(--ink-2);
+  }
+
+  /* The prompt */
+  .fl-prompt {
+    border: 1.5px solid var(--ink);
+    background: var(--bg-2);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+  .pr-log {
+    height: 17rem;
+    overflow-y: auto;
+    padding: 1rem 1.1rem 0.5rem;
+    scroll-behavior: smooth;
+  }
+  .pr-log :global(p) {
+    margin: 0 0 0.9rem;
+    color: var(--ink-2);
+  }
+  .pr-log :global(.pr-cmd) {
+    margin-bottom: 0.25rem;
+    color: var(--accent);
+  }
+  .pr-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-top: 1.5px solid var(--ink);
+    padding: 0.7rem 1.1rem;
+  }
+  .pr-sign {
+    color: var(--accent);
+  }
+  .pr-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    color: var(--ink);
+    outline: none;
+  }
+  .pr-input::placeholder {
+    color: var(--muted);
+  }
+  .pr-form:focus-within {
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+  }
+
+  :global(:root[data-flourish]) .flourish {
+    display: block;
+  }
+  :global(:root[data-flourish='worlds']) .fl-worlds,
+  :global(:root[data-flourish='prompt']) .fl-prompt {
+    display: block;
+  }
+  @media (max-width: 960px) {
+    .flourish {
+      position: static;
+      width: auto;
+      max-width: 26rem;
+      margin-top: 2.5rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .live a {
+      animation: none;
+    }
+  }
+</style>

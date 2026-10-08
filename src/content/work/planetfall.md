@@ -14,8 +14,8 @@ embed:
   url: https://planetfall.ai
   label: Play Planetfall
 links:
-  - { label: planetfall.ai, url: "https://planetfall.ai" }
-  - { label: Source on GitHub, url: "https://github.com/arsindelve/ZorkAI" }
+  - { label: planetfall.ai, url: "https://planetfall.ai", short: Play }
+  - { label: Source on GitHub, url: "https://github.com/arsindelve/ZorkAI", short: Source }
 stats:
   - { n: "1983", label: "the original, by Steve Meretzky" }
   - { n: "1", label: "puzzle left: playable up to the finale" }

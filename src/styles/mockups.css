@@ -1,0 +1,873 @@
+/* Style mockups layered over the base design: same colors, fonts and layout, different treatment.
+   Selectors start with :root:root to outrank Astro's attribute-scoped component styles.
+   This file goes away once a direction is chosen. */
+
+.exhibits {
+  counter-reset: ex;
+}
+.ex {
+  counter-increment: ex;
+}
+.marquee,
+.room-sep,
+.status-line {
+  display: none;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ───────────── PROMPT (base for every variant) ───────────── */
+
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .hero h1,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .work-head h2,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .ex h2 {
+  font-weight: 800;
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .hero .lede::before {
+  content: none;
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .split {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  gap: 2.5rem;
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .split > div {
+  background: transparent;
+  padding: 0 0 0 1.2rem;
+  border-left: 3px solid var(--accent);
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .split > div + div {
+  border-left-color: var(--ink);
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .card {
+  border: 0;
+  border-top: 2px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  padding: 1.5rem 0 0;
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .card:hover {
+  border-top-color: var(--accent);
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .card .more::before,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .credit dt::before,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .cta::before,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .ex-text > .label::before {
+  content: '> ';
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .ex-text > .label {
+  font-size: 0.8rem;
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .ex-text > .label::before {
+  color: var(--accent);
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .credit {
+  border-left: 0;
+  padding-left: 0;
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .exhibit,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .cta,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .play {
+  border-radius: 0;
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .ex-links a:not(.cta),
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .career a,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .contact a {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
+  transition: background-size 0.25s;
+}
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .ex-links a:not(.cta):hover,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .career a:hover,
+:root:root:is([data-style='prompt'],[data-style='path'],[data-style='rooms'],[data-style='transcript']) .contact a:hover {
+  background-image: linear-gradient(color-mix(in srgb, var(--accent) 22%, transparent), color-mix(in srgb, var(--accent) 22%, transparent));
+  background-size: 100% 0.5em;
+}
+
+/* Prompt only: the cursor, and section labels as commands. */
+:root:root[data-style='prompt'] .hero h1::after,
+:root:root[data-style='transcript'] .hero h1::after {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 0.82em;
+  margin-left: 0.12em;
+  vertical-align: -0.06em;
+  background: var(--accent);
+  animation: blink 1.1s steps(1) infinite;
+}
+:root:root[data-style='prompt'] .work-head > .label,
+:root:root[data-style='prompt'] .edu > .label,
+:root:root[data-style='prompt'] .coda-label,
+:root:root[data-style='prompt'] .contact > .label {
+  font-size: 0;
+}
+:root:root[data-style='prompt'] .work-head > .label::before,
+:root:root[data-style='prompt'] .edu > .label::before,
+:root:root[data-style='prompt'] .coda-label::before,
+:root:root[data-style='prompt'] .contact > .label::before {
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--accent);
+}
+:root:root[data-style='prompt'] .work-head > .label::before {
+  content: '> examine work';
+}
+:root:root[data-style='prompt'] .edu > .label::before {
+  content: '> read diplomas';
+}
+:root:root[data-style='prompt'] .coda-label::before {
+  content: '> go back to 1992';
+}
+:root:root[data-style='prompt'] .contact > .label::before {
+  content: '> write to michael';
+}
+:root:root[data-style='prompt'] .work,
+:root:root[data-style='prompt'] .edu,
+:root:root[data-style='prompt'] .coda {
+  border-top: 1px solid var(--ink);
+  padding-top: 2rem;
+}
+
+/* ───────────── Variants share real room separators instead of section labels ───────────── */
+
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .work-head > .label,
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .edu > .label,
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .coda-label,
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .contact > .label {
+  display: none;
+}
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .room-sep {
+  display: block;
+}
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .rs-cmd {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin: 0;
+  white-space: nowrap;
+}
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .rs-room {
+  margin: 0;
+}
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .work,
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .edu {
+  margin-top: 0;
+}
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .coda {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+:root:root:is([data-style='path'],[data-style='rooms'],[data-style='transcript']) .contact {
+  margin-top: 0;
+}
+
+/* ───────────── Shared motion: settles into place, never hidden at rest ───────────── */
+
+.motion .shift,
+.motion .work,
+.motion .edu,
+.motion .ex,
+.motion .coda,
+.motion .contact {
+  transform: translateY(18px);
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.motion .in {
+  transform: none;
+}
+.motion .shift .bar i {
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s;
+}
+.motion .shift.in .bar i {
+  transform: scaleX(1);
+}
+/* Commands type themselves out when their separator arrives. */
+.motion .rs-cmd {
+  display: inline-block;
+  overflow: hidden;
+  width: calc(var(--n) * 1ch);
+  border-right: 0.55em solid transparent;
+}
+.motion .room-sep:not(.in) .rs-cmd {
+  width: 0;
+}
+.motion .room-sep.in .rs-cmd {
+  animation:
+    type 0.9s steps(var(--n)) both,
+    caret 1.1s steps(1) 0.9s 3;
+}
+@keyframes type {
+  from {
+    width: 0;
+  }
+}
+@keyframes caret {
+  0% {
+    border-right-color: var(--accent);
+  }
+  50% {
+    border-right-color: transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[data-style] .hero h1::after {
+    animation: none !important;
+  }
+}
+
+/* ───────────── PATH: one route through every room, drawn as you scroll ───────────── */
+
+:root:root[data-style='path'] main {
+  position: relative;
+}
+:root:root[data-style='path'] main::before,
+:root:root[data-style='path'] main::after {
+  content: '';
+  position: absolute;
+  top: 2rem;
+  bottom: 4rem;
+  left: max(0.75rem, calc(50% - 37.25rem));
+  width: 2px;
+  background: var(--rule);
+  pointer-events: none;
+}
+:root:root[data-style='path'] main::after {
+  background: var(--accent);
+  transform-origin: top;
+  animation: draw linear both;
+  animation-timeline: scroll(root);
+}
+@keyframes draw {
+  from {
+    transform: scaleY(0);
+  }
+}
+:root:root[data-style='path'] .room-sep,
+:root:root[data-style='path'] .ex {
+  position: relative;
+}
+:root:root[data-style='path'] .room-sep {
+  padding-block: 5rem 3rem;
+}
+:root:root[data-style='path'] .room-sep::before {
+  content: '';
+  position: absolute;
+  left: calc(0.75rem + 1px);
+  top: 5.35rem;
+  width: 14px;
+  height: 14px;
+  transform: translateX(-50%);
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  outline: 2px solid var(--accent);
+  border-radius: 50%;
+}
+:root:root[data-style='path'] .rs-room {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-top: 0.3rem;
+}
+:root:root[data-style='path'] .ex::before {
+  content: '';
+  position: absolute;
+  left: calc(0.75rem + 1px);
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+}
+:root:root[data-style='path'] .exhibits {
+  gap: 6rem;
+}
+@media (max-width: 760px) {
+  :root:root[data-style='path'] main::before,
+  :root:root[data-style='path'] main::after,
+  :root:root[data-style='path'] .room-sep::before,
+  :root:root[data-style='path'] .ex::before {
+    display: none;
+  }
+}
+
+/* ───────────── ROOMS: every section is a room, in alternating bands ───────────── */
+
+:root:root[data-style='rooms'] main {
+  overflow-x: clip;
+}
+:root:root[data-style='rooms'] .room-sep {
+  padding-block: 4.5rem 2.5rem;
+  text-align: center;
+}
+:root:root[data-style='rooms'] .rs-room {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-top: 0.75rem;
+}
+:root:root[data-style='rooms'] .rs-room::before,
+:root:root[data-style='rooms'] .rs-room::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+:root:root[data-style='rooms'] .room-sep[data-room='The Day Job'],
+:root:root[data-style='rooms'] .work,
+:root:root[data-style='rooms'] .room-sep[data-room='Where It Started'],
+:root:root[data-style='rooms'] .coda {
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg));
+  box-shadow: 0 0 0 100vmax color-mix(in srgb, var(--accent) 7%, var(--bg));
+  clip-path: inset(0 -100vmax);
+}
+:root:root[data-style='rooms'] .work,
+:root:root[data-style='rooms'] .coda {
+  padding-bottom: 5rem;
+}
+:root:root[data-style='rooms'] .room-sep[data-room='The Exhibit Hall'] {
+  background: var(--bg-2);
+  box-shadow: 0 0 0 100vmax var(--bg-2);
+  clip-path: inset(0 -100vmax);
+}
+:root:root[data-style='rooms'] .exhibits {
+  background: var(--bg-2);
+  padding-bottom: 6rem;
+}
+:root:root[data-style='rooms'] .room-sep[data-room='West of House'],
+:root:root[data-style='rooms'] .contact {
+  background: var(--ink);
+  box-shadow: 0 0 0 100vmax var(--ink);
+  clip-path: inset(0 -100vmax);
+  color: #fff;
+}
+:root:root[data-style='rooms'] .room-sep[data-room='West of House'] .rs-cmd {
+  color: #9aa4ff;
+}
+:root:root[data-style='rooms'] .contact {
+  padding-bottom: 5rem;
+}
+:root:root[data-style='rooms'] .contact a {
+  color: #fff;
+}
+:root:root[data-style='rooms'] .edu {
+  padding-bottom: 1rem;
+}
+:root:root[data-style='rooms'] .site-footer {
+  margin-top: 0;
+}
+
+/* ───────────── TRANSCRIPT: Infocom's status line, following you through the page ───────────── */
+
+:root:root[data-style='transcript'] .status-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 0.55rem max(2rem, calc(50% - 36rem));
+}
+:root:root[data-style='transcript'] .sl-loc {
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:root:root[data-style='transcript'] .sl-score {
+  color: color-mix(in srgb, var(--bg) 70%, transparent);
+  white-space: nowrap;
+}
+:root:root[data-style='transcript'] .room-sep {
+  padding-block: 5rem 3rem;
+}
+:root:root[data-style='transcript'] .rs-room {
+  margin-top: 1.25rem;
+  padding-block: 1.1rem;
+  border-block: 1px dashed color-mix(in srgb, var(--ink) 45%, transparent);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+:root:root[data-style='transcript'] .rs-room::before {
+  content: '*** You have entered ';
+  color: var(--muted);
+  font-weight: 400;
+}
+:root:root[data-style='transcript'] .rs-room::after {
+  content: ' ***';
+  color: var(--muted);
+  font-weight: 400;
+}
+:root:root[data-style='transcript'] .room-sep[data-room='West of House'] .rs-room::before {
+  content: '*** You are standing ';
+}
+:root:root[data-style='transcript'] .room-sep[data-room='West of House'] .rs-room::after {
+  content: '. There is a small mailbox here. ***';
+}
+:root:root[data-style='transcript'] .exhibits {
+  gap: 7rem;
+}
+@media (max-width: 760px) {
+  :root:root[data-style='transcript'] .sl-score {
+    display: none;
+  }
+  :root:root[data-style='transcript'] .rs-room::before,
+  :root:root[data-style='transcript'] .rs-room::after {
+    content: '*** ';
+  }
+  :root:root[data-style='transcript'] .rs-room::after {
+    content: ' ***';
+  }
+}
+
+/* Dev-only picker. */
+.style-picker {
+  position: fixed;
+  right: 1rem;
+  bottom: 4.5rem;
+  z-index: 100;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.25);
+}
+.style-picker a {
+  text-decoration: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  color: var(--ink-2);
+}
+:root:not([data-style]) .style-picker a[data-s='current'],
+:root[data-style='prompt'] .style-picker a[data-s='prompt'],
+:root[data-style='path'] .style-picker a[data-s='path'],
+:root[data-style='rooms'] .style-picker a[data-s='rooms'],
+:root[data-style='transcript'] .style-picker a[data-s='transcript'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+/* Rooms motion: bands stay put (no seams); the room itself arrives. */
+.motion:root:root[data-style='rooms'] .work,
+.motion:root:root[data-style='rooms'] .edu,
+.motion:root:root[data-style='rooms'] .coda,
+.motion:root:root[data-style='rooms'] .contact,
+.motion:root:root[data-style='rooms'] .ex,
+.motion:root:root[data-style='rooms'] .shift {
+  transform: none;
+  transition: none;
+}
+/* Entering a room: hairlines draw out from the name, the name settles, the command types. */
+.motion:root:root[data-style='rooms'] .rs-room::before,
+.motion:root:root[data-style='rooms'] .rs-room::after {
+  transform: scaleX(0);
+  transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.35s;
+}
+.motion:root:root[data-style='rooms'] .rs-room::before {
+  transform-origin: right;
+}
+.motion:root:root[data-style='rooms'] .rs-room::after {
+  transform-origin: left;
+}
+.motion:root:root[data-style='rooms'] .room-sep.in .rs-room::before,
+.motion:root:root[data-style='rooms'] .room-sep.in .rs-room::after {
+  transform: scaleX(1);
+}
+.motion:root:root[data-style='rooms'] .rs-room {
+  letter-spacing: 0.6em;
+  transition: letter-spacing 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s;
+}
+.motion:root:root[data-style='rooms'] .room-sep.in .rs-room {
+  letter-spacing: 0.22em;
+}
+/* Then the room's contents rise in, one after another. */
+.motion:root:root[data-style='rooms'] .card,
+.motion:root:root[data-style='rooms'] .edu-item,
+.motion:root:root[data-style='rooms'] .contact > * {
+  transform: translateY(44px);
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.motion:root:root[data-style='rooms'] .card:nth-child(2),
+.motion:root:root[data-style='rooms'] .edu-item:nth-child(2) {
+  transition-delay: 0.12s;
+}
+.motion:root:root[data-style='rooms'] .card:nth-child(3) {
+  transition-delay: 0.24s;
+}
+.motion:root:root[data-style='rooms'] .work.in .card,
+.motion:root:root[data-style='rooms'] .edu.in .edu-item,
+.motion:root:root[data-style='rooms'] .contact.in > * {
+  transform: none;
+}
+.motion:root:root[data-style='rooms'] .ex .ex-media {
+  transform: translateX(-70px);
+  transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.motion:root:root[data-style='rooms'] .ex.flip .ex-media {
+  transform: translateX(70px);
+}
+.motion:root:root[data-style='rooms'] .ex .ex-text {
+  transform: translateY(36px);
+  transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s;
+}
+.motion:root:root[data-style='rooms'] .ex.in .ex-media,
+.motion:root:root[data-style='rooms'] .ex.in .ex-text {
+  transform: none;
+}
+/* The timeline bars wait a beat, so the fill is visible after load. */
+.motion:root:root[data-style='rooms'] .shift .bar i {
+  transition-delay: 0.6s;
+  transition-duration: 1.6s;
+}
+
+/* Without their own headers, the day job and education bands carry their own top space. */
+:root:root[data-style='rooms'] .work {
+  padding-top: 5rem;
+  margin-top: 5rem;
+}
+:root:root[data-style='rooms'] .edu {
+  padding-top: 5rem;
+}
+
+/* Padding stops the email's top margin collapsing through and opening a seam above the band. */
+:root:root[data-style='rooms'] .contact {
+  padding-top: 4.5rem;
+}
+
+/* Buttons and links in the exhibits use the text face, not the mono. */
+:root:root[data-style='rooms'] .ex-links,
+:root:root[data-style='rooms'] .play {
+  font-family: var(--body);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+:root:root[data-style='rooms'] .cta {
+  padding: 0.65rem 1.15rem;
+}
+:root:root[data-style='rooms'] .cta::before {
+  content: none;
+}
+
+/* Exhibit links: one segmented bar, three equal cells, side by side at every width. */
+:root:root:root[data-style='rooms'] .ex-links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  max-width: 30rem;
+  border: 1.5px solid var(--ink);
+}
+:root:root:root[data-style='rooms'] .ex-links > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+  background: none !important;
+  color: var(--ink);
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+:root:root:root[data-style='rooms'] .ex-links > a + a {
+  border-left: 1.5px solid var(--ink);
+}
+:root:root:root[data-style='rooms'] .ex-links > a:not(.cta):hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent) !important;
+  color: var(--accent);
+}
+:root:root:root[data-style='rooms'] .ex-links > .cta {
+  background: var(--accent) !important;
+  color: var(--on-accent);
+}
+:root:root:root[data-style='rooms'] .ex-links > .cta:hover {
+  background: var(--ink) !important;
+}
+:root:root:root[data-style='rooms'] .ex-links .full {
+  display: none;
+}
+:root:root:root[data-style='rooms'] .ex-links .short {
+  display: inline;
+}
+@media (max-width: 640px) {
+  :root:root:root[data-style='rooms'] .ex-links {
+    max-width: none;
+    font-size: 0.92rem;
+  }
+}
+/* On black, the bar's lines and links turn light. */
+:root:root:root[data-style='rooms'] .contact .ex-links {
+  border-color: #fff;
+}
+:root:root:root[data-style='rooms'] .contact .ex-links > a {
+  color: #fff;
+  border-color: #fff;
+}
+
+
+/* ───────────── Background mockup: WAVES (soft sweeping curves, after secondnature.com) ───────────── */
+:root:root:root[data-bg='waves'] main {
+  overflow-x: clip;
+}
+/* Hero: a soft gradient curve sweeping in from the right. */
+:root:root:root[data-bg='waves'] .hero {
+  isolation: isolate;
+}
+:root:root:root[data-bg='waves'] .hero::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -6rem;
+  right: calc(50% - 50vw);
+  width: min(62vw, 980px);
+  aspect-ratio: 1000 / 800;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232337ff' stop-opacity='0.20'/%3E%3Cstop offset='0.55' stop-color='%235b6bff' stop-opacity='0.10'/%3E%3Cstop offset='1' stop-color='%239fd6ff' stop-opacity='0.04'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M1000 0 L1000 800 C 820 760 640 640 560 470 C 470 280 330 160 120 110 C 300 40 560 0 1000 0 Z' fill='url%28%23g%29'/%3E%3Cpath d='M1000 120 C 760 150 600 260 540 430 C 490 580 400 690 250 760' fill='none' stroke='%232337ff' stroke-opacity='0.14' stroke-width='2'/%3E%3C/svg%3E") right top / contain no-repeat;
+  pointer-events: none;
+}
+:root:root:root[data-bg='waves'] .hero::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: calc(50% - 50vw - 12rem);
+  bottom: -8rem;
+  width: 34rem;
+  height: 34rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 68%);
+  pointer-events: none;
+}
+/* Tinted bands get curved edges instead of straight cuts. */
+:root:root:root[data-bg='waves'] .work,
+:root:root:root[data-bg='waves'] .coda,
+:root:root:root[data-bg='waves'] .room-sep[data-room='Where It Started'] {
+  position: relative;
+  clip-path: inset(-100px -100vmax);
+  /* Paint the band full-width sideways only, so the curved edges above and below stay visible. */
+  box-shadow: none;
+  background: none;
+  border-image: linear-gradient(color-mix(in srgb, var(--accent) 7%, var(--bg)), color-mix(in srgb, var(--accent) 7%, var(--bg))) fill 0 / 0 / 0 100vmax;
+}
+:root:root:root[data-bg='waves'] .work::before,
+:root:root:root[data-bg='waves'] .coda::before,
+:root:root:root[data-bg='waves'] .work::after,
+:root:root:root[data-bg='waves'] .coda::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  height: 90px;
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg));
+  pointer-events: none;
+}
+:root:root:root[data-bg='waves'] .work::before,
+:root:root:root[data-bg='waves'] .coda::before {
+  top: -89px;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 62 C 260 10 520 6 760 40 S 1240 92 1440 30 L1440 90 L0 90 Z' fill='black'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 62 C 260 10 520 6 760 40 S 1240 92 1440 30 L1440 90 L0 90 Z' fill='black'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+:root:root:root[data-bg='waves'] .work::after,
+:root:root:root[data-bg='waves'] .coda::after {
+  bottom: -89px;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 0 L1440 0 L1440 36 C 1180 84 900 88 640 52 S 180 4 0 50 Z' fill='black'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 0 L1440 0 L1440 36 C 1180 84 900 88 640 52 S 180 4 0 50 Z' fill='black'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+:root:root:root[data-bg='waves'] .room-sep[data-room='Where It Started']::before {
+  content: '';
+  position: absolute;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  height: 90px;
+  top: -89px;
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg));
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 62 C 260 10 520 6 760 40 S 1240 92 1440 30 L1440 90 L0 90 Z' fill='black'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 62 C 260 10 520 6 760 40 S 1240 92 1440 30 L1440 90 L0 90 Z' fill='black'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+:root:root:root[data-bg='waves'] .coda::before {
+  display: none;
+}
+:root:root:root[data-bg='waves'] .edu {
+  padding-top: 8rem;
+}
+/* Exhibit Hall: soft half-circles peeking in from alternating sides. */
+:root:root:root[data-bg='waves'] .exhibits {
+  position: relative;
+  isolation: isolate;
+}
+:root:root:root[data-bg='waves'] .exhibits .ex {
+  position: relative;
+}
+:root:root:root[data-bg='waves'] .exhibits .ex::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  width: 30rem;
+  height: 30rem;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 14%, transparent), color-mix(in srgb, var(--accent) 3%, transparent) 70%);
+  pointer-events: none;
+}
+:root:root:root[data-bg='waves'] .exhibits .ex:not(.flip)::after {
+  left: calc(50% - 50vw - 17rem);
+}
+:root:root:root[data-bg='waves'] .exhibits .ex.flip::after {
+  right: calc(50% - 50vw - 17rem);
+}
+@media (max-width: 760px) {
+  :root:root:root[data-bg='waves'] .hero::before {
+    width: 120vw;
+    top: -3rem;
+    opacity: 0.7;
+  }
+  :root:root:root[data-bg='waves'] .exhibits .ex::after {
+    width: 18rem;
+    height: 18rem;
+  }
+}
+
+:root:root:root[data-bg='waves'] .room-sep[data-room='The Exhibit Hall'] {
+  position: relative;
+  clip-path: inset(-100px -100vmax);
+  box-shadow: none;
+  background: none;
+  border-image: linear-gradient(var(--bg-2), var(--bg-2)) fill 0 / 0 / 0 100vmax;
+}
+:root:root:root[data-bg='waves'] .room-sep[data-room='The Exhibit Hall']::before {
+  content: '';
+  position: absolute;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  height: 90px;
+  top: -89px;
+  background: var(--bg-2);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 62 C 260 10 520 6 760 40 S 1240 92 1440 30 L1440 90 L0 90 Z' fill='black'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 62 C 260 10 520 6 760 40 S 1240 92 1440 30 L1440 90 L0 90 Z' fill='black'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+/* ───────────── Footer C: the contact section turns light so the black footer can rise on a wave ───────────── */
+:root:root:root[data-footer='c'] .contact {
+  box-shadow: none;
+  background: none;
+  color: var(--ink);
+  padding-bottom: 2rem;
+}
+:root:root:root[data-footer='c'] .contact a {
+  color: var(--ink);
+}
+:root:root:root[data-footer='c'] .contact .ex-links {
+  border-color: var(--ink);
+}
+:root:root:root[data-footer='c'] .contact .ex-links > a {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+:root:root:root[data-footer='c'] .contact .ex-links > a:not(.cta):hover {
+  color: var(--accent);
+}
+:root:root:root[data-footer] .site-footer {
+  display: none;
+}
+
+/* ───────────── White button mockups (the non-blue cells of the segmented bar) ───────────── */
+/* A: glyphs that say what each link is. */
+:root:root:root[data-btn='a'] .ex-links > a:not(.cta)::before {
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--accent);
+  margin-right: 0.45rem;
+  content: '↗';
+}
+:root:root:root[data-btn='a'] .ex-links > a[href*='github.com']::before {
+  content: '{ }';
+}
+:root:root:root[data-btn='a'] .ex-links > a[href*='zenodo']::before,
+:root:root:root[data-btn='a'] .ex-links > a[href*='doi.org']::before {
+  content: '§';
+}
+:root:root:root[data-btn='a'] .ex-links > a[href*='planetfall.ai']::before,
+:root:root:root[data-btn='a'] .ex-links > a[href*='newzork.ai']::before,
+:root:root:root[data-btn='a'] .ex-links > a[href*='manifest-chronicles/']::before {
+  content: '▶';
+  font-size: 0.75em;
+}
+:root:root:root[data-btn='a'] .contact .ex-links > a::before {
+  content: none !important;
+}
+
+/* B: soft tint, and a blue fill that sweeps in on hover. */
+:root:root:root[data-btn='b'] .ex-links > a:not(.cta) {
+  background: linear-gradient(var(--accent), var(--accent)) left / 0% 100% no-repeat,
+    color-mix(in srgb, var(--accent) 8%, var(--bg-2)) !important;
+  transition:
+    background-size 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.2s;
+}
+:root:root:root[data-btn='b'] .ex-links > a:not(.cta):hover {
+  background-size: 100% 100%, auto !important;
+  color: #fff;
+}
+:root:root:root[data-btn='b'] .ex-links > a:not(.cta)::after {
+  content: '↗';
+  margin-left: 0.4rem;
+  opacity: 0.55;
+}
+:root:root:root[data-btn='b'] .contact .ex-links > a:not(.cta) {
+  background: linear-gradient(var(--accent), var(--accent)) left / 0% 100% no-repeat, transparent !important;
+}
+
+/* C: a thick blue underline grows in from the left; the label nudges right. */
+:root:root:root[data-btn='c'] .ex-links > a:not(.cta) {
+  background: linear-gradient(var(--accent), var(--accent)) left bottom / 0% 4px no-repeat !important;
+  transition: background-size 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+:root:root:root[data-btn='c'] .ex-links > a:not(.cta):hover {
+  background-size: 100% 4px !important;
+  color: var(--accent);
+}
+:root:root:root[data-btn='c'] .ex-links > a:not(.cta) .short,
+:root:root:root[data-btn='c'] .ex-links > a:not(.cta) .full {
+  transition: transform 0.25s;
+}
+:root:root:root[data-btn='c'] .ex-links > a:not(.cta):hover .short {
+  transform: translateX(3px);
+}
+:root:root:root[data-btn='c'] .ex-links > a:not(.cta)::after {
+  content: '→';
+  margin-left: 0.35rem;
+  color: var(--accent);
+}

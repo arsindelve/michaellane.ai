@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ExhibitRow from '../components/ExhibitRow.astro';
+import Flourish from '../components/Flourish.astro';
 import { person, education } from '../data/site';
 
 const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
@@ -11,7 +12,7 @@ const work = all.filter((e) => e.data.kind === 'work');
 
 // How implementation has shifted from me to AI. `ai` only sets the bar's fill and is illustrative, not measured.
 const shift = [
-  { year: '2024', what: 'ZorkAI', how: 'I wrote the engine. AI was the narrator.', ai: 0.15 },
+  { year: '2024', what: 'ZorkAI', how: 'I wrote every line. AI was only the narrator.', ai: 0 },
   { year: '2025', what: 'ZorkAI, Planetfall', how: 'AI agents write code against my tests. I review.', ai: 0.55 },
   {
     year: '2026',
@@ -26,17 +27,22 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
 ---
 
 <Base title="Michael Lane · VP of Engineering">
-  <section class="hero wrap">
-    <h1>I lead engineering organizations. I also breathe new life into old worlds.</h1>
+  <div class="status-line" aria-hidden="true">
+    <span class="sl-loc">Entrance</span>
+    <span class="sl-score">Score: 305 merged PRs · Moves: 1991–2026</span>
+  </div>
+
+  <section class="hero wrap" data-room="Entrance">
+    <h1>I lead engineering organizations. I also <span class="hl">breathe new life into old worlds.</span></h1>
     <p class="lede">
       VP of Engineering, most recently at Rev, where I led 60 people across AI, SaaS and mobile. I’ve been writing
-      software since 1991, and every year I hand more of the implementation to AI. What I don’t hand over is the
-      thinking.
+      software since middle school, and every year I hand more of the implementation to AI. What I don’t hand over is the
+      judgment.
     </p>
 
     <div class="split">
       <div class="drive">
-        <p class="label">I drive</p>
+        <p class="label">I contribute</p>
         <p>The architecture, the systems design, the patterns, the copy and the design.</p>
       </div>
       <div class="defer">
@@ -60,9 +66,10 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
       }
     </ol>
     <p class="shift-key label"><span class="k me"></span>Written by me <span class="k ai"></span>Written by AI</p>
+    <Flourish />
   </section>
 
-  <section id="work" class="work wrap">
+  <section id="work" class="work wrap" data-room="The Day Job">
     <div class="work-head">
       <p class="label">The day job</p>
       <h2>Work I’ve led</h2>
@@ -99,7 +106,7 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
     </p>
   </section>
 
-  <section id="education" class="edu wrap">
+  <section id="education" class="edu wrap" data-room="The Library">
     <p class="label">Education</p>
     <div class="edu-grid">
       {
@@ -123,6 +130,27 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
     </div>
   </section>
 
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {
+        [0, 1].map(() => (
+          <span>
+            {[...exhibits, ...coda].map((e) => (
+              <>
+                {e.data.title}
+                <i>✦</i>
+              </>
+            ))}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="room-sep wrap" data-room="The Exhibit Hall" aria-hidden="true">
+    <p class="rs-room">The Exhibit Hall</p>
+  </div>
+
   <section id="exhibits" class="exhibits">
     {
       exhibits.map((e, i) => (
@@ -137,16 +165,24 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
   </section>
 
 
-  <section class="coda">
+  <div class="room-sep wrap" data-room="Where It Started" aria-hidden="true">
+    <p class="rs-room">Where It Started</p>
+  </div>
+
+  <section class="coda" data-room="1992">
     <p class="label wrap coda-label">Where it started</p>
     {coda.map((e) => <ExhibitRow entry={e} label={e.data.years} />)}
   </section>
 
-  <section id="contact" class="contact wrap">
+  <section id="contact" class="contact wrap" data-room="West of House">
     <p class="label">Contact</p>
-    <p class="lede">
-      <a href={`mailto:${person.email}`}>{person.email}</a>
-    </p>
+    <div class="email">
+      <p class="email-label">Email</p>
+      <div class="email-row">
+        <a class="email-addr" href={`mailto:${person.email}`}>{person.email}</a>
+        <button type="button" class="email-copy" data-email={person.email}>Copy</button>
+      </div>
+    </div>
     <p class="ex-links">
       <a href={person.linkedin}>LinkedIn</a>
       <a href={person.github}>GitHub</a>
@@ -155,9 +191,35 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
   </section>
 </Base>
 
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.email-copy').forEach((btn) => {
+    let timer: number | undefined;
+    btn.addEventListener('click', () => {
+      const email = btn.dataset.email ?? '';
+      navigator.clipboard
+        ?.writeText(email)
+        .then(() => {
+          btn.textContent = 'Copied';
+          btn.classList.add('copied');
+          window.clearTimeout(timer);
+          timer = window.setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 1600);
+        })
+        .catch(() => {});
+    });
+  });
+</script>
+
 <style>
   .hero {
+    position: relative;
     padding-block: 4.5rem 5rem;
+  }
+  .hero > :not(.flourish) {
+    position: relative;
+    z-index: 1;
   }
   .hero h1 {
     font-size: clamp(2.6rem, 6.4vw, 5.2rem);
@@ -174,6 +236,7 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
 
   .exhibits {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 8rem;
   }
   .ex-links {
@@ -396,9 +459,64 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
   .contact {
     margin-top: 6rem;
   }
-  .contact .lede {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    margin-top: 0.75rem;
+  .email {
+    margin: 0.75rem 0 2rem;
+  }
+  .email-label {
+    margin: 0 0 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .email-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+  /* The mockup theme underlines every .contact link; the address gets its own sweep instead. */
+  :global(:root:root:root:root) .contact .email-addr {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-family: var(--body);
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+    text-decoration: none;
+    padding-bottom: 0.08em;
+    background: linear-gradient(var(--accent), var(--accent)) left bottom / 0% 2px no-repeat;
+    transition: background-size 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  :global(:root:root:root:root) .contact .email-addr:hover,
+  :global(:root:root:root:root) .contact .email-addr:focus-visible {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 100% 2px;
+  }
+  .email-copy {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .email-copy:hover,
+  .email-copy:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .email-copy.copied {
+    color: var(--accent);
+    border-color: var(--accent);
   }
 
   @media (max-width: 960px) {

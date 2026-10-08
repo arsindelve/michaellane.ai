@@ -9,13 +9,14 @@ years: 1991 – 1999, 2026
 role: Original author (1992). Director and verifier of the port (2026).
 stack: [QuickBASIC 4.0, MS-DOS, TypeScript, DOSBox, QB64]
 cover: ../../assets/shots/manifest.png
-coverAlt: The first-person wireframe corridor from The Manifest Chronicles, with stat panels for Michael and his companion Floyd.
+coverAlt: A recorded walk through level 1 of The Manifest Chronicles. The wireframe view turns east and moves down a long corridor toward a turn, with stat panels for Michael and his companion Floyd.
+animation: manifest
 embed:
   url: https://arsindelve.github.io/manifest-chronicles/
   label: Play it
 links:
-  - { label: Play in your browser, url: "https://arsindelve.github.io/manifest-chronicles/" }
-  - { label: Source on GitHub, url: "https://github.com/arsindelve/manifest-chronicles" }
+  - { label: Play in your browser, short: Play, url: "https://arsindelve.github.io/manifest-chronicles/" }
+  - { label: Source on GitHub, url: "https://github.com/arsindelve/manifest-chronicles", short: Source }
 stats:
   - { n: "1991", label: "my first game, Catacombs of Despair, compiled" }
   - { n: "48", label: "monster types across four 50×50 levels" }

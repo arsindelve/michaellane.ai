@@ -16,11 +16,11 @@ const d = entry.data;
 const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelve';
 ---
 
-<article class:list={['ex wrap', { flip }]}>
+<article class:list={['ex wrap', { flip }]} data-room={d.title}>
   <div class="ex-media">
     {
       d.cover ? (
-        <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} anim={d.animation} eager={eager} />
+        <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} anim={d.animation} slides={d.slides} eager={eager} />
       ) : (
         <Exhibit url={primary}>
           {d.diagram === 'breaker' ? <BreakerDiagram /> : <AgentDiagram />}
@@ -32,11 +32,12 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
     <p class="label">{label}</p>
     <h2>{d.title}</h2>
     <p class="kicker">{d.kicker}</p>
+    {d.stack.length > 0 && <p class="medium">{d.stack.join(', ')}</p>}
     <p class="summary">{d.summary}</p>
     {
       d.quote && (
         <blockquote class="quote">
-          <p>“{d.quote.text}”</p>
+          <p>{d.quote.text}</p>
           <cite>{d.quote.by}</cite>
         </blockquote>
       )
@@ -57,7 +58,14 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
     }
     <p class="ex-links">
       <a class="cta" href={`/work/${entry.id}`}>Case study →</a>
-      {d.links.slice(0, 2).map((l) => <a href={l.url}>{l.label}</a>)}
+      {
+        d.links.slice(0, 2).map((l) => (
+          <a href={l.url}>
+            <span class="full">{l.label}</span>
+            <span class="short">{l.short ?? l.label}</span>
+          </a>
+        ))
+      }
     </p>
   </div>
 </article>
@@ -68,6 +76,10 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
     grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
     gap: 3.5rem;
     align-items: center;
+  }
+  /* Flipped rows mirror the columns too, so every screenshot gets the wide column. */
+  .ex.flip {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr);
   }
   .ex.flip .ex-media {
     order: 2;
@@ -91,25 +103,47 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
     font-size: 1.2rem;
     margin: 0.5rem 0 1rem;
   }
+  .medium,
+  .short {
+    display: none;
+  }
   .summary {
     color: var(--ink-2);
     font-size: 1.05rem;
   }
   .quote {
-    margin: 1.5rem 0;
+    position: relative;
+    margin: 1.75rem 0;
+    padding: 1.6rem 1.6rem 1.4rem 4.2rem;
+    background: color-mix(in srgb, var(--accent) 7%, var(--bg-2));
+    border-left: 3px solid var(--accent);
+  }
+  .quote::before {
+    content: '“';
+    position: absolute;
+    left: 1.1rem;
+    top: 0.6rem;
+    font-size: 4.5rem;
+    line-height: 1;
+    font-weight: 800;
+    color: var(--accent);
   }
   .quote p {
-    font-size: 1.3rem;
-    line-height: 1.35;
-    font-weight: 500;
+    margin: 0 0 0.9rem;
+    font-size: 1.25rem;
+    line-height: 1.4;
+    font-weight: 600;
     letter-spacing: -0.015em;
-    margin: 0 0 0.5rem;
+    color: var(--ink);
   }
   .quote cite {
+    display: block;
     font-style: normal;
-    font-family: var(--mono);
-    font-size: 0.74rem;
-    color: var(--muted);
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+  .quote cite::before {
+    content: '— ';
   }
   .credit {
     margin: 1.5rem 0;
@@ -154,7 +188,7 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
   @media (max-width: 960px) {
     .ex,
     .ex.flip {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 2rem;
     }
     .ex.flip .ex-media {

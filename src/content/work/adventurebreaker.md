@@ -9,8 +9,8 @@ role: Designer, architect
 stack: [Python 3.11, stdlib only, LLM critic, GitHub Actions]
 diagram: breaker
 links:
-  - { label: Source on GitHub, url: "https://github.com/arsindelve/AdventureBreaker" }
-  - { label: Findings ledger, url: "https://github.com/arsindelve/AdventureBreaker/blob/main/coverage/FINDINGS.md" }
+  - { label: Source on GitHub, url: "https://github.com/arsindelve/AdventureBreaker", short: Source }
+  - { label: Findings ledger, short: Findings, url: "https://github.com/arsindelve/AdventureBreaker/blob/main/coverage/FINDINGS.md" }
 stats:
   - { n: "122", label: "durable findings logged" }
   - { n: "81", label: "filed as issues against ZorkAI" }

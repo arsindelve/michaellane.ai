@@ -9,11 +9,103 @@ export async function getStaticPaths() {
   const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
   return all.map((entry, i) => ({
     params: { slug: entry.id },
-    props: { entry, next: all[(i + 1) % all.length] },
+    props: { entry, prev: all[(i - 1 + all.length) % all.length], next: all[(i + 1) % all.length] },
   }));
 }
 
-const { entry, next } = Astro.props;
+const { entry, prev, next } = Astro.props;
+
+// The original source, shown at the bottom of a case study like a photograph of a screen.
+// Each entry names an excerpt in src/content/excerpts/ and the line it starts at in the real file.
+const sources = import.meta.glob<string>('../../content/excerpts/*', { query: '?raw', import: 'default', eager: true });
+const lensMeta: Record<string, { file: string; start: number; lang: 'basic' | 'cs' | 'py' | 'css' }> = {
+  'manifest-chronicles': { file: 'manifest-chronicles.lens.bas', start: 360, lang: 'basic' }, // M.BAS, 1995
+  zorkai: { file: 'zorkai.lens.cs', start: 426, lang: 'cs' }, // ZorkAI GameEngine.cs: ProcessSingleSentence
+  planetfall: { file: 'planetfall.lens.cs', start: 962, lang: 'cs' }, // ZorkAI GameEngine.cs: actors, end of turn
+  playzork: { file: 'playzork.lens.py', start: 185, lang: 'py' }, // decision_graph.py: spawning the agents
+  adventurebreaker: { file: 'adventurebreaker.lens.py', start: 1, lang: 'py' }, // oracles.py: the free checks
+  'unopened-worlds': { file: 'unopened-worlds.lens.css', start: 18, lang: 'css' }, // Unopened Worlds globals.css
+};
+
+const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const span = (cls: string) => (m: string) => `<span class="${cls}">${m}</span>`;
+const BASIC_KW =
+  /\b(DO|UNTIL|LOOP|IF|THEN|ELSEIF|ELSE|END|LINE|SCREEN|AND|OR|BF|SUB|DIM|SHARED|FOR|TO|NEXT|PRINT|LOCATE|COLOR|INPUT|OPEN|CLOSE|AS|GOSUB|RETURN|CALL|SELECT|CASE)\b/g;
+const CS_KW =
+  /\b(private|public|protected|internal|static|readonly|async|await|var|new|return|if|else|foreach|for|while|switch|case|break|continue|null|true|false|is|not|and|or|in|out|string|bool|int|void|class|using|this|throw|try|catch|finally|default|when)\b/g;
+
+const highlightBasic = (line: string) =>
+  esc(line)
+    .replace(/"[^"]*"/g, span('st'))
+    .replace(/\b\d+\b/g, span('nu'))
+    .replace(BASIC_KW, span('kw'))
+    .replace(/\b([A-Z][A-Z0-9]*\$?)(?=\()/g, span('fn'));
+
+const PY_KW =
+  /(def|class|return|if|elif|else|for|while|in|not|and|or|is|None|True|False|import|from|as|with|try|except|finally|raise|lambda|yield|async|await|pass|continue|break|self)/g;
+const highlightPy = (line: string) => {
+  let cut = -1;
+  for (let i = 0, q = ''; i < line.length; i++) {
+    const c = line[i];
+    if (q) {
+      if (c === q) q = '';
+    } else if (c === '"' || c === "'") q = c;
+    else if (c === '#') {
+      cut = i;
+      break;
+    }
+  }
+  const code = cut >= 0 ? line.slice(0, cut) : line;
+  const comment = cut >= 0 ? line.slice(cut) : '';
+  const html = esc(code)
+    .replace(/("[^"]*"|'[^']*')/g, span('st'))
+    .replace(/\d+/g, span('nu'))
+    .replace(PY_KW, span('kw'))
+    .replace(/([A-Za-z_][A-Za-z0-9_]*)(?=\()/g, span('fn'));
+  return html + (comment ? `<span class="cm">${esc(comment)}</span>` : '');
+};
+
+// CSS: selectors in the accent, property names as functions, colors and numbers as values.
+const highlightCss = (line: string) =>
+  esc(line)
+    .replace(/([a-z-]+)(\s*:\s*)(?=[^;{}]*;)/g, (_m, prop, sep) => `<span class="fn">${prop}</span>${sep}`)
+    .replace(/#[0-9a-fA-F]{3,8}\b/g, span('st'))
+    .replace(/\b\d*\.?\d+(px|rem|em|vw|vh|%|s|deg)?\b/g, span('nu'))
+    .replace(/^([^{]+)(?=\{)/, span('kw'));
+
+const highlightCs = (line: string) => {
+  // Split off a trailing // comment that isn't inside a string.
+  let cut = -1;
+  for (let i = 0, q = false; i < line.length - 1; i++) {
+    if (line[i] === '"') q = !q;
+    if (!q && line[i] === '/' && line[i + 1] === '/') {
+      cut = i;
+      break;
+    }
+  }
+  const code = cut >= 0 ? line.slice(0, cut) : line;
+  const comment = cut >= 0 ? line.slice(cut) : '';
+  const html = esc(code)
+    .replace(/"[^"]*"/g, span('st'))
+    .replace(/\b\d+\b/g, span('nu'))
+    .replace(CS_KW, span('kw'))
+    .replace(/\b([A-Z][A-Za-z0-9]*)(?=\s*[(<])/g, span('fn'));
+  return html + (comment ? `<span class="cm">${esc(comment)}</span>` : '');
+};
+
+const lens = lensMeta[entry.id];
+const lensSource = lens ? (sources[`../../content/excerpts/${lens.file}`] ?? '') : '';
+const lensHtml = lens
+  ? lensSource
+      .trimEnd()
+      .split('\n')
+      .map((l, i) => {
+        const h =
+          lens.lang === 'cs' ? highlightCs(l) : lens.lang === 'py' ? highlightPy(l) : lens.lang === 'css' ? highlightCss(l) : highlightBasic(l);
+        return `<span class="l"><span class="ln">${lens.start + i}</span>${h || ' '}</span>`;
+      })
+      .join('')
+  : '';
 const d = entry.data;
 const { Content } = await render(entry);
 const primary = d.embed?.url ?? d.links[0]?.url;
@@ -28,11 +120,12 @@ const primary = d.embed?.url ?? d.links[0]?.url;
       <p class="summary">{d.summary}</p>
     </header>
 
+
     {
       primary && (d.cover || d.kind === 'exhibit') && (
         <div class="cs-media wrap">
           {d.cover ? (
-            <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} anim={d.animation} eager />
+            <Exhibit src={d.cover} alt={d.coverAlt} url={primary} embed={d.embed} anim={d.animation} slides={d.slides} eager />
           ) : (
             <Exhibit url={primary}>
               {d.diagram === 'breaker' ? <BreakerDiagram /> : <AgentDiagram />}
@@ -95,7 +188,7 @@ const primary = d.embed?.url ?? d.links[0]?.url;
         {
           d.quote && (
             <blockquote class="quote">
-              <p>“{d.quote.text}”</p>
+              <p>{d.quote.text}</p>
               <cite>{d.quote.by}</cite>
             </blockquote>
           )
@@ -119,13 +212,31 @@ const primary = d.embed?.url ?? d.links[0]?.url;
         <div class="prose">
           <Content />
         </div>
+
+
       </div>
     </div>
 
-    <nav class="next wrap">
-      <a href={`/work/${next.id}`}>
-        <span class="label">Next</span>
-        <span class="t">{next.data.title} →</span>
+
+    {
+      lensHtml && (
+        <div class="lens" aria-hidden="true">
+          <div class="lens-stage">
+            <pre class="lens-soft" set:html={lensHtml} />
+            <pre class="lens-sharp" set:html={lensHtml} />
+          </div>
+        </div>
+      )
+    }
+
+    <nav class="pager-nav wrap" aria-label="More work">
+      <a class="prev" href={`/work/${prev.id}`}>
+        <span class="label">← Previous</span>
+        <span class="t">{prev.data.title}</span>
+      </a>
+      <a class="next" href={`/work/${next.id}`}>
+        <span class="label">Next →</span>
+        <span class="t">{next.data.title}</span>
       </a>
     </nav>
   </article>
@@ -205,20 +316,42 @@ const primary = d.embed?.url ?? d.links[0]?.url;
     line-height: 1.45;
   }
   .quote {
+    position: relative;
     margin: 0 0 3rem;
+    padding: 1.6rem 1.6rem 1.4rem 4.2rem;
+    background: color-mix(in srgb, var(--accent) 7%, var(--bg-2));
+    border-left: 3px solid var(--accent);
+  }
+  .quote::before {
+    content: '“';
+    position: absolute;
+    left: 1.1rem;
+    top: 0.6rem;
+    font-size: 4.5rem;
+    line-height: 1;
+    font-weight: 800;
+    color: var(--accent);
   }
   .quote p {
-    font-size: clamp(1.5rem, 2.6vw, 2rem);
-    line-height: 1.25;
+    margin: 0 0 0.9rem;
+    font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+    line-height: 1.4;
     font-weight: 600;
-    letter-spacing: -0.03em;
-    margin: 0 0 0.75rem;
+    letter-spacing: -0.015em;
+    color: var(--ink);
   }
   .quote cite {
+    display: block;
     font-style: normal;
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--muted);
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+  .quote cite::before {
+    content: '— ';
+  }
+  .cs .credit.credit.credit {
+    padding: 1.4rem 1.6rem;
+    border-left: 2px solid var(--accent);
   }
   .credit {
     display: grid;
@@ -273,19 +406,130 @@ const primary = d.embed?.url ?? d.links[0]?.url;
     padding: 0.05em 0.35em;
     border-radius: 3px;
   }
-  .next {
-    margin-top: 6rem;
+  /* The original source, like a photograph of a screen full of code. Lots of it, tilted in perspective,
+     sharp through one band and soft everywhere else, dissolving at the edges. */
+  .lens {
+    display: block;
+    position: relative;
+    --lens-h: clamp(44rem, 80vw, 72rem);
+    height: var(--lens-h);
+    margin: 5rem 0 0;
+    overflow: hidden;
+    perspective: 1100px;
+    /* Soft at the sides, and a long fade away to the bottom. */
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent 0, #000 8% 45%, transparent 100%),
+      linear-gradient(to right, transparent 0, #000 12% 88%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to bottom, transparent 0, #000 8% 45%, transparent 100%),
+      linear-gradient(to right, transparent 0, #000 12% 88%, transparent 100%);
+    mask-composite: intersect;
   }
-  .next a {
+  .lens-stage {
+    position: absolute;
+    top: -6%;
+    left: -2%;
+    right: -4%;
+    height: 120%;
+    transform: rotateY(-16deg) rotateX(12deg) rotateZ(-3deg) scale(1.04);
+    transform-origin: 25% 30%;
+  }
+  .lens pre {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: clamp(0.7rem, 0.92vw, 0.92rem);
+    line-height: 1.6;
+    white-space: pre;
+    columns: 3;
+    column-gap: 3rem;
+  }
+  /* Each line is clipped to its own column, so long lines never run into the next one. */
+  .lens pre :global(.l) {
+    display: block;
+    overflow: hidden;
+  }
+  .lens pre :global(.ln) {
+    display: inline-block;
+    width: 3.2em;
+    margin-right: 1.2em;
+    text-align: right;
+    user-select: none;
+  }
+  /* Depth of field: a blurred copy everywhere, a sharp copy only through the focal band. */
+  .lens-soft {
+    filter: blur(3.5px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0 6%, transparent 14% 32%, #000 46%);
+    mask-image: linear-gradient(to bottom, #000 0 6%, transparent 14% 32%, #000 46%);
+  }
+  .lens-sharp {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 5%, #000 13% 33%, transparent 48%);
+    mask-image: linear-gradient(to bottom, transparent 5%, #000 13% 33%, transparent 48%);
+  }
+
+  .lens {
+    background: var(--bg-2);
+  }
+  .lens pre {
+    color: color-mix(in srgb, var(--ink) 60%, transparent);
+  }
+  .lens pre :global(.ln) {
+    color: color-mix(in srgb, var(--ink) 25%, transparent);
+  }
+  .lens pre :global(.kw) {
+    color: #7a2fd6;
+  }
+  .lens pre :global(.fn) {
+    color: var(--accent);
+  }
+  .lens pre :global(.nu),
+  .lens pre :global(.st) {
+    color: #c48a00;
+  }
+  .lens pre :global(.cm) {
+    color: #2f8f5b;
+  }
+
+  /* Previous / next: the last thing on every case study, directly above the footer. */
+  .pager-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 5rem;
+    padding-block: 2rem 4rem;
+    border-top: 1px solid var(--rule);
+  }
+  .pager-nav a {
     display: block;
     text-decoration: none;
-    border-top: 1px solid var(--rule);
-    padding-top: 2rem;
   }
-  .next .t {
+  .pager-nav .next {
+    text-align: right;
+  }
+  .pager-nav .t {
     display: block;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
     margin-top: 0.5rem;
+  }
+  .pager-nav a:hover .t {
+    color: var(--accent);
+  }
+  /* The bar rides up onto the code, starting about halfway, where the fade begins. */
+  .lens + .pager-nav {
+    position: relative;
+    z-index: 1;
+    margin-top: calc(clamp(44rem, 80vw, 72rem) * -0.5);
+    border-top-color: transparent;
+  }
+  @media (max-width: 760px) {
+    .lens pre {
+      columns: 1;
+      font-size: 0.78rem;
+    }
   }
   @media (max-width: 860px) {
     .cs-grid {

@@ -27,6 +27,42 @@ const sessions = {
   },
 };
 
+// The Manifest Chronicles: create a character, then walk a fixed route through level 1.
+// Recording starts just before the long east corridor comes into view.
+async function recordManifest(page) {
+  const frames = [];
+  const snap = async (delay) => frames.push({ buf: await page.screenshot({ type: 'png' }), delay });
+  await page.goto('https://arsindelve.github.io/manifest-chronicles/', { waitUntil: 'networkidle' });
+  const type = async (t, w = 1200) => {
+    await page.keyboard.type(t);
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(w);
+  };
+  await page.keyboard.press('Space');
+  await page.waitForTimeout(6000);
+  await page.keyboard.press('Space');
+  await page.waitForTimeout(1200);
+  for (const t of ['s', 'Michael', 'Floyd', '2', '1']) await type(t);
+  await type('y', 2000);
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(2500);
+  }
+  const keys = { U: 'ArrowUp', L: 'ArrowLeft', R: 'ArrowRight' };
+  const walk = async (route, record) => {
+    for (const k of route) {
+      await page.keyboard.press(keys[k]);
+      await page.waitForTimeout(650);
+      if (record) await snap(k === 'U' ? 700 : 1100);
+    }
+  };
+  await walk('UUULUUURUUUU', false);
+  await snap(1200);
+  await walk('RRUUULUUUU', true);
+  frames[frames.length - 1].delay += 1500;
+  return frames;
+}
+
 const VIEWPORT = { width: 1280, height: 800 };
 const SPINNER = '[role="progressbar"], .MuiCircularProgress-root';
 
@@ -64,11 +100,11 @@ async function record(page, { url, commands }) {
   return frames;
 }
 
-const wanted = process.argv.slice(2).length ? process.argv.slice(2) : Object.keys(sessions);
+const wanted = process.argv.slice(2).length ? process.argv.slice(2) : [...Object.keys(sessions), 'manifest'];
 const browser = await chromium.launch({ channel: 'chrome' });
 for (const name of wanted) {
   const page = await browser.newPage({ viewport: VIEWPORT, colorScheme: 'dark' });
-  const frames = await record(page, sessions[name]);
+  const frames = name === 'manifest' ? await recordManifest(page) : await record(page, sessions[name]);
   await page.close();
   await sharp(
     frames.map((f) => f.buf),
