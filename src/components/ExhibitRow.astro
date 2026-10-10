@@ -89,6 +89,14 @@ const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelv
     grid-template-columns: 1fr;
     gap: 2rem;
   }
+  /* The play button sits under the screenshot's outer edge: right when the screenshot is on the right. */
+  @media (min-width: 961px) {
+    .ex.flip .ex-media :global(.play) {
+      display: flex;
+      width: fit-content;
+      margin-left: auto;
+    }
+  }
   .ex:global(.playing) .ex-media {
     order: 0;
     scroll-margin-top: 1.5rem;

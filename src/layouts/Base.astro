@@ -16,7 +16,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="en" data-style="rooms" data-bg="waves" data-btn="b" data-footer="c">
+<html lang="en" data-style="rooms" data-bg="waves" data-btn="f" data-play="1" data-footer="c">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,6 +44,8 @@ const {
         if (ft) document.documentElement.dataset.footer = ft;
         const bt = new URLSearchParams(location.search).get('btn');
         if (bt) document.documentElement.dataset.btn = bt;
+        const pl = new URLSearchParams(location.search).get('play');
+        if (pl) document.documentElement.dataset.play = pl;
         const bg = new URLSearchParams(location.search).get('bg');
         if (bg) document.documentElement.dataset.bg = bg;
         const f = new URLSearchParams(location.search).get('flourish');
