@@ -1,132 +1,384 @@
 ---
-// PlayZork's architecture: narrow agents propose, an arbiter decides, the game answers.
+// PlayZork, one turn played out: Zork describes the room, narrow agents each propose a command with an expected value
+// (importance × confidence), an action already refuted is zeroed, the arbiter weighs them and picks exactly one, and
+// the game answers. At rest (no script, or reduced motion) it shows the finished turn.
+const proposals = [
+  { who: 'Issue #12', cmd: 'UNLOCK GRATING WITH KEY', why: 'we carry the skeleton key', ev: 68 },
+  { who: 'Issue #7', cmd: 'TURN ON LAMP', why: 'the lamp is unlit', ev: 42 },
+  { who: 'Explorer', cmd: 'GO NORTH', why: 'an exit not yet on the map', ev: 37.5 },
+  { who: 'Issue #3', cmd: 'ATTACK TROLL WITH SWORD', why: 'the odds are poor', ev: 18 },
+  // Proposed at 31.5, then zeroed because it already failed.
+  { who: 'Issue #9', cmd: 'READ LEAFLET', why: 'already failed on turn 31', ev: 31.5, refuted: true },
+];
+const fmt = (n: number) => n.toFixed(1);
+const rowY = (i: number) => 164 + i * 50;
+// IBM Plex Mono at 14px is about 8.4px a character, for the strike-through.
+const strikeW = (s: string) => s.length * 8.4;
 ---
 
-<svg class="agents" viewBox="0 0 800 500" role="img" aria-labelledby="agents-title agents-desc">
-  <title id="agents-title">PlayZork architecture</title>
-  <desc id="agents-desc">
-    Several issue agents and an explorer agent each propose one action. An arbiter picks exactly one, which is sent
-    to Zork. The game's response updates shared memory: the map, the issues and lessons learned.
-  </desc>
-  <defs>
-    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0 0 L10 5 L0 10 z" class="head"></path>
-    </marker>
-  </defs>
+<svg
+  class="turn"
+  viewBox="0 0 800 500"
+  role="img"
+  aria-label="Turn 47, in the Clearing, where a grating is fastened into the ground. Five agents each propose a command: UNLOCK GRATING WITH KEY (expected value 68), TURN ON LAMP (42), GO NORTH (37.5), ATTACK TROLL WITH SWORD (18), and READ LEAFLET, zeroed because it already failed. The arbiter chooses UNLOCK GRATING WITH KEY, and Zork answers: the grating is unlocked."
+>
+  <text x="48" y="58" class="tag">TURN 47 · CLEARING</text>
+  <text x="752" y="58" class="tag phase"></text>
+  <text x="48" y="96" class="zork">There is a grating securely fastened into the ground.</text>
 
-  <!-- proposers -->
-  <g class="node">
-    <rect x="40" y="40" width="160" height="56" rx="6"></rect>
-    <text x="120" y="64">Issue agent</text><text x="120" y="82" class="sm">"get past the troll"</text>
-  </g>
-  <g class="node">
-    <rect x="230" y="40" width="160" height="56" rx="6"></rect>
-    <text x="310" y="64">Issue agent</text><text x="310" y="82" class="sm">"find a light source"</text>
-  </g>
-  <g class="node">
-    <rect x="420" y="40" width="160" height="56" rx="6"></rect>
-    <text x="500" y="64">Issue agent</text><text x="500" y="82" class="sm">"open the grating"</text>
-  </g>
-  <g class="node explorer">
-    <rect x="610" y="40" width="150" height="56" rx="6"></rect>
-    <text x="685" y="64">Explorer</text><text x="685" y="82" class="sm">"go somewhere new"</text>
-  </g>
+  <text x="48" y="148" class="tag">FIVE AGENTS PROPOSE</text>
+  <text x="752" y="148" class="tag end">VALUE</text>
 
-  <g class="flow">
-    <path d="M120 96 C120 150 360 150 385 196" marker-end="url(#arr)"></path>
-    <path d="M310 96 C310 150 390 160 395 196" marker-end="url(#arr)"></path>
-    <path d="M500 96 C500 150 410 160 405 196" marker-end="url(#arr)"></path>
-    <path d="M685 96 C685 150 440 150 415 196" marker-end="url(#arr)"></path>
-  </g>
-  <text x="400" y="150" class="note">each proposes one action, with a reason</text>
+  <!-- The arbiter's attention, moving down the rows while it weighs them. -->
+  <rect x="40" y={rowY(0) + 1} width="720" height="48" rx="6" class="scan"></rect>
 
-  <!-- arbiter -->
-  <g class="node arbiter">
-    <rect x="300" y="200" width="200" height="60" rx="6"></rect>
-    <text x="400" y="226">Arbiter</text><text x="400" y="244" class="sm">chooses exactly one</text>
-  </g>
+  {
+    proposals.map((p, i) => {
+      const y = rowY(i);
+      return (
+        <g class:list={['row', { win: i === 0, refuted: p.refuted }]} data-ev={p.ev}>
+          <line x1="48" x2="752" y1={y} y2={y} class="rule" />
+          <text x="72" y={y + 22} class="cmd">{p.cmd}</text>
+          {p.refuted && <line x1="70" x2={74 + strikeW(p.cmd)} y1={y + 17} y2={y + 17} class="strike" />}
+          <text x="72" y={y + 39} class="why">{p.who} · {p.why}</text>
+          <rect x="560" y={y + 23} width="140" height="3" rx="1.5" class="track" />
+          <rect x="560" y={y + 23} width={1.4 * p.ev} height="3" rx="1.5" class="fill" />
+          <text x="752" y={y + 28} class="ev">{fmt(p.refuted ? 0 : p.ev)}</text>
+        </g>
+      );
+    })
+  }
+  <line x1="48" x2="752" y1={rowY(5)} y2={rowY(5)} class="rule" />
 
-  <path class="flow solid" d="M400 260 L400 316" marker-end="url(#arr)"></path>
+  <!-- The decision flows from the winning row down to the command sent to Zork. -->
+  <path d={`M56 ${rowY(0) + 31} V466`} class="flow" pathLength="1"></path>
+  <circle cx="56" cy={rowY(0) + 25} r="4" class="dot"></circle>
+  <circle cx="56" cy="466" r="4" class="dot end-dot"></circle>
 
-  <g class="node game">
-    <rect x="320" y="320" width="160" height="56" rx="6"></rect>
-    <text x="400" y="346">Zork</text><text x="400" y="364" class="sm">&gt; SOUTH</text>
-  </g>
-
-  <!-- memory loop -->
-  <path class="flow dashed" d="M480 348 C640 348 700 300 700 200 C700 150 690 120 685 100" marker-end="url(#arr)"></path>
-  <path class="flow dashed" d="M320 348 C160 348 100 300 100 200 C100 150 115 120 120 100" marker-end="url(#arr)"></path>
-
-  <g class="node mem">
-    <rect x="200" y="420" width="400" height="50" rx="6"></rect>
-    <text x="400" y="451">Memory: map graph · open issues · failed actions · lessons from deaths</text>
-  </g>
-  <path class="flow dashed" d="M400 376 L400 416" marker-end="url(#arr)"></path>
+  <text x="72" y="446" class="tag pick-tag">ARBITER CHOOSES</text>
+  <text x="72" y="471" class="pick">&gt; UNLOCK GRATING WITH KEY</text>
+  <text x="752" y="471" class="reply">The grating is unlocked.</text>
 </svg>
 
+<script>
+  // Plays the turn on a loop while it's on screen. Every step adds a class or rewrites a little text; CSS does the rest.
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  const fmt = (n: number) => n.toFixed(1);
+
+  function countTo(el: Element, from: number, to: number, ms: number) {
+    const t0 = performance.now();
+    return new Promise<void>((done) => {
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - t0) / ms);
+        el.textContent = fmt(from + (to - from) * (1 - Math.pow(1 - k, 3)));
+        if (k < 1) requestAnimationFrame(tick);
+        else done();
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+
+  async function type(el: Element, text: string, perChar: number) {
+    for (let i = 1; i <= text.length; i++) {
+      el.textContent = text.slice(0, i);
+      await sleep(perChar);
+    }
+  }
+
+  function play(svg: SVGSVGElement) {
+    const $ = (s: string) => svg.querySelector(s)!;
+    const rows = [...svg.querySelectorAll<SVGGElement>('.row')];
+    const phase = $('.phase');
+    const zork = $('.zork');
+    const pick = $('.pick');
+    const scan = $('.scan') as SVGRectElement;
+    const zorkText = zork.textContent ?? '';
+    const pickText = pick.textContent ?? '';
+    let visible = false;
+    let running = false;
+
+    const say = async (text: string) => {
+      phase.classList.remove('on');
+      await sleep(150);
+      phase.textContent = text;
+      phase.classList.add('on');
+    };
+    const scanTo = (i: number) => (scan.style.transform = `translateY(${i * 50}px)`);
+
+    async function turn() {
+      // Reset to an empty turn.
+      svg.classList.remove('fade');
+      svg.querySelectorAll('.on, .lit, .zeroed').forEach((el) => el.classList.remove('on', 'lit', 'zeroed'));
+      zork.textContent = '';
+      pick.textContent = '';
+      rows.forEach((r) => (r.querySelector('.ev')!.textContent = fmt(0)));
+      scanTo(0);
+      await sleep(400);
+
+      await say('Zork describes the room');
+      zork.classList.add('on');
+      await type(zork, zorkText, 22);
+      await sleep(500);
+
+      await say('Five agents propose');
+      for (const r of rows) {
+        r.classList.add('on');
+        countTo(r.querySelector('.ev')!, 0, Number(r.dataset.ev), 700);
+        await sleep(420);
+      }
+      await sleep(700);
+
+      await say('Refuted actions are zeroed');
+      for (const r of rows.filter((r) => r.classList.contains('refuted'))) {
+        r.classList.add('zeroed');
+        countTo(r.querySelector('.ev')!, Number(r.dataset.ev), 0, 600);
+      }
+      await sleep(1100);
+
+      await say('The arbiter weighs them');
+      scan.classList.add('on');
+      for (const i of [0, 1, 2, 3, 0]) {
+        scanTo(i);
+        await sleep(380);
+      }
+      rows[0].classList.add('lit');
+      $('.dot').classList.add('on');
+      await sleep(600);
+
+      await say('The arbiter chooses exactly one');
+      svg.querySelector('.flow')!.classList.add('on');
+      await sleep(500);
+      $('.end-dot').classList.add('on');
+      $('.pick-tag').classList.add('on');
+      pick.classList.add('on');
+      await type(pick, pickText, 32);
+      await sleep(400);
+
+      await say('Zork answers');
+      $('.reply').classList.add('on');
+      await sleep(4200);
+
+      svg.classList.add('fade');
+      await sleep(700);
+    }
+
+    async function loop() {
+      if (running) return;
+      running = true;
+      svg.classList.add('live');
+      while (visible) await turn();
+      running = false;
+    }
+
+    new IntersectionObserver(
+      ([e]) => {
+        visible = e.isIntersecting;
+        if (visible) loop();
+      },
+      { threshold: 0.4 },
+    ).observe(svg);
+  }
+
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<SVGSVGElement>('svg.turn').forEach(play);
+  }
+</script>
+
 <style>
-  .agents {
+  .turn {
     width: 100%;
     height: 100%;
     display: block;
-    background: radial-gradient(ellipse at 50% 30%, var(--bg-2) 0%, var(--bg) 70%);
+    background: var(--bg-2);
     font-family: var(--mono);
   }
-  .node rect {
-    fill: var(--bg-2);
-    stroke: color-mix(in srgb, var(--ink) 28%, transparent);
-    stroke-width: 1;
-  }
-  .node text {
-    fill: var(--ink);
-    font-size: 15px;
-    text-anchor: middle;
-  }
-  .node text.sm {
+  .tag {
     fill: var(--muted);
-    font-size: 11.5px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
   }
-  .explorer rect {
-    stroke: var(--accent-2);
+  .end,
+  .ev,
+  .reply,
+  .phase {
+    text-anchor: end;
   }
-  .arbiter rect {
-    stroke: var(--accent);
+  .phase {
+    fill: var(--accent);
+    letter-spacing: 0.04em;
+  }
+  .zork {
+    font-family: var(--body);
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    fill: var(--ink);
+  }
+  .rule {
+    stroke: var(--rule);
+  }
+  .cmd {
+    fill: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .why {
+    font-family: var(--body);
+    fill: var(--muted);
+    font-size: 12px;
+  }
+  .track {
+    fill: color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+  .fill {
+    fill: color-mix(in srgb, var(--ink) 35%, transparent);
+    transform-box: fill-box;
+    transform-origin: left;
+  }
+  .ev {
+    fill: var(--ink-2);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .scan {
+    fill: color-mix(in srgb, var(--accent) 7%, transparent);
+    opacity: 0;
+  }
+  .strike {
+    stroke: var(--muted);
     stroke-width: 1.5;
-    fill: color-mix(in srgb, var(--accent) 12%, var(--bg-2));
   }
-  .game rect {
-    fill: var(--bg);
+  .flow {
+    fill: none;
     stroke: var(--accent);
+    stroke-width: 2;
   }
-  .game text.sm {
+  .dot {
     fill: var(--accent);
   }
-  .mem rect {
-    stroke-dasharray: 4 4;
+  .pick {
+    fill: var(--accent);
+    font-size: 15px;
+    font-weight: 700;
   }
-  .mem text {
-    font-size: 12.5px;
+  .reply {
+    font-family: var(--body);
+    font-size: 15px;
     fill: var(--ink-2);
   }
-  .flow path,
-  path.flow {
-    fill: none;
-    stroke: var(--muted);
-    stroke-width: 1.3;
+
+  /* The finished turn, as it rests: the winner lit, the refuted proposal struck and zeroed. */
+  .win .cmd,
+  .win .ev {
+    fill: var(--accent);
   }
-  path.flow.dashed {
-    stroke-dasharray: 5 5;
-    stroke: color-mix(in srgb, var(--muted) 70%, transparent);
+  .win .fill {
+    fill: var(--accent);
   }
-  .head {
+  .refuted .cmd,
+  .refuted .ev {
     fill: var(--muted);
   }
-  .note {
-    fill: var(--muted);
-    font-size: 11.5px;
-    text-anchor: middle;
-    paint-order: stroke;
-    stroke: var(--bg);
-    stroke-width: 6px;
+  .refuted .fill {
+    transform: scaleX(0);
+  }
+
+  /* Playing: everything starts hidden and each step turns its piece on. */
+  .live :is(.zork, .row, .pick-tag, .pick, .reply, .dot, .phase, .flow) {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .live .row {
+    transform: translateY(6px);
+    transition:
+      opacity 0.4s ease,
+      transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .live .fill {
+    transform: scaleX(0);
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .live .on {
+    opacity: 1;
+  }
+  .live .row.on {
+    transform: none;
+  }
+  .live .row.on .fill {
+    transform: scaleX(1);
+  }
+  .live .scan {
+    transition:
+      transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 0.3s;
+  }
+  .live .scan.on {
+    opacity: 1;
+  }
+  .live .dot {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0);
+    transition:
+      opacity 0.2s,
+      transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+  .live .dot.on {
+    transform: scale(1);
+  }
+  .live .flow {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition:
+      opacity 0.2s,
+      stroke-dashoffset 0.6s cubic-bezier(0.6, 0, 0.3, 1);
+  }
+  .live .flow.on {
+    stroke-dashoffset: 0;
+  }
+  /* Until the arbiter picks, the winner looks like everyone else. */
+  .live .win:not(.lit) .cmd {
+    fill: var(--ink);
+  }
+  .live .win:not(.lit) .ev {
+    fill: var(--ink-2);
+  }
+  .live .win:not(.lit) .fill {
+    fill: color-mix(in srgb, var(--ink) 35%, transparent);
+  }
+  .live .win :is(.cmd, .ev, .fill) {
+    transition:
+      fill 0.3s,
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  /* Refuted: proposed like the rest, then struck and zeroed. */
+  .live .refuted:not(.zeroed) .cmd {
+    fill: var(--ink);
+  }
+  .live .refuted:not(.zeroed) .ev {
+    fill: var(--ink-2);
+  }
+  .live .refuted.on:not(.zeroed) .fill {
+    transform: scaleX(1);
+  }
+  .live .refuted.zeroed .fill {
+    transform: scaleX(0);
+  }
+  .live .strike {
+    transform-box: fill-box;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .live .zeroed .strike {
+    transform: scaleX(1);
+  }
+  .live .refuted :is(.cmd, .ev) {
+    transition: fill 0.3s;
+  }
+  /* The end of a turn: everything fades before the next begins. */
+  .live.fade :is(.zork, .row, .scan, .flow, .dot, .pick-tag, .pick, .reply, .phase) {
+    opacity: 0;
+    transition: opacity 0.6s ease;
   }
 </style>
