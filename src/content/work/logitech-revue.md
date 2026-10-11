@@ -15,7 +15,7 @@ slides:
   - { src: ../../assets/shots/revue/4-boot.jpg, path: "", caption: "Logitech Revue with Google TV, 2010", alt: "A Logitech Revue booting on a large TV." }
   - { src: ../../assets/shots/revue/1-remotes-android.jpg, path: "", caption: "One box, many controllers: keyboard, Harmony remote and an Android phone", alt: "The Revue box with its keyboard controller, a Harmony remote and an Android phone running the remote app." }
   - { src: ../../assets/shots/revue/2-harmony.jpg, path: "", caption: "Every one of them spoke to the same remote-control APIs", alt: "Keyboard, mini controller, Harmony remote and an Android phone arranged on a table." }
-  - { src: ../../assets/shots/revue/3-keyboard.jpg, path: "", caption: "The full keyboard controller, with touchpad", alt: "The Revue's full keyboard controller with a built-in touchpad." }
+  - { src: ../../assets/shots/revue/3-keyboard.jpg, path: "", caption: "The full keyboard controller, with touchpad", alt: "The Revue’s full keyboard controller with a built-in touchpad." }
 links:
   - { label: "CNET: Logitech confesses to ‘gigantic’ mistake", url: "https://web.archive.org/web/20210205020129/https://www.cnet.com/news/logitech-confesses-to-gigantic-mistake-with-google-tv/" }
   - { label: "TechCrunch: …to the tune of $100 million", url: "https://techcrunch.com/2011/11/11/logitech-falls-prey-to-googles-beta-mentality-to-the-tune-of-100-million/" }

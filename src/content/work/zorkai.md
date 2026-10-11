@@ -22,7 +22,7 @@ stats:
   - { n: "700+", label: "commits since March 2024" }
   - { n: "300+", label: "merged pull requests" }
   - { n: "2", label: "games live on one engine" }
-me: The architecture, the game engine, the decision about when the model is and isn't allowed to speak, and, in 2024, every line of code.
+me: The architecture, the game engine, the decision about when the model is and isn’t allowed to speak, and, in 2024, every line of code.
 ai: The narrator, in production. Since 2025, AI agents write much of the new code against the test suite, and I review it.
 ---
 

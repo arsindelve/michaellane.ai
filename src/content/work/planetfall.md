@@ -3,7 +3,7 @@ title: Planetfall AI
 kind: exhibit
 order: 2
 kicker: Floyd is back, and now he listens
-summary: Steve Meretzky's 1983 science-fiction classic, rebuilt room by room on the ZorkAI engine. You're still a lowly Ensign Seventh Class scrubbing the deck of the Feinstein. Now you can talk to Floyd, Blather and the Ambassador in plain English, and they answer in character.
+summary: Steve Meretzky’s 1983 science-fiction classic, rebuilt room by room on the ZorkAI engine. You’re still a lowly Ensign Seventh Class scrubbing the deck of the Feinstein. Now you can talk to Floyd, Blather and the Ambassador in plain English, and they answer in character.
 years: 2024 – now
 role: Creator, architect, lead developer
 stack: [C#, .NET, AWS Lambda, DynamoDB, React, OpenAI]
@@ -21,9 +21,9 @@ stats:
   - { n: "128", label: "rooms rebuilt from scratch" }
   - { n: "1", label: "review from the original author" }
 quote:
-  text: "It's quite wonderful; all the new text feels quite at home in the spirit of the game."
+  text: "It’s quite wonderful; all the new text feels quite at home in the spirit of the game."
   by: Steve Meretzky, creator of Planetfall, after playing an early build
-me: Rebuilding the game's world, characters and puzzles on the engine, and deciding how much personality the narrator is allowed to add.
+me: Rebuilding the game’s world, characters and puzzles on the engine, and deciding how much personality the narrator is allowed to add.
 ai: The voices of the narrator, Floyd, Blather and the Ambassador. In development, AI agents write much of the code against the test suite while I review.
 ---
 
@@ -31,7 +31,7 @@ ai: The voices of the narrator, Floyd, Blather and the Ambassador. In developmen
 
 Between the ages of about eight and twelve, an Apple IIc was my portal to Infocom. I thought about the puzzles even away from the computer. I remember sitting at the back of a seventh-grade classroom trying to work out how to get past the mutants in *Planetfall*, and when I finally did, it gave me a sense of accomplishment and wonder I'll never forget.
 
-Planetfall and *A Mind Forever Voyaging*, both by Steve Meretzky, were my two favourites. I started [ZorkAI](/work/zorkai) with Zork because it was simpler. Planetfall was always the point.
+Planetfall and *A Mind Forever Voyaging*, both by Steve Meretzky, were my two favorites. I started [ZorkAI](/work/zorkai) with Zork because it was simpler. Planetfall was always the point.
 
 ## Bringing Floyd to life
 

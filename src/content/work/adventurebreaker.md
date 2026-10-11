@@ -16,8 +16,8 @@ stats:
   - { n: "81", label: "filed as issues against ZorkAI" }
   - { n: "86", label: "merged pull requests" }
   - { n: "0", label: "dependencies: pure standard library" }
-me: The idea, the architecture (spine, ribs, the oracle stack, the narrator A/B) and the rule that every finding is verified against the engine source before it's logged.
-ai: Most of the code. And the critic itself, the reasoning model that judges what the cheap checks can't.
+me: The idea, the architecture (spine, ribs, the oracle stack, the narrator A/B) and the rule that every finding is verified against the engine source before it’s logged.
+ai: Most of the code. And the critic itself, the reasoning model that judges what the cheap checks can’t.
 ---
 
 ## The problem
@@ -39,6 +39,6 @@ Four layers of verification. The first three are free and deterministic: contrac
 
 ## It has receipts
 
-Every finding gets a stable ID, is deduplicated, and is tracked from open to filed to fixed in a committed ledger that remembers what has been tested across runs and computes what hasn't. The worst one so far: on production, roughly fourteen consecutive `wait` commands silently reset a Planetfall session, which made one of the game's own scripted sequences impossible to finish.
+Every finding gets a stable ID, is deduplicated, and is tracked from open to filed to fixed in a committed ledger that remembers what has been tested across runs and computes what hasn't. The worst one so far: in production, roughly fourteen consecutive `wait` commands silently reset a Planetfall session, which made one of the game's own scripted sequences impossible to finish.
 
 It also caught something I'd noticed myself while building this site. Address Floyd or Blather when they aren't in the room, and the game hands your command to the player instead of saying they aren't here.

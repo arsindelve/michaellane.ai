@@ -10,12 +10,12 @@ stack: [Cormorant Garamond, IBM Plex Sans, IBM Plex Mono, Warm black, Paper, Bra
 cover: ../../assets/shots/unopened.png
 slides:
   - { src: ../../assets/shots/uw/1-opening.png, path: "", alt: "The opening of unopenedworlds.com: Thirty Two Worlds, Unopened, in brass italic over warm black." }
-  - { src: ../../assets/shots/uw/2-wall.png, path: "#collection", alt: "Room 01, the collector's wall: sealed Infocom boxes in brass frames, each with its year and name." }
+  - { src: ../../assets/shots/uw/2-wall.png, path: "#collection", alt: "Room 01, the collector’s wall: sealed Infocom boxes in brass frames, each with its year and name." }
   - { src: ../../assets/shots/uw/3-living.png, path: "#living-worlds", alt: "The boxes are closed. The worlds are not. Zork and Planetfall, the two worlds brought back to life." }
-  - { src: ../../assets/shots/uw/4-trinity.png, path: "/trinity", alt: "Trinity's exhibit page: the box art, collector badges, a Near Mint condition grade and a curator's note." }
-  - { src: ../../assets/shots/uw/5-zork-i.png, path: "/zork-i", alt: "Zork I's exhibit page, with the box art and the curator's note." }
-  - { src: ../../assets/shots/uw/6-hitchhiker.png, path: "/hitchhiker", alt: "The Hitchhiker's Guide to the Galaxy's exhibit page." }
-coverAlt: The collector's wall on unopenedworlds.com, with framed, sealed Infocom boxes from Enchanter and Wishbringer to Zork I, II and III.
+  - { src: ../../assets/shots/uw/4-trinity.png, path: "/trinity", alt: "Trinity’s exhibit page: the box art, collector badges, a Near Mint condition grade and a curator’s note." }
+  - { src: ../../assets/shots/uw/5-zork-i.png, path: "/zork-i", alt: "Zork I’s exhibit page, with the box art and the curator’s note." }
+  - { src: ../../assets/shots/uw/6-hitchhiker.png, path: "/hitchhiker", alt: "The Hitchhiker’s Guide to the Galaxy’s exhibit page." }
+coverAlt: The collector’s wall on unopenedworlds.com, with framed, sealed Infocom boxes from Enchanter and Wishbringer to Zork I, II and III.
 links:
   - { label: unopenedworlds.com, url: "https://unopenedworlds.com", short: Visit }
   - { label: Source on GitHub, url: "https://github.com/arsindelve/UnopenedWorlds", short: Source }
@@ -37,14 +37,14 @@ Three faces, and each one does one thing. **Cormorant Garamond** is the voice of
 
 ## A palette from the objects
 
-Warm black for the gallery walls. A paper tone, taken from the box art, for the text. Brass for the museum's own signage and highlights. And one colour that only appears where something is alive: a muted terminal green that marks the two worlds you can actually enter.
+Warm black for the gallery walls. A paper tone, taken from the box art, for the text. Brass for the museum's own signage and highlights. And one color that only appears where something is alive: a muted terminal green that marks the two worlds you can actually enter.
 
 ## Three vocabularies, borrowed
 
 The site speaks in three registers, all borrowed from the subject:
 
-- **The museum's.** The home page is organised into rooms ("Room 01 / The Wall"). The opening is a curator's statement. Each box has its own exhibit page.
-- **The collector's.** Every box carries a condition grade ("NM, Near Mint"), noted honestly as photo and owner inspection rather than third-party certified, and badges for my own history with it: owned and played as a kid, finished, a favourite, still sealed.
+- **The museum's.** The home page is organized into rooms ("Room 01 / The Wall"). The opening is a curator's statement. Each box has its own exhibit page.
+- **The collector's.** Every box carries a condition grade ("NM, Near Mint"), noted honestly as photo and owner inspection rather than third-party certified, and badges for my own history with it: owned and played as a kid, finished, a favorite, still sealed.
 - **The games'.** Each exhibit page opens with a parser command ("> EXAMINE TRINITY"), and the header keeps a status line, "2 worlds online · 31 sealed · 1 unsealed", the way Infocom kept your score.
 
 ## What I didn't do

@@ -2,8 +2,8 @@
 title: This Site
 kind: exhibit
 order: 4.5
-kicker: "An exhibit about the site you’re on. Very meta. Lowercase m."
-summary: The page you're reading is the exhibit. I gave Claude Code the brief and the taste; it wrote every line. Then I rejected twenty-nine of its mockups until the design was right. Every "no" is below. Yes, this exhibit is inside the thing it’s about. If you click "Case study" from here, you will eventually find this sentence again.
+kicker: "An exhibit about the site you’re on. Very meta."
+summary: The page you’re reading is the exhibit. I gave Claude Code the brief and the taste; it wrote every line. Then I rejected twenty-nine of its mockups until the design was right. Every “no” is below. Yes, this exhibit is inside the thing it’s about. If you click “Case study” from here, you will eventually find this sentence again.
 years: "2026"
 role: Creative director, product owner, editor
 stack: [Astro, Claude Code, Subagents, Playwright, S3, CloudFront]
@@ -33,12 +33,12 @@ stats:
   - { n: "0", label: "design decisions made by the AI" }
   - { n: "2", label: "subagents doing QA in parallel" }
 me: The brief, the audience, the taste, every pick and every rejection, the reference images that unstuck it, and the copy.
-ai: All of the implementation, the screenshots, the recorded game sessions, and a QA sweep that caught bugs I'd have shipped.
+ai: All of the implementation, the screenshots, the recorded game sessions, and a QA sweep that caught bugs I’d have shipped.
 ---
 
 ## The brief
 
-A portfolio for someone hiring a VP of Engineering. It had to be honest that AI writes most of my code now, and it had to prove I still own the judgment. So the site itself had to be built that way.
+A portfolio for someone hiring an engineering leader. It had to be honest that AI writes most of my code now, and it had to prove I still own the judgment. So the site itself had to be built that way.
 
 ## What "directing" actually looked like
 

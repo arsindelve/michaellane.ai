@@ -11,12 +11,12 @@ interface Props {
 
 const {
   title,
-  description = 'Michael Lane: engineering leader, VP of Engineering, building with AI since before it was called that.',
+  description = 'Michael Lane: Engineering leader, building with AI.',
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-style="rooms" data-bg="waves" data-btn="f" data-play="1" data-footer="c">
+<html lang="en" data-style="rooms" data-bg="waves" data-btn="f" data-play="1" data-ex="d" data-footer="c">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,6 +44,8 @@ const {
         if (ft) document.documentElement.dataset.footer = ft;
         const bt = new URLSearchParams(location.search).get('btn');
         if (bt) document.documentElement.dataset.btn = bt;
+        const ex = new URLSearchParams(location.search).get('ex');
+        if (ex) document.documentElement.dataset.ex = ex;
         const pl = new URLSearchParams(location.search).get('play');
         if (pl) document.documentElement.dataset.play = pl;
         const bg = new URLSearchParams(location.search).get('bg');
@@ -103,6 +105,95 @@ const {
         );
         root.classList.add('motion');
         for (const el of document.querySelectorAll('.shift, .work, .edu, .ex, .coda, .contact, .room-sep')) io.observe(el);
+      }
+      // Stacked-deck exhibit mockups. Each card sticks 12px below the last (or, if it's taller than the screen, once
+      // it has fully scrolled in). Cards keep their own heights, so a covered card is trimmed to what should show:
+      // nothing below the card on top of it, and only a 12px edge above it once that card has stuck.
+      if (['b', 'd', 'f'].includes(root.dataset.ex ?? '')) {
+        const cards = [...document.querySelectorAll<HTMLElement>('.exhibits .ex')];
+        const tops: number[] = [];
+        const fit = () => {
+          // Cards stack just below the pinned section title.
+          const head = document.querySelector<HTMLElement>('.exhibits .ex-head');
+          const base = (head && getComputedStyle(head).position === 'sticky' ? head.offsetHeight : 64) + 16;
+          document.documentElement.style.setProperty('--head', `${base - 16}px`);
+          // Each card fills the screen below the title, leaving room for the stack's edges, up to a comfortable cap.
+          const room = Math.min(innerHeight - base - 24 - (cards.length - 1) * 12, 860);
+          cards.forEach((el) => (el.style.minHeight = innerWidth > 960 ? `${room}px` : ''));
+          cards.forEach((el, i) => {
+            // Never above the pinned title; a card too tall to fit sticks there and its bottom scrolls past.
+            tops[i] = Math.max(base, Math.min(base + i * 12, innerHeight - el.offsetHeight - 24));
+            el.style.setProperty('--top', `${tops[i]}px`);
+          });
+          trim();
+        };
+        const trim = () => {
+          const r = cards.map((el) => el.getBoundingClientRect());
+          let below = Infinity;
+          for (let i = cards.length - 1; i >= 0; i--) {
+            const next = r[i + 1];
+            let cutTop = 0;
+            let cutBottom = 0;
+            if (next && next.top < r[i].bottom) {
+              below = Math.min(below, next.bottom);
+              cutBottom = Math.max(0, r[i].bottom - below);
+              if (next.top <= tops[i + 1] + 1) {
+                // Show only the card's own top edge; if that edge is off-screen, hide the card altogether.
+                cutTop = r[i].top < next.top - 24 ? r[i].height : Math.max(0, next.top - 12 - r[i].top);
+              }
+            } else {
+              below = Infinity;
+            }
+            cards[i].style.clipPath = cutTop || cutBottom ? `inset(${cutTop}px 0 ${cutBottom}px 0 round 22px)` : '';
+            below = Math.min(below, r[i].bottom);
+          }
+        };
+        fit();
+        addEventListener('resize', fit);
+        addEventListener('load', fit);
+        addEventListener('scroll', () => requestAnimationFrame(trim), { passive: true });
+      }
+      // Path-rail exhibit mockups: a numbered rail beside the deck that lights up as each card arrives.
+      if (['d', 'f'].includes(root.dataset.ex ?? '')) {
+        const hall = document.querySelector('.exhibits');
+        const cards = [...document.querySelectorAll<HTMLElement>('.exhibits .ex')];
+        if (hall && cards.length) {
+          const rail = document.createElement('ol');
+          rail.className = 'ex-rail';
+          rail.setAttribute('aria-hidden', 'true');
+          cards.forEach((card, i) => {
+            const li = document.createElement('li');
+            li.dataset.n = String(i + 1).padStart(2, '0');
+            li.title = card.querySelector('h2')?.textContent ?? '';
+            li.addEventListener('click', () => card.scrollIntoView({ behavior: 'smooth' }));
+            rail.append(li);
+          });
+          hall.querySelector('.ex-head')?.after(rail);
+          const items = [...rail.children];
+          let ticking = false;
+          const update = () => {
+            ticking = false;
+            let at = 0;
+            cards.forEach((c, i) => {
+              if (c.getBoundingClientRect().top < innerHeight * 0.5) at = i;
+            });
+            items.forEach((li, i) => {
+              li.classList.toggle('on', i === at);
+              li.classList.toggle('done', i < at);
+            });
+            rail.style.setProperty('--p', String(at / (cards.length - 1)));
+          };
+          addEventListener(
+            'scroll',
+            () => {
+              if (ticking) return;
+              ticking = true;
+              requestAnimationFrame(update);
+            },
+            { passive: true },
+          );
+          update();
+        }
       }
       // Transcript mockup: the status line shows the room you're in.
       if (root.dataset.style === 'transcript') {

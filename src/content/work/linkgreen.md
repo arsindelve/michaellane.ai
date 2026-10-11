@@ -8,14 +8,14 @@ years: 2014 – 2017
 role: Chief Technology Officer
 stack: [ASP.NET MVC, Angular, SQL Server, NServiceBus, Azure, Ionic]
 cover: ../../assets/shots/linkgreen/home-2016.png
-coverAlt: LinkGreen's 2016 home page, a single interface connecting wholesale suppliers and buyers.
+coverAlt: LinkGreen’s 2016 home page, a single interface connecting wholesale suppliers and buyers.
 frameUrl: http://linkgreen.ca/
 slides:
-  - { src: ../../assets/shots/linkgreen/home-2015.png, path: "", caption: "2015: “Your link to the green industry”", alt: "LinkGreen's 2015 home page for the horticulture industry, with an explainer video of a garden centre." }
-  - { src: ../../assets/shots/linkgreen/home-2016.png, path: "", caption: "2016: one interface, from order placement to fulfillment", alt: "LinkGreen's 2016 banners: a single interface connecting wholesale suppliers and buyers, and place orders with all your suppliers on demand." }
+  - { src: ../../assets/shots/linkgreen/home-2015.png, path: "", caption: "2015: “Your link to the green industry”", alt: "LinkGreen’s 2015 home page for the horticulture industry, with an explainer video of a garden center." }
+  - { src: ../../assets/shots/linkgreen/home-2016.png, path: "", caption: "2016: one interface, from order placement to fulfillment", alt: "LinkGreen’s 2016 banners: a single interface connecting wholesale suppliers and buyers, and place orders with all your suppliers on demand." }
   - { src: ../../assets/shots/linkgreen/mobile-2017.png, path: "/mobile", caption: "LinkGreen Mobile: build orders on the sales floor", alt: "LinkGreen Mobile, the wholesale ordering app, with an order on a phone." }
-  - { src: ../../assets/shots/linkgreen/mobile-order.png, path: "/mobile", caption: "The Ionic app I built: one codebase, iPhone and Android", alt: "Close-up of the LinkGreen Mobile app's order screen, with Done and Save buttons and a running total." }
-  - { src: ../../assets/shots/linkgreen/about-cto.png, path: "/about.php", caption: "The 2016 About page, reformatted: archived text, lost styling", alt: "LinkGreen's 2016 About page entry for Michael Lane, Chief Technology Officer, with his photo." }
+  - { src: ../../assets/shots/linkgreen/mobile-order.png, path: "/mobile", caption: "The Ionic app I built: one codebase, iPhone and Android", alt: "Close-up of the LinkGreen Mobile app’s order screen, with Done and Save buttons and a running total." }
+  - { src: ../../assets/shots/linkgreen/about-cto.png, path: "/about.php", caption: "The 2016 About page, reformatted: archived text, lost styling", alt: "LinkGreen’s 2016 About page entry for Michael Lane, Chief Technology Officer, with his photo." }
 links:
   - { label: "LinkGreen About page, 2016", url: "https://web.archive.org/web/20160211135421/http://linkgreen.ca/about.php", short: "About, 2016" }
   - { label: "OrderEase today", url: "https://www.orderease.com/", short: OrderEase }
@@ -28,7 +28,7 @@ stats:
 
 ## The napkin
 
-LinkGreen was founded in 2013 by Warren Patterson and Rob Tigwell. Their idea was simple and overdue: wholesale ordering in the horticulture industry still ran on phone calls, faxes and printed catalogues, and every order a garden centre placed by hand was slow, expensive and easy to get wrong. LinkGreen would connect suppliers and buyers on one neutral platform, so every supplier could reach all their buyers and every buyer could order from all their suppliers.
+LinkGreen was founded in 2013 by Warren Patterson and Rob Tigwell. Their idea was simple and overdue: wholesale ordering in the horticulture industry still ran on phone calls, faxes and printed catalogs, and every order a garden center placed by hand was slow, expensive and easy to get wrong. LinkGreen would connect suppliers and buyers on one neutral platform, so every supplier could reach all their buyers and every buyer could order from all their suppliers.
 
 When I arrived, there was a napkin diagram and no code. I wrote the first line.
 
@@ -44,4 +44,4 @@ At first it was just me. As LinkGreen grew from a niche in Ontario to customers 
 
 ## Still going
 
-LinkGreen grew beyond horticulture into hardware, building materials, food and more, and today it's OrderEase, a B2B order platform used by companies like Scotts Canada and Milwaukee Tools. I'm proud that it started with a line of code I wrote, sitting next to a napkin.
+LinkGreen grew beyond horticulture into hardware, building materials, food and more, and today it's OrderEase, a B2B order platform used by companies like Scotts Canada and Milwaukee Tool. I'm proud that it started with a line of code I wrote, sitting next to a napkin.

@@ -40,7 +40,7 @@ Around them sit an observer that finds new issues, a map graph with pathfinding,
 The honest version: it doesn't solve Zork. What it did produce was useful:
 
 - Restructuring cut model calls per turn from **10 + 2N to 5 + N** and halved turn time. Running the agents concurrently didn't help: local inference throughput stayed flat at about 0.26 requests per second.
-- An audit of the scaffolding found the real bugs: a mis-named tool that hid the inventory, successful moves recorded as walls, rooms with the same name merged into one. **A weak model cannot compensate for corrupted scaffolding.**
+- An audit of the scaffolding found the real bugs: a misnamed tool that hid the inventory, successful moves recorded as walls, rooms with the same name merged into one. **A weak model cannot compensate for corrupted scaffolding.**
 - Then I gave my escape-room benchmark to Claude Opus 4.7 with none of my scaffolding. It escaped in 45 seconds. My enhanced setup escaped about half the time, after 30 to 60 minutes.
 
 That last result is the one I think about most, as a researcher and as an engineering leader. The ground moves fast. Build for the models that are coming, not just the one you have.

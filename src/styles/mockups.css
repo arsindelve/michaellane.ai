@@ -980,3 +980,480 @@
 :root:root:root[data-style='rooms'] .room-sep[data-room='The Exhibit Hall'] {
   padding-block: 3rem 0;
 }
+
+/* ───────────── Exhibit mockups: ?ex=a|b|c ───────────── */
+/* Four stacked :root outrank the rooms and waves rules above. */
+
+/* A · The museum path: a numbered trail down the left joins the exhibits; alternate ones sit on a tinted band. */
+:root:root:root:root[data-ex='a'] .exhibits {
+  --ex-gap: 0rem;
+  padding-bottom: 0;
+}
+:root:root:root:root[data-ex='a'] .ex-head {
+  margin-bottom: 1rem;
+}
+:root:root:root:root[data-ex='a'] .exhibits .ex {
+  position: relative;
+  padding-block: 5.5rem;
+  padding-left: 7rem;
+}
+:root:root:root:root[data-ex='a'] .exhibits .ex:nth-of-type(even) {
+  border-image: linear-gradient(color-mix(in srgb, var(--accent) 5%, var(--bg-2)), color-mix(in srgb, var(--accent) 5%, var(--bg-2))) fill 0 / 0 / 0 100vmax;
+}
+/* The node: the exhibit's number in a ring. */
+:root:root:root:root[data-ex='a'] .exhibits .ex::before {
+  content: counter(ex, decimal-leading-zero);
+  position: absolute;
+  z-index: 1;
+  left: 2rem;
+  top: 5.5rem;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  background: var(--bg-2);
+  color: var(--accent);
+  font: 600 0.9rem var(--mono);
+}
+/* The trail between nodes. */
+:root:root:root:root[data-ex='a'] .exhibits .ex::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  left: calc(2rem + 1.625rem - 1px);
+  right: auto;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  height: auto;
+  border-radius: 0;
+  transform: none;
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+:root:root:root:root[data-ex='a'] .exhibits .ex:first-of-type::after {
+  top: 5.5rem;
+}
+:root:root:root:root[data-ex='a'] .exhibits .ex:last-of-type::after {
+  bottom: auto;
+  height: 5.5rem;
+}
+/* A large outlined numeral behind the words. */
+:root:root:root:root[data-ex='a'] .exhibits .ex-text {
+  position: relative;
+  isolation: isolate;
+}
+:root:root:root:root[data-ex='a'] .exhibits .ex-text::before {
+  content: counter(ex, decimal-leading-zero);
+  position: absolute;
+  z-index: -1;
+  right: -0.5rem;
+  top: -4.5rem;
+  font: 800 10rem/1 var(--display);
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--accent) 22%, transparent);
+  pointer-events: none;
+}
+
+/* B · The stacked deck: a dark hall, and each exhibit a card that slides up over the last. */
+:root:root:root:root[data-ex='b'] .room-sep[data-room='The Exhibit Hall'] {
+  border-image: linear-gradient(var(--ink), var(--ink)) fill 0 / 0 / 0 100vmax;
+}
+:root:root:root:root[data-ex='b'] .room-sep[data-room='The Exhibit Hall']::before {
+  background: var(--ink);
+}
+:root:root:root:root[data-ex='b'] .exhibits {
+  display: block;
+  background: none;
+  padding: 1rem 0 10vh;
+  border-image: linear-gradient(var(--ink), var(--ink)) fill 0 / 0 / 0 100vmax;
+}
+:root:root:root:root[data-ex='b'] .ex-head {
+  margin-bottom: 3rem;
+}
+:root:root:root:root[data-ex='b'] .exhibits .sec-title {
+  color: #fff;
+  border-bottom-color: color-mix(in srgb, #fff 22%, transparent);
+}
+:root:root:root:root[data-ex='b'] :is(.exhibits, .coda) .ex {
+  max-width: calc(var(--wide) - 4rem);
+  margin: 0 auto 14vh;
+  padding: 3rem;
+  border-radius: 22px;
+  background: var(--bg-2);
+  box-shadow:
+    0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 -24px 60px -20px rgba(0, 0, 0, 0.6);
+}
+:root:root:root:root[data-ex='b'] .exhibits .ex {
+  position: sticky;
+  /* --top is set by script, so a card taller than the screen scrolls fully into view before it sticks. */
+  top: var(--top, calc(5rem + var(--k, 0) * 12px));
+}
+:root:root:root:root[data-ex='b'] .exhibits .ex:nth-of-type(2) { --k: 1; }
+:root:root:root:root[data-ex='b'] .exhibits .ex:nth-of-type(3) { --k: 2; }
+:root:root:root:root[data-ex='b'] .exhibits .ex:nth-of-type(4) { --k: 3; }
+:root:root:root:root[data-ex='b'] .exhibits .ex:nth-of-type(5) { --k: 4; }
+:root:root:root:root[data-ex='b'] .exhibits .ex:nth-of-type(6) { --k: 5; }
+:root:root:root:root[data-ex='b'] .exhibits .ex:nth-of-type(7) { --k: 6; }
+:root:root:root:root[data-ex='b'] .exhibits .ex:last-of-type {
+  margin-bottom: 0;
+}
+:root:root:root:root[data-ex='b'] :is(.exhibits, .coda) .ex::after {
+  content: none;
+}
+/* Each card carries its number in the corner. */
+:root:root:root:root[data-ex='b'] .exhibits .ex::before {
+  content: counter(ex, decimal-leading-zero) ' / 06';
+  position: absolute;
+  top: 1.4rem;
+  right: 1.8rem;
+  font: 500 0.78rem var(--mono);
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+:root:root:root:root[data-ex='b'] .coda .ex {
+  margin-bottom: 0;
+}
+@media (max-width: 960px) {
+  :root:root:root:root[data-ex='b'] .exhibits .ex {
+    position: relative;
+    top: auto;
+    margin-bottom: 1.5rem;
+  }
+  :root:root:root:root[data-ex='b'] :is(.exhibits, .coda) .ex {
+    padding: 1.5rem;
+    border-radius: 16px;
+    max-width: calc(100% - 2rem);
+  }
+}
+
+/* ── Combinations of A and B ── */
+:root:root:root:root[data-ex='d'] {
+  --hall: var(--ink);
+  --hall-ink: #fff;
+  --hall-muted: rgba(255, 255, 255, 0.45);
+  --rail: rgba(255, 255, 255, 0.16);
+}
+:root:root:root:root[data-ex='f'] {
+  --hall: color-mix(in srgb, var(--accent) 7%, var(--bg));
+  --hall-ink: var(--ink);
+  --hall-muted: var(--muted);
+  --rail: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* D and F · The deck with a path rail: B's stacking cards, and A's numbered trail as a sticky progress rail. */
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .room-sep[data-room='The Exhibit Hall'] {
+  border-image: linear-gradient(var(--hall), var(--hall)) fill 0 / 0 / 0 100vmax;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .room-sep[data-room='The Exhibit Hall']::before {
+  background: var(--hall);
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .exhibits {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  column-gap: 1.75rem;
+  row-gap: 0;
+  max-width: var(--wide);
+  margin-inline: auto;
+  padding: 1rem 2rem 12vh;
+  background: none;
+  border-image: linear-gradient(var(--hall), var(--hall)) fill 0 / 0 / 0 100vmax;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-head {
+  grid-column: 1 / -1;
+  padding-inline: 0;
+  margin-bottom: 3rem;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .exhibits .sec-title {
+  color: var(--hall-ink);
+  border-bottom-color: color-mix(in srgb, var(--hall-ink) 18%, transparent);
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .exhibits .ex {
+  grid-column: 2;
+  align-self: start;
+  position: sticky;
+  top: var(--top, 5rem);
+  max-width: none;
+  margin: 0 0 14vh;
+  padding: 3rem;
+  border-radius: 22px;
+  background: var(--bg-2);
+  box-shadow:
+    0 -1px 0 rgba(255, 255, 255, 0.06),
+    0 -24px 60px -24px rgba(0, 0, 0, 0.45);
+}
+:root:root:root:root[data-ex='f'] .exhibits .ex {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent),
+    0 -20px 50px -24px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .exhibits .ex:last-of-type {
+  margin-bottom: 0;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .exhibits .ex::after {
+  content: none;
+}
+/* Wider words and less padding keep the cards close to the height of the screen. */
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .exhibits .ex {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 2.75rem;
+  padding: 2.5rem 2.75rem;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .exhibits .ex.flip {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+}
+/* The rail. */
+.ex-rail {
+  display: none;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail {
+  display: block;
+  grid-column: 1;
+  grid-row: 2 / span 6;
+  align-self: start;
+  position: sticky;
+  top: 6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail::before,
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail::after {
+  content: '';
+  position: absolute;
+  left: calc(1.125rem - 1px);
+  top: 1.8rem;
+  width: 2px;
+  background: var(--rail);
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail::before {
+  bottom: 1.8rem;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail::after {
+  height: calc((100% - 3.6rem) * var(--p, 0));
+  background: var(--accent);
+  transition: height 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail li {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.55rem 0;
+  padding: 0.7rem 0;
+  font-size: 0;
+  cursor: pointer;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail li::before {
+  content: attr(data-n);
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--rail);
+  background: var(--hall);
+  font: 600 0.72rem var(--mono);
+  color: var(--hall-muted);
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    color 0.3s;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail li.done::before {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail li.on::before {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+/* A's outlined numeral, faint behind each card's words. */
+:root:root:root:root:is([data-ex='d'], [data-ex='e'], [data-ex='f']) .exhibits .ex-text {
+  position: relative;
+  isolation: isolate;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='e'], [data-ex='f']) .exhibits .ex-text::before {
+  content: counter(ex, decimal-leading-zero);
+  position: absolute;
+  z-index: -1;
+  right: -0.75rem;
+  bottom: -2.25rem;
+  font: 800 8rem/1 var(--display);
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--accent) 20%, transparent);
+  pointer-events: none;
+}
+/* The Manifest Chronicles, below, as one more card. */
+:root:root:root:root:is([data-ex='d'], [data-ex='e'], [data-ex='f']) .coda .ex {
+  max-width: calc(var(--wide) - 4rem);
+  margin-inline: auto;
+  padding: 3rem;
+  border-radius: 22px;
+  background: var(--bg-2);
+  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.35);
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='e'], [data-ex='f']) .coda .ex::after {
+  content: none;
+}
+@media (max-width: 960px) {
+  :root:root:root:root:is([data-ex='d'], [data-ex='f']) .exhibits {
+    display: block;
+    padding-inline: 1rem;
+  }
+  :root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail {
+    display: none;
+  }
+  :root:root:root:root:is([data-ex='d'], [data-ex='f']) .exhibits .ex {
+    position: relative;
+    top: auto;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+}
+
+/* E · The lit path of cards: A's numbered trail, with each exhibit a white card on a pale hall. Nothing sticks. */
+:root:root:root:root[data-ex='e'] {
+  --e-hall: color-mix(in srgb, var(--accent) 6%, var(--bg));
+}
+:root:root:root:root[data-ex='e'] .room-sep[data-room='The Exhibit Hall'] {
+  border-image: linear-gradient(var(--e-hall), var(--e-hall)) fill 0 / 0 / 0 100vmax;
+}
+:root:root:root:root[data-ex='e'] .room-sep[data-room='The Exhibit Hall']::before {
+  background: var(--e-hall);
+}
+:root:root:root:root[data-ex='e'] .exhibits {
+  --ex-gap: 3.5rem;
+  background: var(--e-hall);
+  padding-bottom: 8rem;
+}
+:root:root:root:root[data-ex='e'] .exhibits .ex {
+  position: relative;
+  width: min(calc(100% - 9rem), calc(var(--wide) - 9rem));
+  max-width: none;
+  margin-left: max(7rem, calc((100% - var(--wide)) / 2 + 7rem));
+  margin-right: auto;
+  padding: 3rem;
+  border-radius: 22px;
+  background: var(--bg-2);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent),
+    0 24px 50px -30px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+:root:root:root:root[data-ex='e'] .exhibits .ex::before {
+  content: counter(ex, decimal-leading-zero);
+  position: absolute;
+  z-index: 1;
+  left: -5rem;
+  top: 3rem;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  background: var(--bg-2);
+  color: var(--accent);
+  font: 600 0.9rem var(--mono);
+}
+:root:root:root:root[data-ex='e'] .exhibits .ex::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  left: calc(-5rem + 1.625rem - 1px);
+  right: auto;
+  top: 0;
+  bottom: calc(-1 * var(--ex-gap));
+  width: 2px;
+  height: auto;
+  border-radius: 0;
+  transform: none;
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+:root:root:root:root[data-ex='e'] .exhibits .ex:first-of-type::after {
+  top: 3rem;
+}
+:root:root:root:root[data-ex='e'] .exhibits .ex:last-of-type::after {
+  bottom: auto;
+  height: 3rem;
+}
+@media (max-width: 960px) {
+  :root:root:root:root[data-ex='e'] .exhibits .ex {
+    width: auto;
+    margin-inline: 1rem;
+    padding: 1.5rem;
+  }
+  :root:root:root:root[data-ex='e'] .exhibits .ex::before,
+  :root:root:root:root[data-ex='e'] .exhibits .ex::after {
+    display: none;
+  }
+}
+
+/* Stacking decks (b, d, f): the section title pins to the top while the cards collect beneath it. */
+:root:root:root:root[data-ex='b'] {
+  --hall: var(--ink);
+}
+:root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .ex-head {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  align-self: start;
+  padding-top: 1.25rem;
+  margin-bottom: 2rem;
+  background: var(--hall);
+  box-shadow: 0 0 0 100vmax var(--hall);
+  clip-path: inset(0 -100vmax -1px);
+}
+:root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .sec-title {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  padding-bottom: 1rem;
+}
+:root:root:root:root:is([data-ex='d'], [data-ex='f']) .ex-rail {
+  top: calc(var(--head, 5rem) + 1rem);
+}
+@media (max-width: 960px) {
+  :root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .ex-head {
+    position: static;
+  }
+}
+/* Decks: compact cards so each fits beneath the pinned title, and keep the title above them. */
+:root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .ex-head {
+  z-index: 10;
+}
+:root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .ex {
+  z-index: 1;
+}
+@media (min-width: 961px) {
+  :root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits :is(.ex, .ex.flip) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  :root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .quote {
+    margin: 1.1rem 0;
+    padding: 1rem 1.2rem 1rem 3.2rem;
+  }
+  :root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .quote p {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+  }
+  :root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .quote::before {
+    font-size: 3rem;
+    top: 0.4rem;
+    left: 0.9rem;
+  }
+  :root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .credit {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.25rem;
+  }
+}
+/* Deck cards: content sits in the middle of the card's height. */
+:root:root:root:root:is([data-ex='b'], [data-ex='d'], [data-ex='f']) .exhibits .ex {
+  align-content: center;
+}

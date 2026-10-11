@@ -12,8 +12,8 @@ const work = all.filter((e) => e.data.kind === 'work');
 
 // How implementation has shifted from me to AI. `ai` only sets the bar's fill and is illustrative, not measured.
 const shift = [
-  { year: '2024', what: 'ZorkAI', how: 'I wrote every line. AI was only the narrator.', ai: 0 },
-  { year: '2025', what: 'ZorkAI, Planetfall', how: 'AI agents write code against my tests. I review.', ai: 0.55 },
+  { year: '2024', what: 'ZorkAI', how: 'I wrote every line. AI was the narrator.', ai: 0 },
+  { year: '2025', what: 'ZorkAI, Planetfall', how: 'AI agents began to write code against my tests. I review.', ai: 0.55 },
   {
     year: '2026',
     what: 'AdventureBreaker',
@@ -23,10 +23,10 @@ const shift = [
   { year: '2026', what: 'Unopened Worlds, this site', how: 'AI writes the implementation. I own every decision.', ai: 0.9 },
 ];
 
-const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Kobo', 'Toolbox', 'Logitech'];
+const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'OrderEase', 'Kobo', 'Toolbox', 'Logitech'];
 ---
 
-<Base title="Michael Lane · VP of Engineering">
+<Base title="Michael Lane · Engineering Leader">
   <div class="status-line" aria-hidden="true">
     <span class="sl-loc">Entrance</span>
     <span class="sl-score">Score: 305 merged PRs · Moves: 1991–2026</span>
@@ -38,19 +38,19 @@ const career = ['Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'LinkGreen', 'Ko
       <span class="hl" aria-hidden="true">{'breathe new life into old worlds.'.split(' ').map((w, i, a) => <><span class="w" style={`--i:${i + 6}`}>{w}</span>{i < a.length - 1 && ' '}</>)}</span>
     </h1>
     <p class="lede">
-      VP of Engineering, most recently at Rev, where I led 60 people across AI, SaaS and mobile. I’ve been writing
-      software since middle school, and every year I hand more of the implementation to AI. What I don’t hand over is the
-      judgment.
+      Most recently, I’ve led over 60 people across AI research, QA, design, and web and mobile development. I’ve been
+      writing software since middle school, and every year I hand more of the implementation to AI, so I can do more
+      research, design, architecture and long-term planning.
     </p>
 
     <div class="split">
       <div class="drive">
         <p class="label">I contribute</p>
-        <p>The architecture, the systems design, the patterns, the copy and the design.</p>
+        <p>The research, architecture, systems design, patterns, copy and design.</p>
       </div>
       <div class="defer">
         <p class="label">AI implements</p>
-        <p>The code. More of it every year, reviewed and tested against decisions I’ve made.</p>
+        <p>The code. More every year, reviewed and tested against decisions I’ve made.</p>
       </div>
     </div>
 

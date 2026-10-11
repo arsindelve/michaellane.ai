@@ -3,7 +3,7 @@ title: Premier Designs to DVTD
 kind: work
 order: 6.5
 kicker: A new business on a new platform, revealed live on a date set seven months earlier
-summary: I led the transformation of Premier Designs, a 35-year-old direct-sales jewelry company, into DVTD, an online marketplace where every purchase gave back to a cause. A totally different business model on an all-new platform, built by a team of six, and switched on live, on stage, on the exact day we'd picked in January.
+summary: I led the transformation of Premier Designs, a 35-year-old direct-sales jewelry company, into DVTD, an online marketplace where every purchase gave back to a cause. A totally different business model on an all-new platform, built by a team of six, and switched on live, on stage, on the exact day we’d picked in January.
 years: "2020"
 role: VP of Software Development; product owner and project manager for the launch
 stack: [Episerver, .NET, Angular, Dynamics 365, Azure, Oracle (retired)]
@@ -11,9 +11,9 @@ cover: ../../assets/shots/dvtd/1-home.png
 coverAlt: The DVTD home page in August 2020, a few weeks after launch.
 frameUrl: https://www.premierdesigns.com/
 slides:
-  - { src: ../../assets/shots/dvtd/1-home.png, path: "", caption: "Launch month: August 2020", alt: "DVTD's home page: Welcome to DVTD, a marketplace where every purchase gives back to multiple missions." }
+  - { src: ../../assets/shots/dvtd/1-home.png, path: "", caption: "Launch month: August 2020", alt: "DVTD’s home page: Welcome to DVTD, a marketplace where every purchase gives back to multiple missions." }
   - { src: ../../assets/shots/dvtd/2-marketplace.png, path: "", caption: "Many brands, one marketplace, every product tied to a cause", alt: "Marketplace with a Mission: products from several brands, each labeled with the cause it supports." }
-  - { src: ../../assets/shots/dvtd/3-how-it-works.png, path: "", caption: "How it works: every order gives back, and so does every product", alt: "How It Works: every order gives back, plus more giving back from each product's own cause." }
+  - { src: ../../assets/shots/dvtd/3-how-it-works.png, path: "", caption: "How it works: every order gives back, and so does every product", alt: "How It Works: every order gives back, plus more giving back from each product’s own cause." }
   - { src: ../../assets/shots/dvtd/4-causes-brands.png, path: "", caption: "Shop by cause or by brand", alt: "Our Causes and Our Brands, with a carousel of partner brand logos." }
   - { src: ../../assets/shots/dvtd/5-join-rewards.png, path: "", caption: "Affiliates and rewards replaced the old Jeweler model", alt: "Join Us as an affiliate, and DVTD Rewards for customers." }
 stats:

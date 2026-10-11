@@ -2,12 +2,12 @@
 
 export const person = {
   name: 'Michael Lane',
-  title: 'VP of Engineering',
+  title: 'Engineering Leader',
   location: 'Dallas, Texas',
   email: 'michael@michaellane.ai',
   linkedin: 'https://www.linkedin.com/in/michaelnlane/',
   github: 'https://github.com/arsindelve',
-  status: 'Open to VP of Engineering roles',
+  status: 'Open to engineering leadership roles',
 };
 
 export type Role = {
@@ -93,7 +93,7 @@ export const roles: Role[] = [
     start: 'Sep 2012',
     end: 'Apr 2014',
     place: 'Toronto',
-    summary: 'Managed two teams building kobo.com, where readers worldwide buy from a catalogue of three million e-books.',
+    summary: 'Managed two teams building kobo.com, where readers worldwide buy from a catalog of three million e-books.',
   },
   {
     company: 'Toolbox Solutions',
