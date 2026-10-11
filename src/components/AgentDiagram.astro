@@ -62,30 +62,9 @@ const strikeW = (s: string) => s.length * 8.4;
 
 <script>
   // Plays the turn on a loop while it's on screen. Every step adds a class or rewrites a little text; CSS does the rest.
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-  const fmt = (n: number) => n.toFixed(1);
+  import { countTo, fmt, loopWhileVisible, say, sleep, type } from '../scripts/play';
 
-  function countTo(el: Element, from: number, to: number, ms: number) {
-    const t0 = performance.now();
-    return new Promise<void>((done) => {
-      const tick = (t: number) => {
-        const k = Math.min(1, (t - t0) / ms);
-        el.textContent = fmt(from + (to - from) * (1 - Math.pow(1 - k, 3)));
-        if (k < 1) requestAnimationFrame(tick);
-        else done();
-      };
-      requestAnimationFrame(tick);
-    });
-  }
-
-  async function type(el: Element, text: string, perChar: number) {
-    for (let i = 1; i <= text.length; i++) {
-      el.textContent = text.slice(0, i);
-      await sleep(perChar);
-    }
-  }
-
-  function play(svg: SVGSVGElement) {
+  for (const svg of document.querySelectorAll<SVGSVGElement>('svg.turn')) {
     const $ = (s: string) => svg.querySelector(s)!;
     const rows = [...svg.querySelectorAll<SVGGElement>('.row')];
     const phase = $('.phase');
@@ -94,18 +73,9 @@ const strikeW = (s: string) => s.length * 8.4;
     const scan = $('.scan') as SVGRectElement;
     const zorkText = zork.textContent ?? '';
     const pickText = pick.textContent ?? '';
-    let visible = false;
-    let running = false;
-
-    const say = async (text: string) => {
-      phase.classList.remove('on');
-      await sleep(150);
-      phase.textContent = text;
-      phase.classList.add('on');
-    };
     const scanTo = (i: number) => (scan.style.transform = `translateY(${i * 50}px)`);
 
-    async function turn() {
+    loopWhileVisible(svg, async () => {
       // Reset to an empty turn.
       svg.classList.remove('fade');
       svg.querySelectorAll('.on, .lit, .zeroed').forEach((el) => el.classList.remove('on', 'lit', 'zeroed'));
@@ -115,12 +85,12 @@ const strikeW = (s: string) => s.length * 8.4;
       scanTo(0);
       await sleep(400);
 
-      await say('Zork describes the room');
+      await say(phase, 'Zork describes the room');
       zork.classList.add('on');
       await type(zork, zorkText, 22);
       await sleep(500);
 
-      await say('Five agents propose');
+      await say(phase, 'Five agents propose');
       for (const r of rows) {
         r.classList.add('on');
         countTo(r.querySelector('.ev')!, 0, Number(r.dataset.ev), 700);
@@ -128,14 +98,14 @@ const strikeW = (s: string) => s.length * 8.4;
       }
       await sleep(700);
 
-      await say('Refuted actions are zeroed');
+      await say(phase, 'Refuted actions are zeroed');
       for (const r of rows.filter((r) => r.classList.contains('refuted'))) {
         r.classList.add('zeroed');
         countTo(r.querySelector('.ev')!, Number(r.dataset.ev), 0, 600);
       }
       await sleep(1100);
 
-      await say('The arbiter weighs them');
+      await say(phase, 'The arbiter weighs them');
       scan.classList.add('on');
       for (const i of [0, 1, 2, 3, 0]) {
         scanTo(i);
@@ -145,8 +115,8 @@ const strikeW = (s: string) => s.length * 8.4;
       $('.dot').classList.add('on');
       await sleep(600);
 
-      await say('The arbiter chooses exactly one');
-      svg.querySelector('.flow')!.classList.add('on');
+      await say(phase, 'The arbiter chooses exactly one');
+      $('.flow').classList.add('on');
       await sleep(500);
       $('.end-dot').classList.add('on');
       $('.pick-tag').classList.add('on');
@@ -154,33 +124,13 @@ const strikeW = (s: string) => s.length * 8.4;
       await type(pick, pickText, 32);
       await sleep(400);
 
-      await say('Zork answers');
+      await say(phase, 'Zork answers');
       $('.reply').classList.add('on');
       await sleep(4200);
 
       svg.classList.add('fade');
       await sleep(700);
-    }
-
-    async function loop() {
-      if (running) return;
-      running = true;
-      svg.classList.add('live');
-      while (visible) await turn();
-      running = false;
-    }
-
-    new IntersectionObserver(
-      ([e]) => {
-        visible = e.isIntersecting;
-        if (visible) loop();
-      },
-      { threshold: 0.4 },
-    ).observe(svg);
-  }
-
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll<SVGSVGElement>('svg.turn').forEach(play);
+    });
   }
 </script>
 
