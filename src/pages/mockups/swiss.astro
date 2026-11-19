@@ -1,0 +1,667 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import portrait from '../../assets/me.jpeg';
+import MockupSwitcher from '../../components/MockupSwitcher.astro';
+import { person, roles, principles, education } from '../../data/site';
+
+const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const work = all.filter((e) => e.data.kind === 'work');
+const exhibits = all.filter((e) => e.data.kind === 'exhibit' && e.id !== 'this-site');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Swiss Grid · {person.name}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="shell">
+      <!-- STICKY LEFT DOSSIER RAIL -->
+      <aside class="rail">
+        <div class="rail-top">
+          <div class="avatar-row">
+            <Image src={portrait} alt={person.name} width={144} height={144} class="avatar" />
+            <div>
+              <h1 class="rail-name">{person.name}</h1>
+              <p class="rail-title">{person.title} · {person.location}</p>
+            </div>
+          </div>
+
+          <div class="avail">
+            <span class="dot"></span>
+            <span>{person.status}</span>
+          </div>
+
+          <p class="rail-bio">
+            Engineering executive &amp; builder. Led 60+ person orgs across AI, product, QA, and design. Currently
+            architecting an AI-first software factory at Second Nature.
+          </p>
+
+          <nav class="rail-nav" aria-label="Page sections">
+            <a href="#thesis"><span>01</span> Executive Thesis</a>
+            <a href="#work"><span>02</span> Selected Work</a>
+            <a href="#experience"><span>03</span> Career Ledger</a>
+            <a href="#exhibits"><span>04</span> AI &amp; R&amp;D Lab</a>
+            <a href="#principles"><span>05</span> Philosophy</a>
+          </nav>
+        </div>
+
+        <div class="rail-foot">
+          <a href={`mailto:${person.email}`} class="cta-btn">Email Michael →</a>
+          <div class="rail-links">
+            <a href={person.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href={person.github} target="_blank" rel="noreferrer">GitHub</a>
+            <a href="/resume">Full Résumé</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN EDITORIAL CANVAS -->
+      <main class="canvas">
+        <section id="thesis" class="block">
+          <p class="sec-kicker">01 / Executive Thesis</p>
+          <h2 class="serif-hero">
+            Building high-trust engineering organizations—and <em>AI-first</em> software factories.
+          </h2>
+          <p class="hero-copy">
+            Most recently Vice President of Software Development at Rev (60+ people across AI, SaaS, mobile, QA, and
+            design) and currently Director of Software Development at Second Nature. I pair 15+ years of executive
+            delivery with hands-on AI systems engineering.
+          </p>
+
+          <div class="stat-bar">
+            <div>
+              <strong>60+</strong>
+              <span>Org scale led</span>
+            </div>
+            <div>
+              <strong>#1 G2</strong>
+              <span>AI Legal Assistant</span>
+            </div>
+            <div>
+              <strong>750+/day</strong>
+              <span>Self-serve SaaS sign-ups</span>
+            </div>
+            <div>
+              <strong>2×</strong>
+              <span>AI-first pod velocity</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="work" class="block">
+          <p class="sec-kicker">02 / Selected Work</p>
+          <h2 class="sec-title">Case studies in leadership &amp; scale</h2>
+
+          <div class="cases">
+            {
+              work.map((w) => {
+                const thumb = w.data.cover ?? w.data.slides?.[0]?.src;
+                const thumbAlt = w.data.coverAlt ?? w.data.slides?.[0]?.alt ?? w.data.title;
+                return (
+                  <article class="case">
+                    <div class="case-head">
+                      <div>
+                        <span class="mono">{w.data.years} · {w.data.role}</span>
+                        <h3>
+                          <a href={`/work/${w.id}`}>{w.data.title}</a>
+                        </h3>
+                      </div>
+                      <a href={`/work/${w.id}`} class="case-link">Case study ↗</a>
+                    </div>
+                    <p class="case-summary">{w.data.summary}</p>
+                    {thumb && (
+                      <a href={`/work/${w.id}`} class="case-frame">
+                        <Image src={thumb} alt={thumbAlt} width={960} class="case-img" />
+                      </a>
+                    )}
+                    <div class="case-foot">
+                      {w.data.stats.slice(0, 3).map((s) => (
+                        <div class="metric">
+                          <strong>{s.n}</strong>
+                          <span>{s.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                );
+              })
+            }
+          </div>
+        </section>
+
+        <section id="experience" class="block">
+          <p class="sec-kicker">03 / Career Ledger</p>
+          <h2 class="sec-title">Experience &amp; Education</h2>
+
+          <div class="ledger">
+            {
+              roles.map((r) => (
+                <div class="ledger-row">
+                  <div class="l-when">{r.start} – {r.end}</div>
+                  <div class="l-what">
+                    <strong>{r.company}</strong> — {r.title}
+                    <p>{r.summary}</p>
+                  </div>
+                  <div class="l-where">{r.place}</div>
+                </div>
+              ))
+            }
+          </div>
+
+          <div class="edu-row">
+            {
+              education.map((e) => (
+                <div class="edu-box">
+                  <span class="mono">{e.when}</span>
+                  <h3>{e.degree}</h3>
+                  <p>{e.school}</p>
+                </div>
+              ))
+            }
+          </div>
+        </section>
+
+        <section id="exhibits" class="block">
+          <p class="sec-kicker">04 / AI &amp; R&amp;D Lab</p>
+          <h2 class="sec-title">Independent engineering</h2>
+          <p class="sec-desc">
+            Hands-on systems built on my own time—multi-agent LLM research, adversarial AI playtesters, and modern
+            browser ports of classic software.
+          </p>
+
+          <div class="ex-grid">
+            {
+              exhibits.map((ex) => {
+                const thumb = ex.data.cover ?? ex.data.slides?.[0]?.src;
+                const thumbAlt = ex.data.coverAlt ?? ex.data.slides?.[0]?.alt ?? ex.data.title;
+                return (
+                  <a href={`/work/${ex.id}`} class="ex-card">
+                    {thumb && (
+                      <div class="ex-thumb">
+                        <Image src={thumb} alt={thumbAlt} width={640} />
+                      </div>
+                    )}
+                    <div class="ex-meta">
+                      <span class="mono">{ex.data.years}</span>
+                      <h3>{ex.data.title}</h3>
+                      <p>{ex.data.kicker}</p>
+                    </div>
+                  </a>
+                );
+              })
+            }
+          </div>
+        </section>
+
+        <section id="principles" class="block last">
+          <p class="sec-kicker">05 / Philosophy</p>
+          <h2 class="sec-title">Leadership principles</h2>
+          <div class="prin-list">
+            {
+              principles.map((p, i) => (
+                <div class="prin-item">
+                  <span class="mono">0{i + 1}</span>
+                  <div>
+                    <h3>{p.head}</h3>
+                    <p>{p.body}</p>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <MockupSwitcher active="swiss" />
+  </body>
+</html>
+
+<style>
+  :root {
+    --bg: #ffffff;
+    --stone: #f4f5f7;
+    --ink: #111318;
+    --ink-2: #4b5563;
+    --muted: #6b7280;
+    --rule: #e5e7eb;
+    --accent: #1d4ed8;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+    padding-bottom: 5rem;
+  }
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .shell {
+    max-width: 82rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 21rem 1fr;
+    min-height: 100vh;
+  }
+
+  /* LEFT RAIL */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 2.5rem 2rem;
+    border-right: 1px solid var(--rule);
+    background: var(--stone);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .avatar {
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+  .rail-name {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .rail-title {
+    margin: 0.1rem 0 0;
+    font-size: 0.82rem;
+    color: var(--ink-2);
+  }
+  .avail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--rule);
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  .dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: #16a34a;
+  }
+  .rail-bio {
+    font-size: 0.88rem;
+    color: var(--ink-2);
+    margin: 0 0 2rem;
+  }
+  .rail-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .rail-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ink-2);
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+  }
+  .rail-nav a:hover {
+    background: #fff;
+    color: var(--ink);
+  }
+  .rail-nav span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+  }
+  .cta-btn {
+    display: block;
+    text-align: center;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    background: var(--ink);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.88rem;
+    margin-bottom: 0.9rem;
+  }
+  .cta-btn:hover {
+    background: var(--accent);
+  }
+  .rail-links {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+  }
+  .rail-links a {
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .rail-links a:hover {
+    color: var(--accent);
+  }
+
+  /* CANVAS */
+  .canvas {
+    padding: 3.5rem 4rem;
+  }
+  .block {
+    padding-bottom: 4.5rem;
+    margin-bottom: 4.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .block.last {
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+  .sec-kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.9rem;
+  }
+  .serif-hero {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(2.5rem, 4.5vw, 3.85rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.25rem;
+  }
+  .serif-hero em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-copy {
+    font-size: 1.08rem;
+    color: var(--ink-2);
+    max-width: 42rem;
+    margin: 0 0 2.25rem;
+  }
+  .stat-bar {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding-block: 1.25rem;
+    gap: 1rem;
+  }
+  .stat-bar strong {
+    display: block;
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .stat-bar span {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .sec-title {
+    font-size: 1.85rem;
+    letter-spacing: -0.025em;
+    margin: 0 0 1.75rem;
+  }
+  .sec-desc {
+    color: var(--ink-2);
+    max-width: 40rem;
+    margin: -1rem 0 2rem;
+  }
+
+  /* CASES */
+  .cases {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  .case {
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 1.75rem;
+    background: #fff;
+  }
+  .case-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .case h3 {
+    margin: 0.25rem 0 0;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+  }
+  .case h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .case h3 a:hover {
+    color: var(--accent);
+  }
+  .case-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .case-summary {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    margin: 0 0 1.25rem;
+  }
+  .case-frame {
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    margin-bottom: 1.25rem;
+    aspect-ratio: 16 / 9;
+    background: var(--stone);
+  }
+  .case-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+  .case-foot {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+  .metric strong {
+    display: block;
+    font-size: 1.15rem;
+  }
+  .metric span {
+    font-size: 0.78rem;
+    color: var(--muted);
+    display: block;
+    line-height: 1.35;
+  }
+
+  /* LEDGER */
+  .ledger {
+    border-top: 2px solid var(--ink);
+    margin-bottom: 2rem;
+  }
+  .ledger-row {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr 9rem;
+    gap: 1.25rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .l-when,
+  .l-where {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--muted);
+  }
+  .l-where {
+    text-align: right;
+  }
+  .l-what p {
+    margin: 0.25rem 0 0;
+    font-size: 0.88rem;
+    color: var(--ink-2);
+  }
+  .edu-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .edu-box {
+    background: var(--stone);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+  .edu-box h3 {
+    margin: 0.35rem 0 0.2rem;
+    font-size: 1.08rem;
+  }
+  .edu-box p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--ink-2);
+  }
+
+  /* EXHIBITS */
+  .ex-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .ex-card {
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s;
+  }
+  .ex-card:hover {
+    border-color: var(--accent);
+  }
+  .ex-thumb {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--stone);
+    border-bottom: 1px solid var(--rule);
+  }
+  .ex-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .ex-meta {
+    padding: 1.1rem;
+  }
+  .ex-meta h3 {
+    margin: 0.25rem 0 0.35rem;
+    font-size: 1.08rem;
+  }
+  .ex-meta p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+
+  /* PRINCIPLES */
+  .prin-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .prin-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--stone);
+    border-radius: 12px;
+  }
+  .prin-item h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.02rem;
+  }
+  .prin-item p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 1024px) {
+    .shell {
+      grid-template-columns: 1fr;
+    }
+    .rail {
+      position: static;
+      height: auto;
+      border-right: 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .canvas {
+      padding: 2.5rem 1.5rem;
+    }
+    .stat-bar,
+    .case-foot,
+    .edu-row,
+    .ex-grid,
+    .prin-list,
+    .ledger-row {
+      grid-template-columns: 1fr;
+    }
+    .l-where {
+      text-align: left;
+    }
+  }
+</style>

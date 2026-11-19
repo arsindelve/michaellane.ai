@@ -1,0 +1,733 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import portrait from '../../assets/me.jpeg';
+import MockupSwitcher from '../../components/MockupSwitcher.astro';
+import { person, roles, principles, education } from '../../data/site';
+
+const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const work = all.filter((e) => e.data.kind === 'work');
+const exhibits = all.filter((e) => e.data.kind === 'exhibit' && e.id !== 'this-site');
+
+const shift = [
+  { year: '2024', what: 'ZorkAI', how: 'Hand-written engine; AI as narrator', pct: '15%' },
+  { year: '2025', what: 'ZorkAI · Planetfall', how: 'AI agents write code against my tests', pct: '55%' },
+  { year: '2026', what: 'AdventureBreaker', how: 'AI playtester breaking my AI narrator', pct: '78%' },
+  { year: '2026', what: 'Unopened Worlds · This Site', how: 'AI implements; I own architecture & review', pct: '92%' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Product Bento · {person.name}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="nav-wrap">
+      <div class="container nav-inner">
+        <a href="/mockups/bento" class="logo">{person.name}</a>
+        <nav class="nav-links">
+          <a href="#work">Work</a>
+          <a href="#ai-shift">AI Shift</a>
+          <a href="#lab">Lab</a>
+          <a href="/resume">Résumé</a>
+          <a href={`mailto:${person.email}`} class="nav-cta">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- HERO BENTO GRID -->
+      <section class="bento-hero" aria-label="Executive overview">
+        <div class="tile tile-intro">
+          <div class="badge">
+            <span class="dot"></span>
+            {person.status}
+          </div>
+          <h1>Engineering leader turning AI into a reliable delivery engine.</h1>
+          <p>
+            I’ve led 60+ person organizations across product, AI research, QA, and design. Today I build
+            verification-heavy software factories—and ship AI systems on my own time.
+          </p>
+          <div class="intro-actions">
+            <a href="#work" class="btn-dark">View Case Studies</a>
+            <a href={person.linkedin} class="btn-light" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+            <a href={person.github} class="btn-light" target="_blank" rel="noreferrer">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="tile tile-photo">
+          <Image src={portrait} alt={person.name} width={520} height={580} class="photo" />
+          <div class="photo-cap">
+            <strong>{person.name}</strong>
+            <span>{person.location}</span>
+          </div>
+        </div>
+
+        <div class="tile tile-role">
+          <span class="kicker">Current Role</span>
+          <strong>Director of Software Development</strong>
+          <p>Second Nature · Leading 3 teams (22 engineers &amp; QA) and the AI-first software factory rollout.</p>
+        </div>
+
+        <div class="tile tile-stat accent">
+          <span class="big">60+</span>
+          <span class="lbl">Engineers, AI, QA &amp; Design led at Rev</span>
+        </div>
+
+        <div class="tile tile-stat">
+          <span class="big">#1 G2</span>
+          <span class="lbl">AI Legal Assistant Leader (Summer 2025)</span>
+        </div>
+
+        <div class="tile tile-edu">
+          <span class="kicker">Credentials</span>
+          <div class="edu-mini">
+            <div>
+              <strong>MSc, Artificial Intelligence</strong>
+              <span>East Texas A&amp;M · In progress</span>
+            </div>
+            <div>
+              <strong>MBA (4.0 GPA)</strong>
+              <span>East Texas A&amp;M · 2025</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CASE STUDIES -->
+      <section id="work" class="sec">
+        <div class="sec-top">
+          <div>
+            <span class="kicker">The Day Job</span>
+            <h2>Work I’ve led</h2>
+          </div>
+          <a href="/resume" class="sec-link">Full 11-role résumé →</a>
+        </div>
+
+        <div class="case-grid">
+          {
+            work.map((w) => {
+              const thumb = w.data.cover ?? w.data.slides?.[0]?.src;
+              const thumbAlt = w.data.coverAlt ?? w.data.slides?.[0]?.alt ?? w.data.title;
+              return (
+                <a href={`/work/${w.id}`} class="tile case-card">
+                  {thumb && (
+                    <div class="case-img-wrap">
+                      <Image src={thumb} alt={thumbAlt} width={840} class="case-img" />
+                    </div>
+                  )}
+                  <div class="case-content">
+                    <div class="case-meta">
+                      <span>{w.data.years}</span>
+                      <span>{w.data.role}</span>
+                    </div>
+                    <h3>{w.data.title}</h3>
+                    <p>{w.data.kicker}</p>
+                    {w.data.stats[0] && (
+                      <div class="case-pill">
+                        <strong>{w.data.stats[0].n}</strong> {w.data.stats[0].label}
+                      </div>
+                    )}
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+      </section>
+
+      <!-- AI SHIFT + PRINCIPLES -->
+      <section id="ai-shift" class="sec split-sec">
+        <div class="tile shift-card">
+          <span class="kicker">How I Build</span>
+          <h2>Handing implementation to AI</h2>
+          <p class="sub">Each year I move further up the stack—owning architecture, tests, and verification while agents write the code.</p>
+          <div class="shift-list">
+            {
+              shift.map((s) => (
+                <div class="shift-row">
+                  <div class="shift-top">
+                    <strong>{s.year} · {s.what}</strong>
+                    <span class="mono">{s.pct} AI</span>
+                  </div>
+                  <p>{s.how}</p>
+                  <div class="bar-bg">
+                    <div class="bar-fill" style={`width: ${s.pct}`}></div>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="prin-stack">
+          {
+            principles.map((p, i) => (
+              <div class="tile prin-tile">
+                <span class="kicker">Principle 0{i + 1}</span>
+                <h3>{p.head}</h3>
+                <p>{p.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- AI & R&D LAB -->
+      <section id="lab" class="sec">
+        <div class="sec-top">
+          <div>
+            <span class="kicker">Independent Engineering</span>
+            <h2>AI Lab &amp; Personal Projects</h2>
+          </div>
+        </div>
+
+        <div class="lab-grid">
+          {
+            exhibits.map((ex) => {
+              const thumb = ex.data.cover ?? ex.data.slides?.[0]?.src;
+              const thumbAlt = ex.data.coverAlt ?? ex.data.slides?.[0]?.alt ?? ex.data.title;
+              return (
+                <a href={`/work/${ex.id}`} class="tile lab-card">
+                  {thumb && (
+                    <div class="lab-img-wrap">
+                      <Image src={thumb} alt={thumbAlt} width={640} class="lab-img" />
+                    </div>
+                  )}
+                  <div class="lab-body">
+                    <span class="mono">{ex.data.years}</span>
+                    <h3>{ex.data.title}</h3>
+                    <p>{ex.data.kicker}</p>
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+      </section>
+
+      <!-- CONTACT BANNER -->
+      <section class="tile contact-banner">
+        <div>
+          <span class="kicker">Next Chapter</span>
+          <h2>Looking for an engineering leader who still builds?</h2>
+          <p>
+            Based in {person.location}. Open to VP / Director of Engineering roles and AI-first transformation
+            leadership.
+          </p>
+        </div>
+        <div class="banner-actions">
+          <a href={`mailto:${person.email}`} class="btn-dark">Email {person.email}</a>
+          <a href="/resume" class="btn-light">Read Résumé</a>
+        </div>
+      </section>
+    </main>
+
+    <MockupSwitcher active="bento" />
+  </body>
+</html>
+
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --teal: #0d9488;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    line-height: 1.55;
+    padding-bottom: 6rem;
+  }
+  .container {
+    max-width: 76rem;
+    margin: 0 auto;
+    padding-inline: 1.5rem;
+  }
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--teal);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+
+  /* NAV */
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(244, 245, 247, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .nav-links a {
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .nav-links a:hover {
+    color: var(--ink);
+  }
+  .nav-cta {
+    padding: 0.45rem 0.95rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff !important;
+    font-weight: 600;
+  }
+
+  /* BENTO TILES */
+  .tile {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.65rem;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  }
+
+  /* HERO BENTO */
+  .bento-hero {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 2rem;
+    margin-bottom: 4rem;
+  }
+  .tile-intro {
+    grid-column: span 2;
+    grid-row: span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    align-self: flex-start;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: #f0fdfa;
+    border: 1px solid #ccfbf1;
+    color: #0f766e;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+  }
+  .dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: #14b8a6;
+  }
+  .tile-intro h1 {
+    font-size: clamp(1.9rem, 3.2vw, 2.65rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin: 0 0 1rem;
+  }
+  .tile-intro p {
+    color: var(--ink-2);
+    font-size: 1.02rem;
+    margin: 0 0 1.75rem;
+  }
+  .intro-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .btn-dark {
+    padding: 0.7rem 1.2rem;
+    border-radius: 12px;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+  .btn-dark:hover {
+    background: var(--teal);
+  }
+  .btn-light {
+    padding: 0.7rem 1.05rem;
+    border-radius: 12px;
+    background: var(--bg);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: 1px solid var(--border);
+  }
+
+  .tile-photo {
+    grid-column: span 1;
+    grid-row: span 2;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-cap {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 1rem 1.2rem;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.86), transparent);
+    color: #fff;
+  }
+  .photo-cap strong {
+    display: block;
+    font-size: 0.98rem;
+  }
+  .photo-cap span {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+  }
+
+  .tile-role {
+    grid-column: span 1;
+  }
+  .tile-role strong {
+    display: block;
+    font-size: 1.05rem;
+    margin-bottom: 0.35rem;
+  }
+  .tile-role p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+
+  .tile-stat {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .tile-stat.accent {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+  .tile-stat.accent .lbl {
+    color: #cbd5e1;
+  }
+  .big {
+    font-size: 2.15rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 0.3rem;
+  }
+  .lbl {
+    font-size: 0.82rem;
+    color: var(--ink-2);
+  }
+
+  .tile-edu {
+    grid-column: span 3;
+  }
+  .edu-mini {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 0.25rem;
+  }
+  .edu-mini strong {
+    display: block;
+    font-size: 0.98rem;
+  }
+  .edu-mini span {
+    font-size: 0.82rem;
+    color: var(--ink-2);
+  }
+
+  /* SECTIONS */
+  .sec {
+    margin-bottom: 4rem;
+  }
+  .sec-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5rem;
+  }
+  .sec-top h2,
+  .shift-card h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    letter-spacing: -0.025em;
+  }
+  .sec-link {
+    color: var(--teal);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  /* CASE GRID */
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+  .case-card {
+    padding: 0;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .case-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  }
+  .case-img-wrap {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .case-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+  .case-content {
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .case-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .case-content h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.25rem;
+  }
+  .case-content p {
+    margin: 0 0 1rem;
+    color: var(--ink-2);
+    font-size: 0.9rem;
+    flex: 1;
+  }
+  .case-pill {
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
+    background: var(--bg);
+    font-size: 0.82rem;
+    color: var(--ink-2);
+  }
+  .case-pill strong {
+    color: var(--ink);
+  }
+
+  /* AI SHIFT + PRINCIPLES */
+  .split-sec {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.15rem;
+    align-items: stretch;
+  }
+  .shift-card .sub {
+    color: var(--ink-2);
+    font-size: 0.92rem;
+    margin: 0.4rem 0 1.4rem;
+  }
+  .shift-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .shift-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+  }
+  .shift-row p {
+    margin: 0.15rem 0 0.45rem;
+    font-size: 0.82rem;
+    color: var(--ink-2);
+  }
+  .bar-bg {
+    height: 7px;
+    border-radius: 999px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--teal), #0f172a);
+  }
+  .prin-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .prin-tile {
+    padding: 1.2rem 1.35rem;
+  }
+  .prin-tile h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+  }
+  .prin-tile p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+
+  /* LAB */
+  .lab-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+  .lab-card {
+    padding: 0;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.18s;
+  }
+  .lab-card:hover {
+    transform: translateY(-2px);
+  }
+  .lab-img-wrap {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .lab-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .lab-body {
+    padding: 1.2rem;
+  }
+  .lab-body h3 {
+    margin: 0.2rem 0 0.3rem;
+    font-size: 1.08rem;
+  }
+  .lab-body p {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--ink-2);
+  }
+
+  /* CONTACT BANNER */
+  .contact-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+  }
+  .contact-banner h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.5rem;
+  }
+  .contact-banner p {
+    margin: 0;
+    color: var(--ink-2);
+  }
+  .banner-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 960px) {
+    .bento-hero,
+    .case-grid,
+    .split-sec,
+    .lab-grid,
+    .edu-mini {
+      grid-template-columns: 1fr;
+    }
+    .tile-intro,
+    .tile-photo,
+    .tile-role,
+    .tile-edu {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+    .tile-photo {
+      aspect-ratio: 4 / 3;
+    }
+    .contact-banner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .nav-links a:not(.nav-cta) {
+      display: none;
+    }
+  }
+</style>

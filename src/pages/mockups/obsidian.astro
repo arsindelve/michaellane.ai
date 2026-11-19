@@ -1,0 +1,1038 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import portrait from '../../assets/me.jpeg';
+import MockupSwitcher from '../../components/MockupSwitcher.astro';
+import { person, education } from '../../data/site';
+
+const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const work = all.filter((e) => e.data.kind === 'work');
+const exhibits = all.filter((e) => e.data.kind === 'exhibit' && e.data.placement === 'main');
+const coda = all.filter((e) => e.data.kind === 'exhibit' && e.data.placement === 'coda');
+
+const shift = [
+  { year: '2024', what: 'ZorkAI', how: 'I wrote every line. AI was the narrator.', ai: 0 },
+  { year: '2025', what: 'ZorkAI, Planetfall', how: 'AI agents began to write code against my tests. I review.', ai: 55 },
+  {
+    year: '2026',
+    what: 'AdventureBreaker',
+    how: 'An AI playtester built to break my AI narrator. AI wrote most of it; I designed it.',
+    ai: 75,
+  },
+  { year: '2026', what: 'Unopened Worlds, this site', how: 'AI writes the implementation. I own every decision.', ai: 90 },
+];
+
+const career = ['Second Nature', 'Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'OrderEase', 'Kobo', 'Toolbox', 'Logitech'];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Obsidian Rooms · {person.name}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="ambient" aria-hidden="true"></div>
+
+    <!-- INFOCOM-INSPIRED GLASS STATUS LINE + NAV -->
+    <header class="topbar">
+      <div class="status-strip">
+        <div class="wrap status-inner">
+          <span class="sl-loc">
+            <span class="sl-prompt">&gt;</span>
+            <span id="room-name">Entrance</span>
+          </span>
+          <span class="sl-score">Score: 305 merged PRs · Moves: 1991–2026</span>
+        </div>
+      </div>
+      <div class="wrap nav-inner">
+        <a href="/mockups/obsidian" class="brand">{person.name}</a>
+        <nav class="nav">
+          <a href="#work">Work</a>
+          <a href="#exhibits">Exhibits</a>
+          <a href="/resume">Résumé</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <!-- ROOM 1: ENTRANCE -->
+      <section class="hero" data-room="Entrance">
+        <div class="hero-main">
+          <div class="hero-copy">
+            <p class="cmd-line"><span class="prompt">&gt;</span> look around</p>
+            <h1>
+              I lead engineering organizations. I also <span class="hl">breathe new life into old worlds.</span>
+            </h1>
+            <p class="lede">
+              Most recently, I’ve led over 60 people across AI research, QA, design, and web and mobile development. I’ve
+              been writing software since middle school, and every year I hand more of the implementation to AI, so I
+              can do more research, design, architecture and long-term planning.
+            </p>
+          </div>
+
+          <aside class="hero-portrait">
+            <div class="portrait-frame">
+              <Image src={portrait} alt={person.name} width={440} height={460} class="portrait" />
+              <div class="portrait-meta">
+                <span class="status-dot"></span>
+                <div>
+                  <strong>{person.status}</strong>
+                  <span>{person.location} · Director @ Second Nature</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="split">
+          <div class="split-box drive">
+            <p class="mono-label">&gt; I contribute</p>
+            <p>The research, architecture, systems design, patterns, copy and design.</p>
+          </div>
+          <div class="split-box defer">
+            <p class="mono-label">&gt; AI implements</p>
+            <p>The code. More every year, reviewed and tested against decisions I’ve made.</p>
+          </div>
+        </div>
+
+        <div class="shift-panel">
+          <div class="shift-head">
+            <span class="mono-label">How the way I build has changed</span>
+            <div class="shift-key">
+              <span><i class="k me"></i> Written by me</span>
+              <span><i class="k ai"></i> Written by AI</span>
+            </div>
+          </div>
+          <ol class="shift">
+            {
+              shift.map((s) => (
+                <li>
+                  <span class="yr">{s.year}</span>
+                  <span class="what">{s.what}</span>
+                  <span class="how">{s.how}</span>
+                  <span class="bar" aria-hidden="true">
+                    <i style={`width: ${s.ai}%`} />
+                  </span>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </section>
+
+      <!-- ROOM 2: THE DAY JOB -->
+      <section id="work" class="room-section" data-room="The Day Job">
+        <div class="room-sep">
+          <span class="sep-line"></span>
+          <span class="sep-tag">The Day Job</span>
+          <span class="sep-cmd">&gt; enter work</span>
+          <span class="sep-line"></span>
+        </div>
+
+        <div class="sec-head">
+          <h2>Work I’ve led</h2>
+          <p>What I build with a team. Below it, what I build on my own time.</p>
+        </div>
+
+        <div class="work-grid">
+          {
+            work.map((w) => {
+              const thumb = w.data.cover ?? w.data.slides?.[0]?.src;
+              const thumbAlt = w.data.coverAlt ?? w.data.slides?.[0]?.alt ?? w.data.title;
+              return (
+                <a class="work-card" href={`/work/${w.id}`}>
+                  {thumb && (
+                    <div class="work-thumb">
+                      <Image src={thumb} alt={thumbAlt} width={840} class="thumb-img" />
+                    </div>
+                  )}
+                  <div class="work-body">
+                    <div class="work-top">
+                      <span class="mono-tag">{w.data.years}</span>
+                      {w.data.stats[0] && (
+                        <span class="stat-badge">
+                          <strong>{w.data.stats[0].n}</strong> {w.data.stats[0].label}
+                        </span>
+                      )}
+                    </div>
+                    <h3>{w.data.title}</h3>
+                    <p>{w.data.kicker}</p>
+                    <span class="more">&gt; Case study →</span>
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+
+        <p class="career-line">
+          <span class="mono-label">Career</span>
+          <span class="career-names">
+            {career.join(' · ')}
+          </span>
+          <a href="/resume">Full résumé →</a>
+        </p>
+      </section>
+
+      <!-- ROOM 3: THE LIBRARY -->
+      <section id="education" class="room-section" data-room="The Library">
+        <div class="room-sep">
+          <span class="sep-line"></span>
+          <span class="sep-tag">The Library</span>
+          <span class="sep-cmd">&gt; examine credentials</span>
+          <span class="sep-line"></span>
+        </div>
+
+        <div class="edu-grid">
+          {
+            education.map((e) => (
+              <div class="edu-card">
+                <span class="mono-tag">{e.when}</span>
+                <h3>{e.degree}</h3>
+                <p class="school">{e.school}</p>
+                {'note' in e && e.note && (
+                  <p class="note">
+                    {e.note}
+                    {e.link && (
+                      <>
+                        {' '}
+                        <a href={e.link.href}>{e.link.label} →</a>
+                      </>
+                    )}
+                  </p>
+                )}
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ROOM 4: THE EXHIBIT HALL -->
+      <section id="exhibits" class="room-section" data-room="The Exhibit Hall">
+        <div class="room-sep">
+          <span class="sep-line"></span>
+          <span class="sep-tag">The Exhibit Hall</span>
+          <span class="sep-cmd">&gt; open exhibits</span>
+          <span class="sep-line"></span>
+        </div>
+
+        <div class="sec-head">
+          <h2>What I build on my own time</h2>
+          <p>AI rebuilds of 1980s text adventures, multi-agent research, and faithful ports of teenage code.</p>
+        </div>
+
+        <div class="exhibits-list">
+          {
+            exhibits.map((ex, idx) => {
+              const thumb = ex.data.cover ?? ex.data.slides?.[0]?.src;
+              const thumbAlt = ex.data.coverAlt ?? ex.data.slides?.[0]?.alt ?? ex.data.title;
+              return (
+                <article class="ex-card">
+                  <div class="ex-copy">
+                    <div class="ex-meta">
+                      <span class="ex-num">Exhibit 0{idx + 1}</span>
+                      <span class="mono-tag">{ex.data.years}</span>
+                    </div>
+                    <h3>
+                      <a href={`/work/${ex.id}`}>{ex.data.title}</a>
+                    </h3>
+                    <p class="ex-kicker">{ex.data.kicker}</p>
+                    <p class="ex-summary">{ex.data.summary}</p>
+
+                    {(ex.data.me || ex.data.ai) && (
+                      <dl class="credit">
+                        {ex.data.me && (
+                          <div>
+                            <dt>&gt; Me</dt>
+                            <dd>{ex.data.me}</dd>
+                          </div>
+                        )}
+                        {ex.data.ai && (
+                          <div>
+                            <dt>&gt; AI</dt>
+                            <dd>{ex.data.ai}</dd>
+                          </div>
+                        )}
+                      </dl>
+                    )}
+
+                    <div class="ex-actions">
+                      <a href={`/work/${ex.id}`} class="btn-primary">&gt; Examine exhibit →</a>
+                      {ex.data.links[0] && (
+                        <a href={ex.data.links[0].url} class="btn-ghost" target="_blank" rel="noreferrer">
+                          {ex.data.links[0].label} ↗
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  {thumb ? (
+                    <a href={`/work/${ex.id}`} class="ex-media">
+                      <Image src={thumb} alt={thumbAlt} width={800} class="ex-img" />
+                    </a>
+                  ) : (
+                    <div class="ex-media ex-terminal">
+                      <span class="mono-label">System Stack</span>
+                      <div class="stack-pills">
+                        {ex.data.stack.map((s) => (
+                          <span>{s}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </article>
+              );
+            })
+          }
+        </div>
+      </section>
+
+      <!-- ROOM 5: THE EXIT / CODA & CONTACT -->
+      <section id="contact" class="room-section" data-room="The Exit">
+        <div class="room-sep">
+          <span class="sep-line"></span>
+          <span class="sep-tag">The Exit</span>
+          <span class="sep-cmd">&gt; say hello</span>
+          <span class="sep-line"></span>
+        </div>
+
+        <div class="exit-grid">
+          {
+            coda[0] && (
+              <div class="coda-card">
+                <span class="mono-label">Coda · {coda[0].data.years}</span>
+                <h3>{coda[0].data.title}</h3>
+                <p>{coda[0].data.summary}</p>
+                <a href={`/work/${coda[0].id}`}>&gt; Read how this site was built →</a>
+              </div>
+            )
+          }
+
+          <div class="contact-card">
+            <span class="mono-label">Direct</span>
+            <h3>{person.name} · {person.location}</h3>
+            <p>{person.status}.</p>
+            <div class="contact-links">
+              <a href={`mailto:${person.email}`} class="btn-primary">{person.email}</a>
+              <a href={person.linkedin} class="btn-ghost" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+              <a href={person.github} class="btn-ghost" target="_blank" rel="noreferrer">GitHub ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wrap site-footer">
+      <p>
+        Built with <a href="/how-this-was-built">Claude Code</a>, Astro and an unreasonable attachment to 1980s text
+        adventures. <a href="https://github.com/arsindelve/michaellane.ai">Source</a>.
+      </p>
+    </footer>
+
+    <MockupSwitcher active="obsidian" />
+
+    <script>
+      const roomLabel = document.getElementById('room-name');
+      const rooms = document.querySelectorAll<HTMLElement>('[data-room]');
+      if (roomLabel && rooms.length) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                const name = (entry.target as HTMLElement).dataset.room;
+                if (name) roomLabel.textContent = name;
+              }
+            }
+          },
+          { rootMargin: '-30% 0px -55% 0px' },
+        );
+        rooms.forEach((r) => io.observe(r));
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  :root {
+    --bg: #090a0d;
+    --surface: #11131a;
+    --surface-2: #171a24;
+    --border: rgba(255, 255, 255, 0.09);
+    --border-hi: rgba(56, 189, 248, 0.45);
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --dim: #64748b;
+    --cyan: #38bdf8;
+    --indigo: #818cf8;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    line-height: 1.6;
+    padding-bottom: 6rem;
+    overflow-x: hidden;
+  }
+  .ambient {
+    position: fixed;
+    inset: -20% -10% auto -10%;
+    height: 70vh;
+    background:
+      radial-gradient(55% 50% at 15% 15%, rgba(99, 102, 241, 0.14), transparent 70%),
+      radial-gradient(50% 50% at 85% 10%, rgba(56, 189, 248, 0.11), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrap {
+    max-width: 74rem;
+    margin: 0 auto;
+    padding-inline: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* TOPBAR + STATUS LINE */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(9, 10, 13, 0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .status-strip {
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .status-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 0.4rem;
+    gap: 1rem;
+  }
+  .sl-loc {
+    color: #fff;
+    font-weight: 500;
+  }
+  .sl-prompt {
+    color: var(--cyan);
+    margin-right: 0.35rem;
+  }
+  .nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3.6rem;
+  }
+  .brand {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+  }
+  .nav {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .nav a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav a:hover {
+    color: var(--cyan);
+  }
+
+  .mono-label,
+  .mono-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin: 0;
+  }
+
+  /* HERO */
+  .hero {
+    padding-block: 3.5rem 2rem;
+  }
+  .hero-main {
+    display: grid;
+    grid-template-columns: 1.35fr 0.75fr;
+    gap: 3rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+  }
+  .cmd-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 0.85rem;
+  }
+  .cmd-line .prompt {
+    color: var(--cyan);
+  }
+  h1 {
+    font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+    margin: 0 0 1.25rem;
+    color: #fff;
+  }
+  .hl {
+    background: linear-gradient(120deg, var(--cyan), var(--indigo));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .lede {
+    font-size: 1.08rem;
+    color: var(--muted);
+    max-width: 40rem;
+    margin: 0;
+  }
+
+  .portrait-frame {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 0.65rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  }
+  .portrait {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+  }
+  .portrait-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 0.5rem 0.35rem;
+  }
+  .status-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.16);
+    flex-shrink: 0;
+  }
+  .portrait-meta strong {
+    display: block;
+    font-size: 0.86rem;
+    color: #fff;
+  }
+  .portrait-meta span {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* SPLIT + SHIFT */
+  .split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .split-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--cyan);
+    border-radius: 12px;
+    padding: 1.25rem 1.4rem;
+  }
+  .split-box.defer {
+    border-left-color: var(--indigo);
+  }
+  .split-box p:last-child {
+    margin: 0.4rem 0 0;
+    color: #e2e8f0;
+    font-size: 0.96rem;
+  }
+
+  .shift-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+  .shift-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .shift-key {
+    display: flex;
+    gap: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .shift-key span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .k {
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .k.me {
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .k.ai {
+    background: linear-gradient(90deg, var(--cyan), var(--indigo));
+  }
+  .shift {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .shift li {
+    display: grid;
+    grid-template-columns: 3.5rem 12.5rem 1fr 9rem;
+    gap: 1rem;
+    align-items: center;
+    padding-block: 0.45rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .yr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--cyan);
+  }
+  .what {
+    font-weight: 600;
+    color: #fff;
+  }
+  .how {
+    color: var(--muted);
+  }
+  .bar {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+  .bar i {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--cyan), var(--indigo));
+  }
+
+  /* ROOM SEPARATORS */
+  .room-section {
+    padding-top: 3.5rem;
+  }
+  .room-sep {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 2rem;
+  }
+  .sep-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .sep-tag {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #fff;
+  }
+  .sep-cmd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--cyan);
+  }
+
+  .sec-head {
+    margin-bottom: 1.75rem;
+  }
+  .sec-head h2 {
+    font-size: clamp(1.7rem, 3vw, 2.25rem);
+    letter-spacing: -0.03em;
+    margin: 0 0 0.35rem;
+    color: #fff;
+  }
+  .sec-head p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  /* WORK */
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.35rem;
+    margin-bottom: 1.5rem;
+  }
+  .work-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .work-card:hover {
+    border-color: var(--border-hi);
+    transform: translateY(-2px);
+  }
+  .work-thumb {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    background: #0d0f14;
+  }
+  .thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+  .work-body {
+    padding: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .work-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .stat-badge {
+    font-size: 0.76rem;
+    color: #cbd5e1;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+  }
+  .stat-badge strong {
+    color: var(--cyan);
+  }
+  .work-body h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.25rem;
+    color: #fff;
+  }
+  .work-body p {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    flex: 1;
+  }
+  .more {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--cyan);
+  }
+
+  .career-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.88rem;
+  }
+  .career-names {
+    color: #cbd5e1;
+    flex: 1;
+  }
+  .career-line a {
+    color: var(--cyan);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  /* EDU */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+  .edu-card h3 {
+    margin: 0.35rem 0 0.2rem;
+    font-size: 1.2rem;
+    color: #fff;
+  }
+  .school {
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 0.92rem;
+  }
+  .note {
+    margin: 0.65rem 0 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  .note a {
+    color: var(--cyan);
+    text-decoration: none;
+  }
+
+  /* EXHIBITS */
+  .exhibits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .ex-card {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.65rem;
+    align-items: center;
+  }
+  .ex-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .ex-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--cyan);
+  }
+  .ex-copy h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.45rem;
+  }
+  .ex-copy h3 a {
+    color: #fff;
+    text-decoration: none;
+  }
+  .ex-copy h3 a:hover {
+    color: var(--cyan);
+  }
+  .ex-kicker {
+    margin: 0 0 0.75rem;
+    color: #e2e8f0;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  .ex-summary {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .credit {
+    margin: 0 0 1.25rem;
+    padding: 0.9rem 1rem;
+    background: var(--surface-2);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.84rem;
+  }
+  .credit dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--cyan);
+    display: inline;
+    margin-right: 0.5rem;
+  }
+  .credit dd {
+    display: inline;
+    margin: 0;
+    color: #cbd5e1;
+  }
+  .ex-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+  .btn-primary {
+    padding: 0.65rem 1.05rem;
+    border-radius: 8px;
+    background: #fff;
+    color: #090a0d;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    background: var(--cyan);
+  }
+  .btn-ghost {
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: #e2e8f0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .ex-media {
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    aspect-ratio: 16 / 10;
+    background: #0d0f14;
+  }
+  .ex-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .ex-terminal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem;
+    gap: 0.75rem;
+  }
+  .stack-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .stack-pills span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: #cbd5e1;
+  }
+
+  /* EXIT */
+  .exit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .coda-card,
+  .contact-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem;
+  }
+  .coda-card h3,
+  .contact-card h3 {
+    margin: 0.4rem 0;
+    font-size: 1.2rem;
+    color: #fff;
+  }
+  .coda-card p,
+  .contact-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0 0 1rem;
+  }
+  .coda-card a {
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    text-decoration: none;
+  }
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .site-footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--dim);
+    font-size: 0.88rem;
+  }
+  .site-footer a {
+    color: var(--muted);
+  }
+
+  @media (max-width: 960px) {
+    .hero-main,
+    .split,
+    .work-grid,
+    .edu-grid,
+    .ex-card,
+    .exit-grid {
+      grid-template-columns: 1fr;
+    }
+    .shift li {
+      grid-template-columns: 3.5rem 1fr;
+      gap: 0.35rem 0.75rem;
+    }
+    .how,
+    .bar {
+      grid-column: 1 / -1;
+    }
+    .sl-score {
+      display: none;
+    }
+  }
+</style>

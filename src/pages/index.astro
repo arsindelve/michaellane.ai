@@ -23,7 +23,28 @@ const shift = [
   { year: '2026', what: 'Unopened Worlds, this site', how: 'AI writes the implementation. I own every decision.', ai: 0.9 },
 ];
 
-const career = ['Second Nature', 'Rev', 'Cart.com', 'Sesami', 'Premier Designs', 'OrderEase', 'Kobo', 'Toolbox', 'Logitech'];
+const career = [
+  { name: 'Second Nature', years: '2026–' },
+  { name: 'Rev', years: '2024–26' },
+  { name: 'Cart.com', years: '2022–24' },
+  { name: 'Sesami', years: '2021–22' },
+  { name: 'Premier Designs', years: '2017–20' },
+  { name: 'OrderEase', years: '2014–17' },
+  { name: 'Kobo', years: '2012–14' },
+  { name: 'Toolbox', years: '2011–12' },
+  { name: 'Logitech', years: '2009–11' },
+];
+
+const workCompany: Record<string, string> = {
+  'second-nature-software-factory': 'Second Nature',
+  'rev-legal-ai': 'Rev',
+  'rev-saas': 'Rev',
+  'cart-core-services': 'Cart.com',
+  'premier-dvtd': 'Premier Designs',
+  linkgreen: 'OrderEase',
+  'logitech-revue': 'Logitech',
+};
+const linkedCompanies = new Set(Object.values(workCompany));
 ---
 
 <Base title="Michael Lane · Engineering Leader">
@@ -88,7 +109,7 @@ const career = ['Second Nature', 'Rev', 'Cart.com', 'Sesami', 'Premier Designs',
       <div class="cards" tabindex="0" aria-label="Work I’ve led">
       {
         work.map((w) => (
-          <a class="card" href={`/work/${w.id}`}>
+          <a class="card" href={`/work/${w.id}`} data-company={workCompany[w.id] ?? ''}>
             {w.data.stats[0] && (
               <p class="big">
                 {w.data.stats[0].n}
@@ -109,7 +130,19 @@ const career = ['Second Nature', 'Rev', 'Cart.com', 'Sesami', 'Premier Designs',
         career.map((c, i) => (
           <>
             {i > 0 && <span class="sep">·</span>}
-            <span>{c}</span>
+            {linkedCompanies.has(c.name) ? (
+              <button type="button" class="career-co" data-company={c.name}>
+                <span class="c-node" aria-hidden="true" />
+                <span class="c-name">{c.name}</span>
+                <span class="c-yr">{c.years}</span>
+              </button>
+            ) : (
+              <span class="career-item">
+                <span class="c-node dim" aria-hidden="true" />
+                <span class="c-name">{c.name}</span>
+                <span class="c-yr">{c.years}</span>
+              </span>
+            )}
           </>
         ))
       }
@@ -224,13 +257,29 @@ const career = ['Second Nature', 'Rev', 'Cart.com', 'Sesami', 'Premier Designs',
     const step = () => originals[0].offsetWidth + gap();
     const setWidth = () => step() * originals.length;
     const jump = (left: number) => track.scrollTo({ left, behavior: 'instant' as ScrollBehavior });
+    const careerBtns = [...document.querySelectorAll<HTMLButtonElement>('.career-co[data-company]')];
+    const activeIndex = () => ((Math.round(track.scrollLeft / step()) % originals.length) + originals.length) % originals.length;
+    const syncCareer = () => {
+      const co = originals[activeIndex()]?.dataset.company;
+      for (const btn of careerBtns) btn.classList.toggle('active', btn.dataset.company === co);
+    };
+    syncCareer();
+
     let settle = 0;
+    let raf = 0;
     track.addEventListener(
       'scroll',
       () => {
+        if (!raf) {
+          raf = requestAnimationFrame(() => {
+            raf = 0;
+            syncCareer();
+          });
+        }
         clearTimeout(settle);
         settle = window.setTimeout(() => {
           if (track.scrollLeft >= setWidth() - 2) jump(track.scrollLeft - setWidth());
+          syncCareer();
         }, 120);
       },
       { passive: true },
@@ -245,6 +294,19 @@ const career = ['Second Nature', 'Rev', 'Cart.com', 'Sesami', 'Premier Designs',
       clearInterval(timer);
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) timer = window.setInterval(() => !paused && go(1), 10000);
     };
+    for (const btn of careerBtns) {
+      btn.addEventListener('click', () => {
+        const co = btn.dataset.company;
+        const matches = originals.map((el, i) => (el.dataset.company === co ? i : -1)).filter((i) => i !== -1);
+        if (!matches.length) return;
+        const cur = activeIndex();
+        const curPos = matches.indexOf(cur);
+        const targetIdx = curPos >= 0 ? matches[(curPos + 1) % matches.length] : matches[0];
+        if (track.scrollLeft >= setWidth() - 2) jump(track.scrollLeft - setWidth());
+        track.scrollTo({ left: targetIdx * step(), behavior: 'smooth' });
+        restart();
+      });
+    }
     prev.addEventListener('click', () => (go(-1), restart()));
     next.addEventListener('click', () => (go(1), restart()));
     wrap.addEventListener('mouseenter', () => (paused = true));
@@ -580,6 +642,30 @@ const career = ['Second Nature', 'Rev', 'Cart.com', 'Sesami', 'Premier Designs',
   }
   .career .sep {
     color: var(--muted);
+  }
+  .career .c-node,
+  .career .c-yr {
+    display: none;
+  }
+  .career-co {
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: 0.15rem 0.45rem;
+    margin: -0.15rem -0.2rem;
+    border-radius: 6px;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    transition: color 0.18s ease, background-color 0.18s ease;
+  }
+  .career-co:hover {
+    color: var(--accent);
+  }
+  .career-co.active {
+    color: var(--accent);
+    font-weight: 700;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
   }
   .career a {
     font-family: var(--mono);

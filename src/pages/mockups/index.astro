@@ -1,0 +1,259 @@
+---
+import MockupSwitcher from '../../components/MockupSwitcher.astro';
+
+const directions = [
+  {
+    id: '01',
+    name: 'Executive Slate',
+    href: '/mockups/slate',
+    tagline: 'Dark architectural precision for an AI-native engineering executive.',
+    palette: ['#090a0d', '#12151c', '#6366f1', '#38bdf8', '#f8fafc'],
+    fonts: 'Plus Jakarta Sans + JetBrains Mono',
+    highlights: [
+      'Asymmetric hero with framed portrait, live role card, and 4-stat KPI strip',
+      'Featured leadership bento with product screenshots & outcome metrics',
+      '2×2 glassmorphic Leadership Principles + AI & R&D Lab showcase',
+      'Scannable executive career timeline & MSc/MBA credentials',
+    ],
+  },
+  {
+    id: '02',
+    name: 'Swiss Grid',
+    href: '/mockups/swiss',
+    tagline: 'High-contrast daylight editorial with a sticky profile rail and crisp rules.',
+    palette: ['#ffffff', '#f4f5f7', '#111318', '#1d4ed8', '#dc2626'],
+    fonts: 'Instrument Serif + Inter + IBM Plex Mono',
+    highlights: [
+      '12-column split layout: sticky left executive dossier + scrolling right canvas',
+      'Editorial serif headlines paired with crisp tabular career ledger',
+      'Large 16:9 case study frames with role metadata & stack tags',
+      'Effortless 10-second scan for CEOs, boards, and executive recruiters',
+    ],
+  },
+  {
+    id: '03',
+    name: 'Product Bento',
+    href: '/mockups/bento',
+    tagline: 'Modular, warm-modern bento grid uniting leadership impact and hands-on AI craft.',
+    palette: ['#f8fafc', '#ffffff', '#0f172a', '#0d9488', '#f59e0b'],
+    fonts: 'DM Sans + JetBrains Mono',
+    highlights: [
+      'Above-the-fold bento grid: thesis, portrait, 4 KPI tiles, current role & education',
+      '2-column visual case studies with real product screenshots & metrics',
+      'Interactive-style "How I Build With AI" 2024–2026 progression card',
+      'Clean 3-column independent AI & retro-computing lab gallery',
+    ],
+  },
+  {
+    id: '04',
+    name: 'Obsidian Rooms',
+    href: '/mockups/obsidian',
+    tagline: 'Slate’s modern dark palette fused with your original Infocom rooms, status line, and voice.',
+    palette: ['#090a0d', '#11131a', '#38bdf8', '#818cf8', '#f1f5f9'],
+    fonts: 'Plus Jakarta Sans + JetBrains Mono',
+    highlights: [
+      'Dynamic Infocom status bar (> Entrance · Score: 305 merged PRs) updating as you scroll',
+      'Original hero voice, "I contribute / AI implements" split, and 2024–2026 shift bars',
+      'Room dividers (> enter work, > open exhibits) with dark visual screenshot cards',
+      'Exhibit Hall preserving the signature > Me / > AI credit breakdown',
+    ],
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio Design Mockups · Michael Lane</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="hub">
+      <header class="hub-head">
+        <p class="eyebrow">michaellane.ai · Design Exploration</p>
+        <h1>Three Modern Portfolio Directions</h1>
+        <p class="sub">
+          Each mockup uses your real career history, case studies, screenshots, and AI exhibits—reimagined with stronger
+          visual hierarchy, modern typography, and executive presence. Click any direction to preview the full page.
+        </p>
+      </header>
+
+      <section class="grid">
+        {
+          directions.map((d) => (
+            <article class="card">
+              <div class="card-top">
+                <span class="num">{d.id}</span>
+                <div class="swatches" aria-label="Color palette">
+                  {d.palette.map((hex) => (
+                    <span class="swatch" style={`background:${hex}`} title={hex} />
+                  ))}
+                </div>
+              </div>
+              <h2>{d.name}</h2>
+              <p class="tagline">{d.tagline}</p>
+              <p class="fonts">
+                <span>Type:</span> {d.fonts}
+              </p>
+              <ul>
+                {d.highlights.map((h) => (
+                  <li>{h}</li>
+                ))}
+              </ul>
+              <a class="btn" href={d.href}>
+                Preview {d.name} →
+              </a>
+            </article>
+          ))
+        }
+      </section>
+    </main>
+
+    <MockupSwitcher active="hub" />
+  </body>
+</html>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: #0b0d12;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+    padding-bottom: 6rem;
+  }
+  .hub {
+    max-width: 74rem;
+    margin: 0 auto;
+    padding: 4.5rem 2rem;
+  }
+  .hub-head {
+    max-width: 44rem;
+    margin-bottom: 3.5rem;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #38bdf8;
+    margin: 0 0 0.75rem;
+  }
+  h1 {
+    font-size: clamp(2.1rem, 4vw, 3.1rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    margin: 0 0 1rem;
+  }
+  .sub {
+    color: #94a3b8;
+    font-size: 1.0625rem;
+    margin: 0;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .card {
+    background: #121620;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover {
+    border-color: rgba(56, 189, 248, 0.45);
+    transform: translateY(-2px);
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+  .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: #64748b;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    padding: 0.2rem 0.5rem;
+  }
+  .swatches {
+    display: flex;
+    gap: 0.35rem;
+  }
+  .swatch {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.45rem;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+  }
+  .tagline {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    margin: 0 0 1rem;
+  }
+  .fonts {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin: 0 0 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .fonts span {
+    color: #64748b;
+  }
+  ul {
+    margin: 0 0 1.75rem;
+    padding-left: 1.1rem;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+  }
+  .btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 1.1rem;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #090a0d;
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .btn:hover {
+    background: #38bdf8;
+  }
+  @media (max-width: 960px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

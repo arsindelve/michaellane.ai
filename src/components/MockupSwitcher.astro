@@ -1,0 +1,104 @@
+---
+interface Props {
+  active: 'hub' | 'slate' | 'swiss' | 'bento' | 'obsidian';
+}
+
+const { active } = Astro.props;
+
+const items = [
+  { id: 'hub', label: 'All Designs', href: '/mockups' },
+  { id: 'slate', label: '01 · Slate', href: '/mockups/slate' },
+  { id: 'swiss', label: '02 · Swiss Grid', href: '/mockups/swiss' },
+  { id: 'bento', label: '03 · Bento', href: '/mockups/bento' },
+  { id: 'obsidian', label: '04 · Obsidian Rooms', href: '/mockups/obsidian' },
+  { id: 'current', label: 'Current Site ↗', href: '/' },
+] as const;
+---
+
+<nav class="mockup-bar" aria-label="Portfolio design mockups">
+  <span class="mockup-badge">Mockup Preview</span>
+  <div class="mockup-links">
+    {
+      items.map((item) => (
+        <a
+          href={item.href}
+          class:list={['mockup-link', { active: item.id === active }]}
+          aria-current={item.id === active ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+  </div>
+</nav>
+
+<style>
+  .mockup-bar {
+    position: fixed;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.45rem 0.6rem 0.45rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(15, 17, 23, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.8125rem;
+    max-width: calc(100vw - 1.5rem);
+    overflow-x: auto;
+  }
+
+  .mockup-badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    white-space: nowrap;
+    padding-right: 0.35rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .mockup-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .mockup-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .mockup-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .mockup-link.active {
+    background: #ffffff;
+    color: #0f172a;
+    font-weight: 600;
+  }
+
+  @media (max-width: 640px) {
+    .mockup-badge {
+      display: none;
+    }
+    .mockup-bar {
+      padding: 0.4rem;
+    }
+  }
+</style>

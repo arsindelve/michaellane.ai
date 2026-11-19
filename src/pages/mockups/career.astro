@@ -1,0 +1,480 @@
+---
+const career = [
+  { name: 'Second Nature', years: '2026–', hasCase: true },
+  { name: 'Rev', years: '2024–26', hasCase: true },
+  { name: 'Cart.com', years: '2022–24', hasCase: true },
+  { name: 'Sesami', years: '2021–22', hasCase: false },
+  { name: 'Premier Designs', years: '2017–20', hasCase: true },
+  { name: 'OrderEase', years: '2014–17', hasCase: true },
+  { name: 'Kobo', years: '2012–14', hasCase: false },
+  { name: 'Toolbox', years: '2011–12', hasCase: false },
+  { name: 'Logitech', years: '2009–11', hasCase: true },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Career List Mockups · Obsidian</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="page">
+      <header class="head">
+        <p class="eyebrow">Obsidian · Small-Width Career List Options</p>
+        <h1>Four ways to handle the wrapped company list</h1>
+        <p class="sub">
+          Previewed at a constrained narrow width (`~520px`). Click any highlighted company in any option to test the
+          active state.
+        </p>
+      </header>
+
+      <div class="grid">
+        <!-- OPTION A: PILL GRID -->
+        <section class="mock">
+          <div class="mock-head">
+            <span class="tag">Option A</span>
+            <h2>Rounded Pill Chips</h2>
+            <p>Header row + hairline rule, solid pills for case studies, dashed for résumé-only.</p>
+          </div>
+          <div class="narrow-frame">
+            <div class="career opt-a">
+              <div class="c-top">
+                <span class="label">Career</span>
+                <a href="/resume">Full résumé →</a>
+              </div>
+              <div class="a-list">
+                {
+                  career.map((c, i) =>
+                    c.hasCase ? (
+                      <button type="button" class:list={['co-btn', { active: i === 0 }]}>
+                        {c.name}
+                      </button>
+                    ) : (
+                      <span class="co-muted">{c.name}</span>
+                    ),
+                  )
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- OPTION B: STRUCTURED INDEX GRID -->
+        <section class="mock">
+          <div class="mock-head">
+            <span class="tag">Option B</span>
+            <h2>Structured 3-Column Index</h2>
+            <p>Clean architectural grid with tenure years and a cyan dot for clickable case studies.</p>
+          </div>
+          <div class="narrow-frame">
+            <div class="career opt-b">
+              <div class="c-top">
+                <span class="label">Career</span>
+                <a href="/resume">Full résumé →</a>
+              </div>
+              <div class="b-grid">
+                {
+                  career.map((c, i) =>
+                    c.hasCase ? (
+                      <button type="button" class:list={['b-cell', 'co-btn', { active: i === 0 }]}>
+                        <span class="b-name">
+                          <i class="dot" />
+                          {c.name}
+                        </span>
+                        <small>{c.years}</small>
+                      </button>
+                    ) : (
+                      <div class="b-cell b-muted">
+                        <span class="b-name">
+                          <i class="dot dim" />
+                          {c.name}
+                        </span>
+                        <small>{c.years}</small>
+                      </div>
+                    ),
+                  )
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- OPTION C: CONNECTED TIMELINE RAIL -->
+        <section class="mock">
+          <div class="mock-head">
+            <span class="tag">Option C</span>
+            <h2>Stepped Career Rail</h2>
+            <p>2-column chronological path with a subtle vertical rail showing progression from 2026 back to 2009.</p>
+          </div>
+          <div class="narrow-frame">
+            <div class="career opt-c">
+              <div class="c-top">
+                <span class="label">Career</span>
+                <a href="/resume">Full résumé →</a>
+              </div>
+              <div class="c-rail">
+                {
+                  career.map((c, i) =>
+                    c.hasCase ? (
+                      <button type="button" class:list={['c-item', 'co-btn', { active: i === 0 }]}>
+                        <span class="node" />
+                        <span class="c-name">{c.name}</span>
+                        <span class="c-yr">{c.years}</span>
+                      </button>
+                    ) : (
+                      <div class="c-item c-muted">
+                        <span class="node dim" />
+                        <span class="c-name">{c.name}</span>
+                        <span class="c-yr">{c.years}</span>
+                      </div>
+                    ),
+                  )
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- OPTION D: MINIMAL TYPOGRAPHIC UNDERLINE -->
+        <section class="mock">
+          <div class="mock-head">
+            <span class="tag">Option D</span>
+            <h2>Minimal Typographic Flow</h2>
+            <p>No boxes or borders—clean inline typography with generous spacing and a crisp cyan active underline.</p>
+          </div>
+          <div class="narrow-frame">
+            <div class="career opt-d">
+              <div class="c-top">
+                <span class="label">Career</span>
+                <a href="/resume">Full résumé →</a>
+              </div>
+              <div class="d-flow">
+                {
+                  career.map((c, i) =>
+                    c.hasCase ? (
+                      <button type="button" class:list={['d-btn', 'co-btn', { active: i === 0 }]}>
+                        {c.name}
+                      </button>
+                    ) : (
+                      <span class="d-muted">{c.name}</span>
+                    ),
+                  )
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      document.querySelectorAll('.narrow-frame').forEach((frame) => {
+        const btns = [...frame.querySelectorAll<HTMLButtonElement>('.co-btn')];
+        btns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            btns.forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  :root {
+    --bg: #090a0d;
+    --bg-2: #11131a;
+    --surface-2: #171a24;
+    --ink: #f1f5f9;
+    --ink-2: #cbd5e1;
+    --muted: #64748b;
+    --rule: rgba(255, 255, 255, 0.1);
+    --accent: #38bdf8;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    line-height: 1.5;
+  }
+  .page {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+  .head {
+    max-width: 42rem;
+    margin-bottom: 2.5rem;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.5rem;
+  }
+  h1 {
+    margin: 0 0 0.6rem;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+  }
+  .sub {
+    margin: 0;
+    color: #94a3b8;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+  .mock-head {
+    margin-bottom: 0.9rem;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+  .mock-head h2 {
+    margin: 0.2rem 0 0.25rem;
+    font-size: 1.2rem;
+  }
+  .mock-head p {
+    margin: 0;
+    font-size: 0.86rem;
+    color: #94a3b8;
+  }
+  .narrow-frame {
+    max-width: 520px;
+    border: 1px dashed rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.015);
+  }
+
+  .career {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 1.15rem 1.25rem;
+  }
+  .c-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+  .c-top a {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  button {
+    font: inherit;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    color: inherit;
+  }
+
+  /* OPTION A */
+  .a-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .a-list .co-btn {
+    padding: 0.35rem 0.72rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--rule);
+    color: var(--ink-2);
+  }
+  .a-list .co-btn.active {
+    color: var(--accent);
+    background: rgba(56, 189, 248, 0.14);
+    border-color: rgba(56, 189, 248, 0.45);
+    font-weight: 600;
+  }
+  .a-list .co-muted {
+    padding: 0.35rem 0.72rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    color: var(--muted);
+  }
+
+  /* OPTION B */
+  .b-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .b-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    padding: 0.55rem 0.65rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid transparent;
+    text-align: left;
+  }
+  .b-cell.co-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .b-cell.co-btn.active {
+    background: rgba(56, 189, 248, 0.1);
+    border-color: rgba(56, 189, 248, 0.35);
+  }
+  .b-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+  .b-cell.active .b-name {
+    color: #fff;
+  }
+  .b-muted .b-name {
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .b-cell small {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    padding-left: 0.8rem;
+  }
+  .dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+  .dot.dim {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* OPTION C */
+  .c-rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem 1.25rem;
+    position: relative;
+  }
+  .c-item {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+    text-align: left;
+  }
+  .c-item.co-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .c-item.active {
+    background: rgba(56, 189, 248, 0.12);
+  }
+  .node {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    flex: none;
+  }
+  .c-item.active .node {
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+  }
+  .node.dim {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .c-name {
+    font-size: 0.86rem;
+    color: var(--ink-2);
+    flex: 1;
+  }
+  .c-item.active .c-name {
+    color: #fff;
+    font-weight: 600;
+  }
+  .c-muted .c-name {
+    color: var(--muted);
+  }
+  .c-yr {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  /* OPTION D */
+  .d-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem 1.35rem;
+    align-items: baseline;
+  }
+  .d-btn {
+    padding: 0.15rem 0;
+    font-size: 0.94rem;
+    color: var(--ink-2);
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.18);
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .d-btn:hover {
+    color: #fff;
+    border-bottom-color: var(--accent);
+  }
+  .d-btn.active {
+    color: var(--accent);
+    font-weight: 700;
+    border-bottom: 2px solid var(--accent);
+  }
+  .d-muted {
+    font-size: 0.94rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .b-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
