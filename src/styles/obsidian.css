@@ -98,8 +98,21 @@
   -webkit-text-fill-color: transparent;
 }
 
-:root:root[data-style='obsidian'] .hero .lede {
+:root:root:root:root:root[data-style='obsidian'] .hero .lede {
   color: var(--muted);
+  font-size: 1.12rem;
+  line-height: 1.6;
+  max-width: 42rem;
+  margin-top: 1.25rem;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .hero .lede + .lede {
+  margin-top: 0.85rem;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .hero .lede strong {
+  color: #ffffff;
+  font-weight: 600;
 }
 
 /* Split: I contribute / AI implements */
@@ -130,11 +143,24 @@
 }
 
 /* Shift timeline */
-:root:root[data-style='obsidian'] .shift {
+:root:root:root:root:root[data-style='obsidian'] .shift {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   background: var(--bg-2);
   border: 1px solid var(--rule);
   border-radius: 16px;
   padding: 1.25rem 1.5rem;
+}
+
+@media (max-width: 1050px) {
+  :root:root:root:root:root[data-style='obsidian'] .shift {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  :root:root:root:root:root[data-style='obsidian'] .shift {
+    grid-template-columns: 1fr;
+  }
 }
 
 :root:root[data-style='obsidian'] .shift li {

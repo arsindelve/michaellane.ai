@@ -299,16 +299,20 @@ const primary = d.embed?.url ?? d.frameUrl ?? d.links[0]?.url;
   }
   .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+    gap: 1.75rem 2rem;
     margin: 0 0 3rem;
     padding-bottom: 2.5rem;
     border-bottom: 1px solid var(--rule);
   }
+  .stats > div {
+    min-width: 0;
+  }
   .stats dt {
-    font-size: 2.8rem;
-    line-height: 1;
+    font-size: clamp(1.85rem, 3vw, 2.45rem);
+    line-height: 1.05;
     color: var(--accent);
+    white-space: nowrap;
   }
   .stats dd {
     margin: 0.6rem 0 0;

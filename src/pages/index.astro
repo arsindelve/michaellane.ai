@@ -12,15 +12,19 @@ const work = all.filter((e) => e.data.kind === 'work');
 
 // How implementation has shifted from me to AI. `ai` only sets the bar's fill and is illustrative, not measured.
 const shift = [
-  { year: '2024', what: 'ZorkAI', how: 'I wrote every line. AI was the narrator.', ai: 0 },
-  { year: '2025', what: 'ZorkAI, Planetfall', how: 'AI agents began to write code against my tests. I review.', ai: 0.55 },
+  { year: '2024', how: 'I wrote every line. AI was the narrator as I reimagined interactive fiction for a new generation.', ai: 0 },
+  { year: '2025', how: 'AI agents began to write code against my tests. I review.', ai: 0.55 },
   {
     year: '2026',
-    what: 'AdventureBreaker',
     how: 'An AI playtester built to break my AI narrator. AI wrote most of it; I designed it.',
     ai: 0.75,
   },
-  { year: '2026', what: 'Unopened Worlds, this site', how: 'AI writes the implementation. I own every decision.', ai: 0.9 },
+  { year: '2026', how: 'AI writes the implementation. I own every decision.', ai: 0.9 },
+  {
+    year: '2027',
+    how: 'Software factories: deterministic gates, evidence-based review, and earned autonomy.',
+    ai: 0.98,
+  },
 ];
 
 const career = [
@@ -59,9 +63,15 @@ const linkedCompanies = new Set(Object.values(workCompany));
       <span class="hl" aria-hidden="true">{'breathe new life into old worlds.'.split(' ').map((w, i, a) => <><span class="w" style={`--i:${i + 6}`}>{w}</span>{i < a.length - 1 && ' '}</>)}</span>
     </h1>
     <p class="lede">
-      Most recently, I’ve led over 60 people across AI research, QA, design, and web and mobile development. I’ve been
-      writing software since middle school, and every year I hand more of the implementation to AI, so I can do more
-      research, design, architecture and long-term planning.
+      I’ve led over 60 people across AI research, QA, design, and web and mobile development. I’ve been writing software
+      since middle school, and every year I hand more of the implementation to AI, so I can do more research, design,
+      architecture and long-term planning.
+    </p>
+    <p class="lede">
+      Right now, my focus is <strong>software factories</strong>: moving engineering organizations from AI-assisted
+      coding to AI-first delivery—front-loading architecture into RFCs, enforcing deterministic CI gates, and replacing
+      diff-reading with evidence-based review and earned autonomy{' '}
+      <a href="/work/second-nature-software-factory">at Second Nature</a>.
     </p>
 
     <ol class="shift" aria-label="How the way I build has changed">
@@ -69,7 +79,6 @@ const linkedCompanies = new Set(Object.values(workCompany));
         shift.map((s) => (
           <li style={`--ai: ${s.ai}`}>
             <span class="yr">{s.year}</span>
-            <span class="what">{s.what}</span>
             <span class="how">{s.how}</span>
             <span class="bar" aria-hidden="true">
               <i />
