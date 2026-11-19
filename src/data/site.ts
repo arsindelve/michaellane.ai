@@ -25,6 +25,22 @@ export type Role = {
 // the rest render compactly.
 export const roles: Role[] = [
   {
+    company: 'Second Nature',
+    title: 'Director of Software Development',
+    start: 'Mar 2026',
+    end: 'Present',
+    place: 'Raleigh, NC (remote)',
+    summary:
+      'Own public-facing engineering (resident experience and onboarding; 3 teams, 22 developers and QA) and lead the rollout of a verification-heavy software factory moving the organization from AI-assisted to AI-first.',
+    points: [
+      'Made the case to leadership to build an AI software factory: front-loading design into RFCs, enforcing deterministic CI gates, and replacing human diff-reading with evidence-based review.',
+      'Piloting small two-engineer pods paired with Claude as planning partner, eliminating sprint ceremony overhead and delivering 2x velocity per engineer over median teams.',
+      'Pioneered "earned autonomy" and auto-merge for low-risk PRs governed by AI risk classification and regret-free merge rate baselines under SOC 2 Type 2 compliance.',
+      'Shipped a production internal tool with every line written by orchestrated agents under my direction in 2 days against a 6-week estimate, now in daily use.',
+    ],
+    stack: 'Node.js on AWS',
+  },
+  {
     company: 'Rev',
     title: 'Vice President of Software Development',
     start: 'Aug 2025',
