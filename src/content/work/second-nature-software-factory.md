@@ -7,8 +7,13 @@ summary: As Director of Software Development, I made the case and architected th
 years: 2026 – Present
 role: Director of Software Development
 stack: [Claude Code, ast-grep, Modal sandboxes, SOC 2 Type 2, Node.js, AWS]
+cover: ../../assets/shots/second-nature/home-hero.png
+coverAlt: Second Nature’s Resident Experience Platform home page, “The only platform that personalizes renting for every resident,” highlighting Resident Onboarding and the Resident Benefits Package.
+frameUrl: https://www.secondnature.com/
+links:
+  - { label: secondnature.com, url: "https://www.secondnature.com" }
 stats:
-  - { n: "2x", label: "points per engineer in pilot pods" }
+  - { n: "2x", label: "points per engineer vs. teams using Claude Code only for implementation" }
   - { n: "~50%", label: "projected reduction in all-in cost per point" }
   - { n: "2 days", label: "to ship production tool vs 6-week estimate" }
   - { n: "22", label: "engineers and QA across three resident-facing teams" }
@@ -32,6 +37,6 @@ Instead of asking humans to inspect every line of generated diffs, the factory m
 
 ## The proof
 
-We proved the model first with our pilot team: two engineers delivering 2x the velocity per engineer of median teams, with engineer engagement scores reaching 92–94% against an org baseline of 84–87%.
+We proved the model first with a two-engineer pilot. Other teams were already using Claude Code for implementation; the experiment was to integrate AI across the full lifecycle—planning, scoping, refinement, and testing—instead of stopping at code generation. That pilot pod delivered 2x the velocity per engineer of median teams using Claude Code just for implementation, with engineer engagement scores reaching 92–94% against an org baseline of 84–87%.
 
 In my own work, I shipped a production internal tool with every line written by orchestrated agents under my direction in two days and a night against a six-week estimate for a full team—in active daily use across the company since.

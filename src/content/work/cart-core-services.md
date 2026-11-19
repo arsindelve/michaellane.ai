@@ -7,6 +7,13 @@ summary: Cart.com grew by buying companies, and every one of them came with its 
 years: 2022 – 2023
 role: Director of Engineering, Core Services
 stack: [Auth0, Okta, Kafka, Event-driven microservices, Google Cloud]
+cover: ../../assets/shots/cart/cart-home-2022-hero.png
+coverAlt: Cart.com's 2022 home page, "Where brands go to grow," with six columns for its services.
+frameUrl: https://www.cart.com/
+slides:
+  - { src: ../../assets/shots/cart/cart-home-2022-hero.png, path: "", caption: "2022: six services under one name, each with its own login", alt: "Cart.com's 2022 home page: Where brands go to grow, with six columns for Storefront, Growth Marketing, Channel Management, Fulfillment, Customer Engagement and Unified Analytics, and a strip of brands trusted by over 6,000." }
+  - { src: ../../assets/shots/cart/cart-home-2022-stats.png, path: "", caption: "6,000 brands, 41 million orders a year", alt: "Cart.com's 2022 stats: 6k+ brands, 20k+ online stores, 142M+ products, 2k+ advertising channels, 22M+ daily repricing events, 41M+ orders a year, 3.5M+ square feet of fulfillment space and $3B+ annual GMV." }
+  - { src: ../../assets/shots/cart/cart-fulfillment-2022-order-management.png, path: "/solution/fulfillment", caption: "Every order, tracked from start to finish", alt: "Cart.com's order management section: automate order management to deliver with accuracy, with an order summary illustration." }
 stats:
   - { n: "6", label: "acquired companies behind one login" }
   - { n: "1", label: "customer portal: Brand HQ" }
