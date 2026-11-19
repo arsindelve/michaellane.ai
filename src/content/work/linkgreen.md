@@ -7,10 +7,11 @@ summary: I joined LinkGreen as its first technical hire and wrote the first line
 years: 2014 – 2017
 role: Chief Technology Officer
 stack: [ASP.NET MVC, Angular, SQL Server, NServiceBus, Azure, Ionic]
-cover: ../../assets/shots/linkgreen/home-2016.png
-coverAlt: LinkGreen’s 2016 home page, a single interface connecting wholesale suppliers and buyers.
-frameUrl: http://linkgreen.ca/
+cover: ../../assets/shots/linkgreen/orderease-home.png
+coverAlt: "OrderEase today: “Take orders everywhere. Rekey nothing.” B2B order management platform and dashboard."
+frameUrl: https://www.orderease.com/
 slides:
+  - { src: ../../assets/shots/linkgreen/orderease-home.png, path: "", caption: "OrderEase today: B2B order management platform", alt: "OrderEase’s modern home page and dashboard preview: Take orders everywhere. Rekey nothing." }
   - { src: ../../assets/shots/linkgreen/home-2015.png, path: "", caption: "2015: “Your link to the green industry”", alt: "LinkGreen’s 2015 home page for the horticulture industry, with an explainer video of a garden center." }
   - { src: ../../assets/shots/linkgreen/home-2016.png, path: "", caption: "2016: one interface, from order placement to fulfillment", alt: "LinkGreen’s 2016 banners: a single interface connecting wholesale suppliers and buyers, and place orders with all your suppliers on demand." }
   - { src: ../../assets/shots/linkgreen/mobile-2017.png, path: "/mobile", caption: "LinkGreen Mobile: build orders on the sales floor", alt: "LinkGreen Mobile, the wholesale ordering app, with an order on a phone." }

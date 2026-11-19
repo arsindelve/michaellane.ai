@@ -1,0 +1,655 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import { education, principles } from '../../data/site';
+
+const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const work = all.filter((e) => e.data.kind === 'work');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Section Mockups (Work + Education/Principles) · Michael Lane</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="ambient" aria-hidden="true"></div>
+
+    <main class="page">
+      <header class="head">
+        <p class="eyebrow">Obsidian · Section Options 1 &amp; 2</p>
+        <h1>“Work I’ve led” &amp; Education / Principles</h1>
+        <p class="sub">Three visual options for the Work cards (using your real screenshots) and three for the middle Education/Principles band.</p>
+      </header>
+
+      <!-- PART 1: WORK I'VE LED -->
+      <section class="group">
+        <p class="group-lbl">Part 1 · Work I’ve Led</p>
+
+        <!-- 1A -->
+        <div class="opt">
+          <div class="opt-meta">
+            <span class="tag">Option 1A</span>
+            <h2>Visual Thumbnail Cards (keeps the horizontal carousel)</h2>
+            <p>Adds a 16:9 screenshot header and a crisp stat badge to each card—same carousel + Stepped Career Rail below.</p>
+          </div>
+          <div class="grid-3">
+            {
+              work.slice(0, 3).map((w) => {
+                const thumb = w.data.cover ?? w.data.slides?.[0]?.src;
+                const alt = w.data.coverAlt ?? w.data.slides?.[0]?.alt ?? w.data.title;
+                return (
+                  <a href={`/work/${w.id}`} class="card-1a">
+                    {thumb && (
+                      <div class="thumb-16x9">
+                        <Image src={thumb} alt={alt} width={640} class="img-cover" />
+                      </div>
+                    )}
+                    <div class="c1a-body">
+                      {w.data.stats[0] && (
+                        <span class="stat-pill">
+                          <strong>{w.data.stats[0].n}</strong> {w.data.stats[0].label}
+                        </span>
+                      )}
+                      <h3>{w.data.title}</h3>
+                      <p>{w.data.kicker}</p>
+                      <span class="more">Case study →</span>
+                    </div>
+                  </a>
+                );
+              })
+            }
+          </div>
+        </div>
+
+        <!-- 1B -->
+        <div class="opt">
+          <div class="opt-meta">
+            <span class="tag">Option 1B</span>
+            <h2>Featured 2-Up + Compact Grid (no carousel needed)</h2>
+            <p>Highlights Second Nature &amp; Rev Legal AI with screenshots and 2-stat strips; the remaining 5 sit in a scannable grid below.</p>
+          </div>
+          <div class="grid-2">
+            {
+              work.slice(0, 2).map((w) => {
+                const thumb = w.data.cover ?? w.data.slides?.[0]?.src;
+                const alt = w.data.coverAlt ?? w.data.slides?.[0]?.alt ?? w.data.title;
+                return (
+                  <a href={`/work/${w.id}`} class="card-1b-feat">
+                    {thumb && (
+                      <div class="thumb-16x9">
+                        <Image src={thumb} alt={alt} width={800} class="img-cover" />
+                      </div>
+                    )}
+                    <div class="c1b-body">
+                      <span class="mono">{w.data.years} · {w.data.role}</span>
+                      <h3>{w.data.title}</h3>
+                      <p>{w.data.kicker}</p>
+                      <div class="mini-stats">
+                        {w.data.stats.slice(0, 2).map((s) => (
+                          <div>
+                            <strong>{s.n}</strong>
+                            <span>{s.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </a>
+                );
+              })
+            }
+          </div>
+          <div class="grid-5">
+            {
+              work.slice(2).map((w) => (
+                <a href={`/work/${w.id}`} class="card-1b-sm">
+                  {w.data.stats[0] && <strong>{w.data.stats[0].n}</strong>}
+                  <h4>{w.data.title}</h4>
+                  <span>{w.data.years}</span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- 1C -->
+        <div class="opt">
+          <div class="opt-meta">
+            <span class="tag">Option 1C</span>
+            <h2>Horizontal Split Cards (2-up)</h2>
+            <p>Compact side-by-side cards with a cropped screenshot on the left and stat + title on the right.</p>
+          </div>
+          <div class="grid-2">
+            {
+              work.slice(0, 4).map((w) => {
+                const thumb = w.data.cover ?? w.data.slides?.[0]?.src;
+                const alt = w.data.coverAlt ?? w.data.slides?.[0]?.alt ?? w.data.title;
+                return (
+                  <a href={`/work/${w.id}`} class="card-1c">
+                    {thumb && (
+                      <div class="c1c-img">
+                        <Image src={thumb} alt={alt} width={420} class="img-cover" />
+                      </div>
+                    )}
+                    <div class="c1c-body">
+                      {w.data.stats[0] && <span class="c1c-stat">{w.data.stats[0].n}</span>}
+                      <h3>{w.data.title}</h3>
+                      <p>{w.data.kicker}</p>
+                    </div>
+                  </a>
+                );
+              })
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 2: EDUCATION & PRINCIPLES -->
+      <section class="group">
+        <p class="group-lbl">Part 2 · Education &amp; Leadership Principles</p>
+
+        <!-- 2A -->
+        <div class="opt">
+          <div class="opt-meta">
+            <span class="tag">Option 2A</span>
+            <h2>2×2 Leadership Principles + Compact Credential Strip</h2>
+            <p>Surfaces your 4 principles from <code>site.ts</code> and tightens Education into a sleek horizontal bar below.</p>
+          </div>
+          <div class="grid-2">
+            {
+              principles.map((p, i) => (
+                <div class="prin-card">
+                  <span class="mono">0{i + 1}</span>
+                  <h3>{p.head}</h3>
+                  <p>{p.body}</p>
+                </div>
+              ))
+            }
+          </div>
+          <div class="edu-strip">
+            {
+              education.map((e) => (
+                <div class="edu-strip-item">
+                  <span class="mono">{e.when}</span>
+                  <div>
+                    <strong>{e.degree}</strong>
+                    <span>{e.school}</span>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- 2B -->
+        <div class="opt">
+          <div class="opt-meta">
+            <span class="tag">Option 2B</span>
+            <h2>Asymmetric Split: Education Left · Principles Right</h2>
+            <p>Pairs both in one cohesive band—credentials anchored on the left, operating philosophy on the right.</p>
+          </div>
+          <div class="split-2b">
+            <div class="col-edu">
+              <span class="mono">Education</span>
+              {
+                education.map((e) => (
+                  <div class="edu-box">
+                    <span class="when">{e.when}</span>
+                    <h3>{e.degree}</h3>
+                    <p>{e.school}</p>
+                    {'note' in e && e.note && <small>{e.note}</small>}
+                  </div>
+                ))
+              }
+            </div>
+            <div class="col-prin">
+              <span class="mono">How I Lead</span>
+              {
+                principles.map((p, i) => (
+                  <div class="prin-row">
+                    <span class="num">0{i + 1}</span>
+                    <div>
+                      <h4>{p.head}</h4>
+                      <p>{p.body}</p>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- 2C -->
+        <div class="opt">
+          <div class="opt-meta">
+            <span class="tag">Option 2C</span>
+            <h2>Ultra-Lean Credential Strip (Education Only)</h2>
+            <p>If you’d rather skip Principles on the home page and just make Education take half the vertical space.</p>
+          </div>
+          <div class="edu-strip">
+            {
+              education.map((e) => (
+                <div class="edu-strip-item">
+                  <span class="mono">{e.when}</span>
+                  <div>
+                    <strong>{e.degree}</strong>
+                    <span>{e.school}</span>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  :root {
+    --bg: #090a0d;
+    --bg-2: #11131a;
+    --surface-2: #171a24;
+    --ink: #f1f5f9;
+    --ink-2: #cbd5e1;
+    --muted: #94a3b8;
+    --rule: rgba(255, 255, 255, 0.1);
+    --accent: #38bdf8;
+    --accent-2: #818cf8;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    line-height: 1.55;
+  }
+  .ambient {
+    position: fixed;
+    inset: -15% -10% auto -10%;
+    height: 70vh;
+    background:
+      radial-gradient(55% 50% at 18% 18%, rgba(99, 102, 241, 0.12), transparent 70%),
+      radial-gradient(50% 50% at 84% 12%, rgba(56, 189, 248, 0.1), transparent 70%);
+    pointer-events: none;
+  }
+  .page {
+    max-width: 74rem;
+    margin: 0 auto;
+    padding: 3.5rem 2rem 6rem;
+    position: relative;
+    z-index: 1;
+  }
+  .head {
+    max-width: 44rem;
+    margin-bottom: 3rem;
+  }
+  .eyebrow,
+  .tag,
+  .mono {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+  }
+  h1 {
+    margin: 0.4rem 0 0.6rem;
+    font-size: 2.2rem;
+    letter-spacing: -0.03em;
+  }
+  .sub {
+    margin: 0;
+    color: var(--muted);
+  }
+  .group {
+    margin-bottom: 4.5rem;
+  }
+  .group-lbl {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+    margin: 0 0 2rem;
+  }
+  .opt {
+    margin-bottom: 3.25rem;
+  }
+  .opt-meta {
+    margin-bottom: 1.15rem;
+  }
+  .opt-meta h2 {
+    margin: 0.2rem 0 0.2rem;
+    font-size: 1.25rem;
+  }
+  .opt-meta p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .opt-meta code {
+    font-family: var(--mono);
+    color: var(--ink-2);
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .grid-5 {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 1rem;
+  }
+  .thumb-16x9 {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--rule);
+    background: #0d0f14;
+  }
+  .img-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+
+  /* 1A */
+  .card-1a {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s;
+  }
+  .card-1a:hover {
+    border-color: var(--accent);
+  }
+  .c1a-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .stat-pill {
+    font-size: 0.76rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  .stat-pill strong {
+    color: var(--accent);
+    font-size: 0.95rem;
+    margin-right: 0.25rem;
+  }
+  .c1a-body h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.15rem;
+  }
+  .c1a-body p {
+    margin: 0 0 1rem;
+    font-size: 0.88rem;
+    color: var(--muted);
+    flex: 1;
+  }
+  .more {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+
+  /* 1B */
+  .card-1b-feat {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-1b-feat:hover {
+    border-color: var(--accent);
+  }
+  .c1b-body {
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .c1b-body h3 {
+    margin: 0.35rem 0 0.35rem;
+    font-size: 1.3rem;
+  }
+  .c1b-body p {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+    flex: 1;
+  }
+  .mini-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 0.85rem;
+    background: var(--surface-2);
+    border-radius: 10px;
+  }
+  .mini-stats strong {
+    display: block;
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+  .mini-stats span {
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: block;
+    line-height: 1.3;
+  }
+  .card-1b-sm {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .card-1b-sm:hover {
+    border-color: var(--accent);
+  }
+  .card-1b-sm strong {
+    color: var(--accent);
+    font-size: 1.25rem;
+  }
+  .card-1b-sm h4 {
+    margin: 0;
+    font-size: 0.92rem;
+    flex: 1;
+  }
+  .card-1b-sm span {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  /* 1C */
+  .card-1c {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card-1c:hover {
+    border-color: var(--accent);
+  }
+  .c1c-img {
+    height: 100%;
+    min-height: 8.5rem;
+    border-right: 1px solid var(--rule);
+  }
+  .c1c-body {
+    padding: 1.1rem 1.25rem;
+  }
+  .c1c-stat {
+    font-weight: 800;
+    color: var(--accent);
+    font-size: 1.25rem;
+    display: block;
+  }
+  .c1c-body h3 {
+    margin: 0.2rem 0 0.25rem;
+    font-size: 1.05rem;
+  }
+  .c1c-body p {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--muted);
+  }
+
+  /* 2A, 2B, 2C */
+  .prin-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 1.4rem;
+  }
+  .prin-card h3 {
+    margin: 0.4rem 0 0.35rem;
+    font-size: 1.08rem;
+  }
+  .prin-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .edu-strip {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .edu-strip-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+  .edu-strip-item strong {
+    display: block;
+    font-size: 1rem;
+  }
+  .edu-strip-item span {
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+
+  .split-2b {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 1.5rem;
+  }
+  .col-edu,
+  .col-prin {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .edu-box {
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--rule);
+  }
+  .edu-box .when {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent-2);
+  }
+  .edu-box h3 {
+    margin: 0.2rem 0 0.15rem;
+    font-size: 1.08rem;
+  }
+  .edu-box p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+  .edu-box small {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .prin-row {
+    display: flex;
+    gap: 0.9rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--rule);
+  }
+  .prin-row .num {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--accent);
+    padding-top: 0.15rem;
+  }
+  .prin-row h4 {
+    margin: 0 0 0.2rem;
+    font-size: 0.98rem;
+  }
+  .prin-row p {
+    margin: 0;
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 960px) {
+    .grid-3,
+    .grid-2,
+    .grid-5,
+    .edu-strip,
+    .split-2b,
+    .card-1c {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

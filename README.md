@@ -9,8 +9,10 @@ Personal portfolio for **Michael Lane** — engineering leader, AI-first builder
 ## Highlights
 
 - **Obsidian Theme** (`src/styles/obsidian.css`) — Deep obsidian (`#090a0d`) canvas with cyan/indigo accents, `Plus Jakarta Sans` + `JetBrains Mono` typography, and subtle ambient gradients.
-- **Interactive Infocom Prompt** (`src/components/Flourish.astro`) — A working text-adventure prompt (`> look`, `type a command`) alongside the 32 Infocom grey-box worlds (`1980–1988`).
-- **Work Carousel ↔ Stepped Career Rail** (`src/pages/index.astro`) — Infinite-looping leadership case-study carousel synced bidirectionally with the Career bar (rendering as a responsive 2-column / 1-column Stepped Career Rail with tenure years on widths `≤ 1280px`).
+- **Interactive Infocom Prompt** (`src/components/Flourish.astro`) — A working text-adventure prompt (`> look`, `type a command`) alongside the 32 Infocom grey-box worlds (`1980–1988`), paired with a 5-column `2024–2027` AI-leverage progression strip.
+- **Work Carousel ↔ Stepped Career Rail** (`src/pages/index.astro`) — Infinite-looping leadership case-study carousel with `16:9` product screenshots (Second Nature, Rev, Cart.com, Sesami, Premier Designs, OrderEase, Logitech Revue) synced bidirectionally with a responsive **Stepped Career Rail** (`3×3` desktop, `2-col` tablet, `1-col` mobile).
+- **Education & How I Lead** — Asymmetric 2-column split pairing academic credentials (`MSc AI` in progress, `MBA · 4.0 GPA`) with four numbered leadership principles from `src/data/site.ts`.
+- **Architectural Timeline Résumé** (`src/pages/resume.astro`) — Connected vertical timeline for executive roles, compact 2-column earlier-career grid, Selected Projects, Education, and `@media print` PDF export.
 - **Research & Renaissance Exhibit Hall** — Stacking-deck showcase of independent AI and retro-computing projects (*ZorkAI*, *Planetfall AI*, *AdventureBreaker*, *Unopened Worlds*, *PlayZork*, *The Manifest Chronicles*) with `Me / AI` credit breakdowns.
 
 ---

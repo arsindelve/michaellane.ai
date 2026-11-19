@@ -7,6 +7,8 @@ summary: I led the teams that moved Rev from transactional, per-file billing to 
 years: 2024 – 2025
 role: Senior Director, Software Development, SaaS
 stack: [Zuora, SaaS billing, Platform services]
+cover: ../../assets/shots/rev/rev-insights-dark.png
+coverAlt: "Rev’s Multi-File Analysis page in dark mode: “Easily Search Your Entire Case,” showing the Rev Insights workspace with multiple uploaded video, audio, and PDF files."
 stats:
   - { n: "750+", label: "self-serve sign-ups a day" }
 ---

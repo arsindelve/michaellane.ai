@@ -7,11 +7,12 @@ summary: At Logitech I managed the local and offshore teams on the Logitech Revu
 years: 2009 – 2011
 role: Software Development Manager
 stack: [Google TV, Android, iPhone, Remote control APIs, Scrum]
-cover: ../../assets/shots/revue/4-boot.jpg
-coverAlt: A Logitech Revue booting on a large TV, with the Logitech Revue with Google TV logo.
-frameUrl: https://commons.wikimedia.org/wiki/Category:Logitech_Revue
+cover: ../../assets/shots/revue/logitech-revue-2011.png
+coverAlt: "Logitech’s 2011 product page for Logitech Revue With Google TV (USD 299.99), showing the HDTV interface, Revue set-top box, and keyboard controller."
+frameUrl: https://web.archive.org/web/20110102182744/http://www.logitech.com/en-us/smartTV/revue
 mediaSize: small
 slides:
+  - { src: ../../assets/shots/revue/logitech-revue-2011.png, path: "", caption: "Logitech’s 2011 product page: Logitech Revue With Google TV", alt: "Archived 2011 Logitech Revue With Google TV product page showing the HDTV UI, Revue box, and keyboard controller." }
   - { src: ../../assets/shots/revue/4-boot.jpg, path: "", caption: "Logitech Revue with Google TV, 2010", alt: "A Logitech Revue booting on a large TV." }
   - { src: ../../assets/shots/revue/1-remotes-android.jpg, path: "", caption: "One box, many controllers: keyboard, Harmony remote and an Android phone", alt: "The Revue box with its keyboard controller, a Harmony remote and an Android phone running the remote app." }
   - { src: ../../assets/shots/revue/2-harmony.jpg, path: "", caption: "Every one of them spoke to the same remote-control APIs", alt: "Keyboard, mini controller, Harmony remote and an Android phone arranged on a table." }

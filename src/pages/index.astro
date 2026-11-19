@@ -1,9 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import ExhibitRow from '../components/ExhibitRow.astro';
 import Flourish from '../components/Flourish.astro';
-import { person, education } from '../data/site';
+import { person, education, principles } from '../data/site';
 
 const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
 const exhibits = all.filter((e) => e.data.kind === 'exhibit' && e.data.placement === 'main');
@@ -44,6 +45,7 @@ const workCompany: Record<string, string> = {
   'rev-legal-ai': 'Rev',
   'rev-saas': 'Rev',
   'cart-core-services': 'Cart.com',
+  sesami: 'Sesami',
   'premier-dvtd': 'Premier Designs',
   linkgreen: 'OrderEase',
   'logitech-revue': 'Logitech',
@@ -95,7 +97,7 @@ const linkedCompanies = new Set(Object.values(workCompany));
     <div class="work-head">
       <p class="label">The day job</p>
       <h2 class="sec-title">Work I’ve led</h2>
-      <p class="intro">What I build with a team. Below it, what I build on my own time.</p>
+      <p class="intro">What I built with a team.</p>
     </div>
     <div class="cards-wrap">
       <button type="button" class="cards-btn prev" aria-label="Previous">
@@ -106,19 +108,35 @@ const linkedCompanies = new Set(Object.values(workCompany));
       </button>
       <div class="cards" tabindex="0" aria-label="Work I’ve led">
       {
-        work.map((w) => (
-          <a class="card" href={`/work/${w.id}`} data-company={workCompany[w.id] ?? ''}>
-            {w.data.stats[0] && (
-              <p class="big">
-                {w.data.stats[0].n}
-                <span>{w.data.stats[0].label}</span>
-              </p>
-            )}
-            <h3>{w.data.title}</h3>
-            <p>{w.data.kicker}</p>
-            <span class="more">Case study →</span>
-          </a>
-        ))
+        work.map((w) => {
+          const thumb = w.data.cover ?? w.data.slides?.[0]?.src;
+          const alt = w.data.coverAlt ?? w.data.slides?.[0]?.alt ?? w.data.title;
+          return (
+            <a class="card" href={`/work/${w.id}`} data-company={workCompany[w.id] ?? ''}>
+              {thumb ? (
+                <div class="card-thumb">
+                  <Image src={thumb} alt={alt} width={640} class="card-thumb-img" />
+                </div>
+              ) : (
+                <div class="card-thumb card-thumb-fallback" aria-hidden="true">
+                  <span class="fb-num">{w.data.stats[0]?.n ?? w.data.years}</span>
+                  <span class="fb-sub">{w.data.stack.slice(0, 3).join(' · ') || w.data.role}</span>
+                </div>
+              )}
+              <div class="card-body">
+                {w.data.stats[0] && (
+                  <p class="big">
+                    {w.data.stats[0].n}
+                    <span>{w.data.stats[0].label}</span>
+                  </p>
+                )}
+                <h3>{w.data.title}</h3>
+                <p>{w.data.kicker}</p>
+                <span class="more">Case study →</span>
+              </div>
+            </a>
+          );
+        })
       }
       </div>
     </div>
@@ -149,27 +167,44 @@ const linkedCompanies = new Set(Object.values(workCompany));
   </section>
 
   <section id="education" class="edu wrap" data-room="The Library">
-    <p class="label">Education</p>
-    <h2 class="sec-title">Education</h2>
-    <div class="edu-grid">
-      {
-        education.map((e) => (
-          <div class="edu-item">
-            <p class="when">{e.when}</p>
-            <h3>{e.degree}</h3>
-            <p class="school">{e.school}</p>
-            <p class="note">
-              {'note' in e && e.note}
-              {e.link && (
-                <>
-                  {' '}
-                  <a href={e.link.href}>{e.link.label} →</a>
-                </>
+    <div class="split-2b">
+      <div class="col-edu">
+        <p class="label">Education</p>
+        {
+          education.map((e) => (
+            <div class="edu-box">
+              <p class="when">{e.when}</p>
+              <h3>{e.degree}</h3>
+              <p class="school">{e.school}</p>
+              {'note' in e && e.note && (
+                <p class="note">
+                  {e.note}
+                  {e.link && (
+                    <>
+                      {' '}
+                      <a href={e.link.href}>{e.link.label} →</a>
+                    </>
+                  )}
+                </p>
               )}
-            </p>
-          </div>
-        ))
-      }
+            </div>
+          ))
+        }
+      </div>
+      <div class="col-prin">
+        <p class="label">How I Lead</p>
+        {
+          principles.map((p, i) => (
+            <div class="prin-row">
+              <span class="num">0{i + 1}</span>
+              <div>
+                <h3>{p.head}</h3>
+                <p>{p.body}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
     </div>
   </section>
 
@@ -193,7 +228,10 @@ const linkedCompanies = new Set(Object.values(workCompany));
   <div class="room-sep wrap" data-room="The Exhibit Hall" aria-hidden="true"></div>
 
   <section id="exhibits" class="exhibits">
-    <div class="wrap ex-head"><h2 class="sec-title">Research and Renaissance</h2></div>
+    <div class="wrap ex-head">
+      <h2 class="sec-title">Research and Renaissance</h2>
+      <p class="intro">What I build on my own time.</p>
+    </div>
     {
       exhibits.map((e, i) => (
         <ExhibitRow
