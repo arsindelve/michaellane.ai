@@ -64,17 +64,6 @@ const linkedCompanies = new Set(Object.values(workCompany));
       research, design, architecture and long-term planning.
     </p>
 
-    <div class="split">
-      <div class="drive">
-        <p class="label">I contribute</p>
-        <p>The research, architecture, systems design, patterns, copy and design.</p>
-      </div>
-      <div class="defer">
-        <p class="label">AI implements</p>
-        <p>The code. More every year, reviewed and tested against decisions I’ve made.</p>
-      </div>
-    </div>
-
     <ol class="shift" aria-label="How the way I build has changed">
       {
         shift.map((s) => (
@@ -216,22 +205,6 @@ const linkedCompanies = new Set(Object.values(workCompany));
   <section class="coda" data-room="1992">
     <p class="label wrap coda-label">Where it started</p>
     {coda.map((e) => <ExhibitRow entry={e} label={e.data.years} />)}
-  </section>
-
-  <section id="contact" class="contact wrap" data-room="West of House">
-    <p class="label">Contact</p>
-    <div class="email">
-      <p class="email-label">Email</p>
-      <div class="email-row">
-        <a class="email-addr" href={`mailto:${person.email}`}>{person.email}</a>
-        <button type="button" class="email-copy" data-email={person.email}>Copy</button>
-      </div>
-    </div>
-    <p class="ex-links">
-      <a href={person.linkedin}>LinkedIn</a>
-      <a href={person.github}>GitHub</a>
-      <a href="/resume">Résumé</a>
-    </p>
   </section>
 </Base>
 

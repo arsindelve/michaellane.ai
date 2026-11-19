@@ -268,126 +268,115 @@
 }
 
 :root:root:root:root:root[data-style='obsidian'] .career {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem 1.25rem;
+  align-items: center;
   background: var(--bg-2);
   border: 1px solid var(--rule);
   border-radius: 12px;
-  padding: 0.9rem 1.25rem;
+  padding: 1.15rem 1.25rem;
   margin-bottom: 0;
   color: var(--ink-2);
 }
 
-:root:root:root:root:root[data-style='obsidian'] .career-co {
-  color: var(--muted);
-}
-
-:root:root:root:root:root[data-style='obsidian'] .career-co:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-:root:root:root:root:root[data-style='obsidian'] .career-co.active {
-  color: var(--accent);
-  background: rgba(56, 189, 248, 0.14);
-  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.35);
+:root:root:root:root:root[data-style='obsidian'] .career .label {
+  grid-column: 1 / 3;
+  grid-row: 1;
+  justify-self: start;
+  margin: 0;
 }
 
 :root:root:root:root:root[data-style='obsidian'] .career a {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  margin: 0;
   color: var(--accent);
 }
 
-@media (max-width: 1280px) {
-  :root:root:root:root:root[data-style='obsidian'] .career {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.45rem 1.25rem;
-    align-items: center;
-    padding: 1.15rem 1.25rem;
-  }
+:root:root:root:root:root[data-style='obsidian'] .career::before {
+  content: '';
+  grid-column: 1 / -1;
+  grid-row: 2;
+  height: 0;
+  border-top: 1px solid var(--rule);
+  margin-block: 0.2rem 0.35rem;
+}
 
+:root:root:root:root:root[data-style='obsidian'] .career .sep {
+  display: none;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career > :is(button.career-co, span.career-item) {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0.38rem 0.55rem;
+  border-radius: 6px;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career .c-node {
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  flex: none;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career .c-node.dim {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career .c-name {
+  flex: 1;
+  color: var(--ink-2);
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career > span.career-item .c-name {
+  color: var(--muted);
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career .c-yr {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career > button.career-co:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career > button.career-co.active {
+  background: rgba(56, 189, 248, 0.12);
+  box-shadow: none;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career > button.career-co.active .c-node {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+}
+
+:root:root:root:root:root[data-style='obsidian'] .career > button.career-co.active .c-name {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+@media (max-width: 1050px) {
+  :root:root:root:root:root[data-style='obsidian'] .career {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   :root:root:root:root:root[data-style='obsidian'] .career .label {
     grid-column: 1;
-    grid-row: 1;
-    justify-self: start;
-    margin: 0;
   }
-
   :root:root:root:root:root[data-style='obsidian'] .career a {
     grid-column: 2;
-    grid-row: 1;
-    justify-self: end;
-    margin: 0;
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career::before {
-    content: '';
-    grid-column: 1 / -1;
-    grid-row: 2;
-    height: 0;
-    border-top: 1px solid var(--rule);
-    margin-block: 0.2rem 0.35rem;
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career .sep {
-    display: none;
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career > :is(button.career-co, span.career-item) {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    margin: 0;
-    padding: 0.38rem 0.55rem;
-    border-radius: 6px;
-    text-align: left;
-    font-size: 0.88rem;
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career .c-node {
-    display: block;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    border: 1.5px solid var(--accent);
-    flex: none;
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career .c-node.dim {
-    border-color: rgba(255, 255, 255, 0.22);
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career .c-name {
-    flex: 1;
-    color: var(--ink-2);
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career > span.career-item .c-name {
-    color: var(--muted);
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career .c-yr {
-    display: block;
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career > button.career-co:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career > button.career-co.active {
-    background: rgba(56, 189, 248, 0.12);
-    box-shadow: none;
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career > button.career-co.active .c-node {
-    background: var(--accent);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
-  }
-
-  :root:root:root:root:root[data-style='obsidian'] .career > button.career-co.active .c-name {
-    color: #ffffff;
-    font-weight: 600;
   }
 }
 
@@ -429,23 +418,9 @@
   color: var(--accent);
 }
 
-/* Marquee */
-:root:root[data-style='obsidian'] .marquee {
-  display: block;
-  overflow: hidden;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  color: var(--muted);
-}
-
-:root:root[data-style='obsidian'] .marquee-track {
-  display: flex;
-  width: max-content;
-  white-space: nowrap;
-}
-
-:root:root[data-style='obsidian'] .marquee i {
-  color: var(--accent);
+/* Marquee - hidden */
+:root:root:root:root:root[data-style='obsidian'] .marquee {
+  display: none;
 }
 
 /* Exhibits (stacking deck) - 5x :root outranks mockups.css 4x :root rules */
@@ -574,31 +549,140 @@
 }
 
 /* Contact & Footer */
-:root:root[data-style='obsidian'] .contact {
-  background: linear-gradient(155deg, rgba(99, 102, 241, 0.12), var(--bg-2));
-  border: 1px solid rgba(99, 102, 241, 0.35);
+:root:root:root:root:root[data-style='obsidian'] .contact {
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.12), var(--bg-2));
+  border: 1px solid rgba(99, 102, 241, 0.32);
   border-radius: 20px;
-  padding: 2.5rem;
+  padding: 2rem 2.25rem;
 }
 
-:root:root[data-style='obsidian'] .contact .email-addr {
+:root:root:root:root:root[data-style='obsidian'] .c-split {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.75rem;
+  align-items: center;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-left {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-avatar {
+  width: 4.75rem;
+  height: 4.75rem;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  flex: none;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: #a7f3d0;
+  margin-bottom: 0.4rem;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-pill .dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #34d399;
+  display: inline-block;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-left h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.4rem;
   color: #ffffff;
 }
 
-:root:root[data-style='obsidian'] .contact .email-addr:hover {
+:root:root:root:root:root[data-style='obsidian'] .c-sub {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-email-box {
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-email-box .label {
+  margin: 0;
   color: var(--accent);
 }
 
-:root:root[data-style='obsidian'] .contact .email-copy {
-  background: var(--surface-2);
+:root:root:root:root:root[data-style='obsidian'] .c-email-box .email-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .contact .email-addr {
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .contact .email-addr:hover {
+  color: var(--accent);
+}
+
+:root:root:root:root:root[data-style='obsidian'] .contact .email-copy {
+  background: var(--bg-2);
   border: 1px solid var(--rule);
   color: var(--ink);
   border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.82rem;
 }
 
-:root:root[data-style='obsidian'] .contact .email-copy:hover {
+:root:root:root:root:root[data-style='obsidian'] .contact .email-copy:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-tiles a {
+  text-align: center;
+  padding: 0.6rem 0.5rem;
+  border-radius: 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+:root:root:root:root:root[data-style='obsidian'] .c-tiles a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 820px) {
+  :root:root:root:root:root[data-style='obsidian'] .c-split {
+    grid-template-columns: 1fr;
+  }
 }
 
 :root:root[data-style='obsidian'] .site-footer,

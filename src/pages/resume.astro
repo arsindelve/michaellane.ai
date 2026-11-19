@@ -1,26 +1,35 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import portrait from '../assets/me.jpeg';
 import { person, roles, projects, education } from '../data/site';
+
+const recent = roles.slice(0, 4);
+const earlier = roles.slice(4);
 ---
 
 <Base title="Résumé · Michael Lane" description="Résumé of Michael Lane, engineering leader.">
-  <article class="resume wrap">
-    <p class="print-hint label">
-      This page prints cleanly to PDF. <button type="button" onclick="window.print()">Print / save as PDF</button>
-    </p>
-
-    <header>
-      <h1>{person.name}</h1>
-      <p class="tag">Engineering leadership · Moving software organizations from AI-assisted to AI-first</p>
-      <p class="contact">
-        {person.location} · <a href={`mailto:${person.email}`}>{person.email}</a> ·
-        <a href={person.linkedin}>linkedin.com/in/michaelnlane</a> · <a href={person.github}>github.com/arsindelve</a>
-      </p>
-    </header>
-
-    <section>
-      <h2>Summary</h2>
-      <p>
+  <article class="wrap doc">
+    <section class="hero-card">
+      <div class="hero-top">
+        <Image src={portrait} alt={person.name} width={144} height={144} class="avatar" />
+        <div class="hero-id">
+          <div class="hero-row">
+            <span class="kicker">Résumé · {person.location}</span>
+            <button type="button" class="print-btn" onclick="window.print()">Print / Save PDF</button>
+          </div>
+          <h1>{person.name}</h1>
+          <p class="tagline">Engineering leadership · Moving software organizations from AI-assisted to AI-first</p>
+          <div class="links">
+            <a href={`mailto:${person.email}`}>{person.email}</a>
+            <span>·</span>
+            <a href={person.linkedin} target="_blank" rel="noreferrer">linkedin.com/in/michaelnlane</a>
+            <span>·</span>
+            <a href={person.github} target="_blank" rel="noreferrer">github.com/arsindelve</a>
+          </div>
+        </div>
+      </div>
+      <p class="summary">
         Engineering executive with 17 years leading teams and 19 years shipping production software. Currently Director
         of Software Development at Second Nature, building and rolling out a verification-heavy software factory.
         Previously VP of Software Development at Rev, leading a 60-person organization across AI, SaaS and mobile,
@@ -29,168 +38,411 @@ import { person, roles, projects, education } from '../data/site';
       </p>
     </section>
 
-    <section>
-      <h2>Experience</h2>
-      {
-        roles.map((r) => (
-          <div class="r">
-            <div class="r-head">
-              <h3>
-                {r.title} · {r.company}
-              </h3>
-              <span class="label">
-                {r.start} – {r.end}
-              </span>
+    <section class="sec">
+      <div class="sec-head">
+        <span class="kicker">01 · Recent Leadership</span>
+        <h2>Executive Experience</h2>
+      </div>
+
+      <div class="timeline">
+        {
+          recent.map((r, idx) => (
+            <article class="tl-item">
+              <div class="tl-rail" aria-hidden="true">
+                <span class:list={['node', { active: idx === 0 }]} />
+              </div>
+              <div class="tl-card">
+                <div class="tl-head">
+                  <div>
+                    <h3>{r.title}</h3>
+                    <p class="co">
+                      {r.company} · <span>{r.place}</span>
+                    </p>
+                  </div>
+                  <span class="dates">
+                    {r.start} – {r.end}
+                  </span>
+                </div>
+                <p class="tl-sum">{r.summary}</p>
+                {r.points && (
+                  <ul>
+                    {r.points.map((pt) => (
+                      <li>{pt}</li>
+                    ))}
+                  </ul>
+                )}
+                {r.stack && <p class="stack">{r.stack}</p>}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec-head">
+        <span class="kicker">02 · Earlier Career (2007–2022)</span>
+        <h2>Foundation &amp; Progression</h2>
+      </div>
+
+      <div class="early-grid">
+        {
+          earlier.map((r) => (
+            <div class="early-card">
+              <div class="early-top">
+                <strong>{r.company}</strong>
+                <span>
+                  {r.start} – {r.end}
+                </span>
+              </div>
+              <p class="early-title">
+                {r.title} · {r.place}
+              </p>
+              <p class="early-sum">{r.summary}</p>
+              {r.stack && <p class="stack">{r.stack}</p>}
             </div>
-            <p>{r.summary}</p>
-            {r.points && (
-              <ul>
-                {r.points.map((pt) => (
-                  <li>{pt}</li>
-                ))}
-              </ul>
-            )}
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="sec bottom-grid">
+      <div>
+        <div class="sec-head">
+          <span class="kicker">03 · Independent R&amp;D</span>
+          <h2>Selected Projects</h2>
+        </div>
+        <div class="stack-list">
+          {
+            projects.map((p) => (
+              <div class="mini-card">
+                <div class="early-top">
+                  <strong>{p.name}</strong>
+                  <span>{p.years}</span>
+                </div>
+                <p>{p.blurb.split('. ')[0].replace(/\.$/, '')}.</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-head">
+          <span class="kicker">04 · Credentials</span>
+          <h2>Education &amp; Also</h2>
+        </div>
+        <div class="stack-list">
+          {
+            education.map((e) => (
+              <div class="mini-card">
+                <div class="early-top">
+                  <strong>{e.degree}</strong>
+                  <span>{e.when}</span>
+                </div>
+                <p>{e.school}</p>
+              </div>
+            ))
+          }
+          <div class="mini-card">
+            <div class="early-top">
+              <strong>Outside of Work</strong>
+            </div>
+            <p>Private pilot · Competitive hockey · English, French, Spanish</p>
           </div>
-        ))
-      }
-    </section>
-
-    <section>
-      <h2>Selected projects</h2>
-      <ul class="proj">
-        {
-          projects.map((p) => (
-            <li>
-              <strong>{p.name}</strong> ({p.years}). {p.blurb.split('. ')[0]}.
-            </li>
-          ))
-        }
-      </ul>
-    </section>
-
-    <section>
-      <h2>Education</h2>
-      <ul class="proj">
-        {
-          education.map((e) => (
-            <li>
-              <strong>{e.degree}</strong>, {e.school}, {e.when}
-            </li>
-          ))
-        }
-      </ul>
-    </section>
-
-    <section>
-      <h2>Also</h2>
-      <p>Private pilot · Competitive hockey · English, French, Spanish</p>
+        </div>
+      </div>
     </section>
   </article>
 </Base>
 
 <style>
-  .resume {
-    max-width: 48rem;
-    padding-block: 2rem 0;
-    font-size: 1rem;
+  .doc {
+    max-width: 66rem;
+    padding-top: 2rem;
   }
-  .print-hint {
-    border: 1px dashed var(--rule);
-    padding: 0.75rem 1rem;
-    margin-bottom: 2.5rem;
-    text-transform: none;
-    letter-spacing: 0;
-  }
-  .print-hint button {
-    font: inherit;
-    margin-left: 0.5rem;
-    background: var(--ink);
-    color: var(--bg);
-    border: 0;
-    padding: 0.35rem 0.7rem;
-    cursor: pointer;
-  }
-  h1 {
-    font-size: 2.6rem;
-  }
-  .tag {
-    font-size: 1.2rem;
-    color: var(--ink-2);
-    margin: 0.25rem 0 0.4rem;
-  }
-  .contact {
+  .kicker {
     font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--muted);
-  }
-  section {
-    margin-top: 1.75rem;
-  }
-  h2 {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--accent);
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 0.3rem;
-    margin-bottom: 0.9rem;
+    display: block;
+    margin-bottom: 0.35rem;
   }
-  .r {
-    margin-bottom: 1rem;
+  .hero-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    padding: 2rem;
+    margin-bottom: 3rem;
   }
-  .r-head {
+  .hero-top {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 1.35rem;
+  }
+  .hero-id {
+    flex: 1;
+    min-width: 0;
+  }
+  .hero-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 1rem;
-    align-items: baseline;
   }
-  .r h3 {
-    font-size: 1.05rem;
+  .print-btn {
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--accent);
+    font: 600 0.8rem var(--body);
+    cursor: pointer;
+    white-space: nowrap;
   }
-  .r p,
-  .r li,
-  .proj li {
+  .print-btn:hover {
+    background: var(--accent);
+    color: #090a0d;
+  }
+  .avatar {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 16px;
+    object-fit: cover;
+    border: 1px solid var(--rule);
+    flex: none;
+  }
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+  .tagline {
+    margin: 0.15rem 0 0.5rem;
     color: var(--ink-2);
-    margin-bottom: 0.25rem;
+    font-size: 1.02rem;
   }
-  .r ul,
-  .proj {
-    margin: 0.2rem 0 0;
-    padding-left: 1.1rem;
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--muted);
+  }
+  .links a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .summary {
+    margin: 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: 0.96rem;
+  }
+
+  .sec {
+    margin-bottom: 3.25rem;
+  }
+  .sec-head h2 {
+    margin: 0 0 1.4rem;
+    font-size: 1.45rem;
+    letter-spacing: -0.025em;
+    color: #fff;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    top: 1.2rem;
+    bottom: 1.2rem;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .tl-item {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+    gap: 1.25rem;
+  }
+  .tl-rail {
+    display: flex;
+    justify-content: center;
+    padding-top: 1.25rem;
+    position: relative;
+    z-index: 1;
+  }
+  .node {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: var(--bg-2);
+    border: 2px solid var(--accent);
+  }
+  .node.active {
+    background: var(--accent);
+    box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.2);
+  }
+  .tl-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 1.4rem 1.6rem;
+  }
+  .tl-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .tl-head h3 {
+    margin: 0;
+    font-size: 1.12rem;
+    color: #fff;
+  }
+  .co {
+    margin: 0.1rem 0 0;
+    font-weight: 600;
+    color: var(--ink-2);
+    font-size: 0.92rem;
+  }
+  .co span {
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .dates {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .tl-sum {
+    margin: 0.35rem 0 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .tl-card ul {
+    margin: 0.75rem 0 0;
+    padding-left: 1.15rem;
+    color: var(--ink-2);
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .stack {
+    margin: 0.7rem 0 0;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--accent-2);
+  }
+
+  .early-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .early-card,
+  .mini-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 1.2rem 1.35rem;
+  }
+  .early-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    align-items: baseline;
+    color: #fff;
+  }
+  .early-top span {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .early-title {
+    margin: 0.15rem 0 0.45rem;
+    font-size: 0.86rem;
+    color: var(--ink-2);
+  }
+  .early-sum,
+  .mini-card p {
+    margin: 0;
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .stack-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  @media (max-width: 820px) {
+    .hero-top,
+    .tl-head,
+    .hero-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .early-grid,
+    .bottom-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media print {
+    :global(body) {
+      background: #fff !important;
+      color: #111 !important;
+    }
     :global(.site-header),
+    :global(.fm),
     :global(.site-footer),
-    .print-hint {
+    .print-btn {
       display: none !important;
     }
-    :global(body) {
+    .doc {
+      padding-top: 0;
+    }
+    .hero-card,
+    .tl-card,
+    .early-card,
+    .mini-card {
       background: #fff;
-      color: #000;
-      font-size: 10pt;
-    }
-    .resume {
-      padding: 0;
-      font-size: 10pt;
-    }
-    h1 {
-      font-size: 22pt;
-    }
-    section {
-      margin-top: 10pt;
-      break-inside: avoid-page;
-    }
-    .r {
+      border-color: #ddd;
       break-inside: avoid;
-      margin-bottom: 6pt;
     }
-    a {
-      text-decoration: none;
+    h1,
+    .sec-head h2,
+    .tl-head h3,
+    .early-top {
+      color: #111;
     }
-  }
-  @page {
-    margin: 0.55in;
+    .summary,
+    .tl-sum,
+    .early-sum,
+    .mini-card p,
+    .tl-card ul {
+      color: #333;
+    }
   }
 </style>

@@ -1,0 +1,215 @@
+---
+import ResumeSwitcher from '../../components/ResumeSwitcher.astro';
+
+const options = [
+  {
+    id: '01',
+    name: 'Executive Dossier',
+    href: '/mockups/resume-dossier',
+    tagline: 'Sticky left profile rail + spacious right experience canvas.',
+    points: [
+      'Sticky left sidebar with portrait, contact links, Education, and Print / Save PDF button',
+      'Right column opens with Executive Summary + 4-stat KPI strip',
+      'Experience cards with clear role hierarchy, bullet points, and stack pills',
+      'Includes @media print rules for clean white-paper PDF export',
+    ],
+  },
+  {
+    id: '02',
+    name: 'Architectural Timeline',
+    href: '/mockups/resume-timeline',
+    tagline: 'Single-column Obsidian editorial with a connected vertical career rail.',
+    points: [
+      'Glassmorphic executive header card with portrait, tagline, and Print / Save PDF',
+      'Connected vertical timeline for recent leadership roles (Second Nature, Rev, Cart.com)',
+      'Compact 2-column grid for earlier career roles so the page stays tight',
+      'Visual cards for Selected AI Projects & Education at the bottom',
+    ],
+  },
+  {
+    id: '03',
+    name: 'Interactive Ledger',
+    href: '/mockups/resume-ledger',
+    tagline: 'Filterable, 10-second scannable executive ledger.',
+    points: [
+      'Interactive filter pills (All Roles · Executive Leadership · AI & Hands-On)',
+      'Expand / Collapse details toggle for quick scanning vs. deep reading',
+      'Structured 3-column ledger rows (Dates & Place | Role & Impact | Stack)',
+      'Clean 2-column Education + Selected Projects footer grid',
+    ],
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Résumé Design Options · Michael Lane</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="ambient" aria-hidden="true"></div>
+    <main class="hub">
+      <header class="head">
+        <p class="eyebrow">michaellane.ai/resume · Design Options</p>
+        <h1>Three Obsidian Résumé Layouts</h1>
+        <p class="sub">
+          All three options use your exact résumé data from <code>site.ts</code>, match the Obsidian dark theme, and
+          support clean print-to-PDF. Click any option to preview the full page.
+        </p>
+      </header>
+
+      <section class="grid">
+        {
+          options.map((o) => (
+            <article class="card">
+              <span class="num">{o.id}</span>
+              <h2>{o.name}</h2>
+              <p class="tagline">{o.tagline}</p>
+              <ul>
+                {o.points.map((p) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+              <a class="btn" href={o.href}>
+                Preview {o.name} →
+              </a>
+            </article>
+          ))
+        }
+      </section>
+    </main>
+
+    <ResumeSwitcher active="hub" />
+  </body>
+</html>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: #090a0d;
+    color: #f1f5f9;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    line-height: 1.6;
+    padding-bottom: 6rem;
+    position: relative;
+  }
+  .ambient {
+    position: fixed;
+    inset: -20% -10% auto -10%;
+    height: 70vh;
+    background:
+      radial-gradient(55% 50% at 15% 15%, rgba(99, 102, 241, 0.14), transparent 70%),
+      radial-gradient(50% 50% at 85% 10%, rgba(56, 189, 248, 0.11), transparent 70%);
+    pointer-events: none;
+  }
+  .hub {
+    max-width: 74rem;
+    margin: 0 auto;
+    padding: 4.5rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  .head {
+    max-width: 44rem;
+    margin-bottom: 3rem;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #38bdf8;
+    margin: 0 0 0.75rem;
+  }
+  h1 {
+    font-size: clamp(2rem, 3.8vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin: 0 0 1rem;
+  }
+  .sub {
+    color: #94a3b8;
+    margin: 0;
+  }
+  .sub code {
+    font-family: 'JetBrains Mono', monospace;
+    color: #cbd5e1;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .card {
+    background: #11131a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover {
+    border-color: rgba(56, 189, 248, 0.45);
+    transform: translateY(-2px);
+  }
+  .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: #38bdf8;
+    margin-bottom: 0.75rem;
+  }
+  h2 {
+    margin: 0 0 0.45rem;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+  }
+  .tagline {
+    color: #cbd5e1;
+    font-size: 0.94rem;
+    margin: 0 0 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  ul {
+    margin: 0 0 1.75rem;
+    padding-left: 1.1rem;
+    color: #94a3b8;
+    font-size: 0.88rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+  }
+  .btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 1.1rem;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #090a0d;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+  .btn:hover {
+    background: #38bdf8;
+  }
+  @media (max-width: 960px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
