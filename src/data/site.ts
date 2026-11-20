@@ -109,7 +109,7 @@ export const roles: Role[] = [
     start: 'Sep 2012',
     end: 'Apr 2014',
     place: 'Toronto',
-    summary: 'Managed two teams building kobo.com, where readers worldwide buy from a catalog of three million e-books.',
+    summary: 'Led three teams (12 developers) on a ground-up rewrite of the e-book e-commerce platform—shipping “One Store” to unify previously separate mobile, web, and e-reader storefronts across a catalog of three million e-books.',
   },
   {
     company: 'Toolbox Solutions',
@@ -117,7 +117,7 @@ export const roles: Role[] = [
     start: 'Mar 2011',
     end: 'Sep 2012',
     place: 'Barrie, ON',
-    summary: 'Led two .NET teams. Toolbox was later acquired by SPS Commerce.',
+    summary: 'Led two .NET teams building hosted retail POS BI dashboards and custom analytics backed by massive SQL Server ETL and penny-exact reconciliation. Acquired by SPS Commerce.',
   },
   {
     company: 'Logitech',

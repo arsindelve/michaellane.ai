@@ -1,0 +1,621 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import AgentDiagram from '../../components/AgentDiagram.astro';
+import BreakerDiagram from '../../components/BreakerDiagram.astro';
+
+const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const exhibits = all.filter((e) => e.data.kind === 'exhibit' && e.data.placement === 'main');
+---
+
+<Base title="Research & Renaissance Mockups · Michael Lane">
+  <div class="mk-shell wrap">
+    <header class="mk-top">
+      <div>
+        <p class="label">Mockups · Research &amp; Renaissance</p>
+        <h1>3 ways to declutter the 6 exhibits</h1>
+        <p class="mk-sub">
+          Right now all 6 exhibits stack as full-height boxed rows (~4,000px). Compare three Obsidian-native layouts using your live data.
+        </p>
+      </div>
+      <div class="mk-tabs" role="tablist" aria-label="Exhibit layout options">
+        <button type="button" class="mk-tab on" data-opt="a" role="tab" aria-selected="true">
+          Option A · Spotlight + Index
+        </button>
+        <button type="button" class="mk-tab" data-opt="b" role="tab" aria-selected="false">
+          Option B · 2×3 Gallery Grid
+        </button>
+        <button type="button" class="mk-tab" data-opt="c" role="tab" aria-selected="false">
+          Option C · Tiered Bento
+        </button>
+      </div>
+    </header>
+
+    <!-- OPTION A: SPOTLIGHT + 6-ITEM INDEX -->
+    <section class="mk-panel on" data-panel="a">
+      <div class="mk-note">
+        <strong>Option A — Spotlight + Index Rail:</strong> Shows one full exhibit at a time with generous breathing room (including the Me/AI credit and links), while a 6-item index lets visitors jump between all six in a single viewport.
+      </div>
+      <div class="spot-layout">
+        <nav class="spot-rail" aria-label="Select exhibit">
+          {
+            exhibits.map((e, i) => (
+              <button type="button" class:list={['spot-btn', { on: i === 0 }]} data-idx={i}>
+                <span class="spot-num">{String(i + 1).padStart(2, '0')} · {e.data.years}</span>
+                <span class="spot-name">{e.data.title}</span>
+                <span class="spot-kicker">{e.data.kicker}</span>
+              </button>
+            ))
+          }
+        </nav>
+
+        <div class="spot-stage">
+          {
+            exhibits.map((e, i) => {
+              const d = e.data;
+              const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelve';
+              return (
+                <article class:list={['spot-card', { on: i === 0 }]} data-stage={i}>
+                  <div class="spot-media">
+                    {d.cover ? (
+                      <Image src={d.cover} alt={d.coverAlt} width={900} class="spot-img" />
+                    ) : (
+                      <div class="spot-diagram">
+                        {d.diagram === 'breaker' ? <BreakerDiagram /> : <AgentDiagram />}
+                      </div>
+                    )}
+                  </div>
+                  <div class="spot-body">
+                    <div class="spot-meta">
+                      <span class="label">{String(i + 1).padStart(2, '0')} · {d.years}</span>
+                      {d.stack.length > 0 && <span class="spot-stack">{d.stack.slice(0, 4).join(' · ')}</span>}
+                    </div>
+                    <h2>{d.title}</h2>
+                    <p class="spot-k">{d.kicker}</p>
+                    <p class="spot-sum">{d.summary}</p>
+                    {d.me && d.ai && (
+                      <dl class="spot-credit">
+                        <div>
+                          <dt>Me</dt>
+                          <dd>{d.me}</dd>
+                        </div>
+                        <div>
+                          <dt>AI</dt>
+                          <dd>{d.ai}</dd>
+                        </div>
+                      </dl>
+                    )}
+                    <p class="spot-links">
+                      <a class="cta" href={`/work/${e.id}`}>Case study →</a>
+                      {d.links[0] && (
+                        <a class="ghost" href={d.links[0].url}>{d.links[0].short ?? d.links[0].label} ↗</a>
+                      )}
+                      {d.embed && (
+                        <a class="ghost" href={primary}>Play live ↗</a>
+                      )}
+                    </p>
+                  </div>
+                </article>
+              );
+            })
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- OPTION B: 2x3 GALLERY GRID -->
+    <section class="mk-panel" data-panel="b">
+      <div class="mk-note">
+        <strong>Option B — 2×3 Editorial Gallery:</strong> Clean 2-column grid matching the Work cards above. Moves the dense summary, quotes, and Me/AI split onto the case study page so all 6 exhibits scan effortlessly.
+      </div>
+      <div class="gal-grid">
+        {
+          exhibits.map((e, i) => {
+            const d = e.data;
+            return (
+              <a class="gal-card" href={`/work/${e.id}`}>
+                <div class="gal-media">
+                  {d.cover ? (
+                    <Image src={d.cover} alt={d.coverAlt} width={640} class="gal-img" />
+                  ) : (
+                    <div class="gal-diagram">
+                      {d.diagram === 'breaker' ? <BreakerDiagram /> : <AgentDiagram />}
+                    </div>
+                  )}
+                </div>
+                <div class="gal-body">
+                  <div class="gal-top">
+                    <span class="label">{String(i + 1).padStart(2, '0')} · {d.years}</span>
+                    {d.embed && <span class="gal-badge">Playable</span>}
+                  </div>
+                  <h3>{d.title}</h3>
+                  <p class="gal-kicker">{d.kicker}</p>
+                  {d.stack.length > 0 && (
+                    <p class="gal-stack">{d.stack.slice(0, 4).join(' · ')}</p>
+                  )}
+                  <span class="gal-cta">Case study →</span>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <!-- OPTION C: TIERED BENTO -->
+    <section class="mk-panel" data-panel="c">
+      <div class="mk-note">
+        <strong>Option C — Tiered Bento:</strong> Gives visual hierarchy instead of 6 identical heavy boxes. Flagship exhibits (01–02) get wide 16:10 frames with Me/AI callouts; 03–06 sit in a crisp 4-card / 2×2 lower tier.
+      </div>
+      <div class="bento-grid">
+        {
+          exhibits.map((e, i) => {
+            const d = e.data;
+            const isHero = i < 2;
+            return (
+              <a class:list={['bento-card', { hero: isHero }]} href={`/work/${e.id}`}>
+                <div class="bento-media">
+                  {d.cover ? (
+                    <Image src={d.cover} alt={d.coverAlt} width={isHero ? 720 : 560} class="bento-img" />
+                  ) : (
+                    <div class="bento-diagram">
+                      {d.diagram === 'breaker' ? <BreakerDiagram /> : <AgentDiagram />}
+                    </div>
+                  )}
+                </div>
+                <div class="bento-body">
+                  <span class="label">{String(i + 1).padStart(2, '0')} · {d.years}</span>
+                  <h3>{d.title}</h3>
+                  <p class="bento-kicker">{d.kicker}</p>
+                  {isHero && d.me && d.ai && (
+                    <p class="bento-split">
+                      <strong>Me:</strong> {d.me} <strong>AI:</strong> {d.ai}
+                    </p>
+                  )}
+                  <span class="gal-cta">Case study →</span>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.mk-tab');
+  const panels = document.querySelectorAll<HTMLElement>('.mk-panel');
+  tabs.forEach((t) => {
+    t.addEventListener('click', () => {
+      const opt = t.dataset.opt;
+      tabs.forEach((b) => {
+        const on = b.dataset.opt === opt;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-selected', String(on));
+      });
+      panels.forEach((p) => p.classList.toggle('on', p.dataset.panel === opt));
+    });
+  });
+
+  const spotBtns = document.querySelectorAll<HTMLButtonElement>('.spot-btn');
+  const stages = document.querySelectorAll<HTMLElement>('.spot-card');
+  spotBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const idx = btn.dataset.idx;
+      spotBtns.forEach((b) => b.classList.toggle('on', b.dataset.idx === idx));
+      stages.forEach((s) => s.classList.toggle('on', s.dataset.stage === idx));
+    });
+  });
+</script>
+
+<style>
+  .mk-shell {
+    padding-top: 3rem;
+    padding-bottom: 5rem;
+  }
+  .mk-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .mk-top h1 {
+    margin: 0.35rem 0 0.5rem;
+    font-size: clamp(1.75rem, 3vw, 2.4rem);
+    color: #fff;
+    letter-spacing: -0.03em;
+  }
+  .mk-sub {
+    margin: 0;
+    max-width: 58ch;
+    color: var(--muted);
+    font-size: 0.98rem;
+  }
+  .mk-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .mk-tab {
+    background: var(--bg-2);
+    color: var(--ink-2);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.55rem 1rem;
+    font: 500 0.85rem/1 var(--font-sans);
+    cursor: pointer;
+    transition: all 140ms ease;
+  }
+  .mk-tab:hover {
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .mk-tab.on {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #090a0d;
+    font-weight: 600;
+  }
+  .mk-note {
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 12px;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1.75rem;
+    color: var(--ink-2);
+    font-size: 0.92rem;
+  }
+  .mk-note strong {
+    color: #fff;
+  }
+  .mk-panel {
+    display: none;
+  }
+  .mk-panel.on {
+    display: block;
+  }
+
+  /* OPTION A */
+  .spot-layout {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .spot-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .spot-btn {
+    text-align: left;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    transition: border-color 140ms ease, background 140ms ease;
+  }
+  .spot-btn:hover {
+    border-color: rgba(56, 189, 248, 0.45);
+  }
+  .spot-btn.on {
+    border-color: var(--accent);
+    background: rgba(56, 189, 248, 0.08);
+  }
+  .spot-num {
+    font: 500 0.72rem/1.2 var(--font-mono);
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .spot-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  .spot-kicker {
+    font-size: 0.82rem;
+    color: var(--muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .spot-card {
+    display: none;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .spot-card.on {
+    display: block;
+  }
+  .spot-media {
+    aspect-ratio: 16 / 9;
+    background: #0c0e14;
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .spot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .spot-diagram {
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .spot-body {
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+  .spot-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+  .spot-stack {
+    font: 400 0.78rem/1.2 var(--font-mono);
+    color: var(--muted);
+  }
+  .spot-body h2 {
+    margin: 0 0 0.35rem;
+    color: #fff;
+    font-size: 1.65rem;
+    letter-spacing: -0.025em;
+  }
+  .spot-k {
+    margin: 0 0 0.75rem;
+    color: var(--ink-2);
+    font-size: 1.05rem;
+  }
+  .spot-sum {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .spot-credit {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem 1.25rem;
+    margin: 0 0 1.25rem;
+    padding: 0.9rem 1.1rem;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+  }
+  .spot-credit dt {
+    font: 600 0.72rem/1.2 var(--font-mono);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.25rem;
+  }
+  .spot-credit dd {
+    margin: 0;
+    color: var(--ink-2);
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+  .spot-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 0;
+  }
+  .spot-links .cta {
+    background: #fff;
+    color: #090a0d;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-decoration: none;
+  }
+  .spot-links .ghost {
+    color: var(--accent);
+    font-size: 0.88rem;
+    text-decoration: none;
+  }
+
+  /* OPTION B */
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .gal-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 150ms ease, transform 150ms ease;
+  }
+  .gal-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .gal-media {
+    aspect-ratio: 16 / 9;
+    background: #0c0e14;
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .gal-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gal-diagram {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gal-body {
+    padding: 1.25rem 1.4rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .gal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+  }
+  .gal-badge {
+    font: 500 0.72rem/1 var(--font-mono);
+    color: var(--accent);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 999px;
+    padding: 0.25rem 0.55rem;
+  }
+  .gal-body h3 {
+    margin: 0 0 0.35rem;
+    color: #fff;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+  .gal-kicker {
+    margin: 0 0 0.75rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+  .gal-stack {
+    margin: 0 0 1rem;
+    font: 400 0.76rem/1.3 var(--font-mono);
+    color: var(--ink-2);
+    opacity: 0.75;
+  }
+  .gal-cta {
+    margin-top: auto;
+    font: 500 0.86rem/1 var(--font-mono);
+    color: var(--accent);
+  }
+
+  /* OPTION C */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .bento-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 150ms ease;
+  }
+  .bento-card.hero {
+    grid-column: span 2;
+  }
+  .bento-card:hover {
+    border-color: var(--accent);
+  }
+  .bento-media {
+    aspect-ratio: 16 / 9;
+    background: #0c0e14;
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .bento-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .bento-diagram {
+    width: 100%;
+    height: 100%;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bento-body {
+    padding: 1.1rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .bento-body h3 {
+    margin: 0.35rem 0 0.3rem;
+    color: #fff;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+  }
+  .bento-card.hero .bento-body h3 {
+    font-size: 1.35rem;
+  }
+  .bento-kicker {
+    margin: 0 0 0.65rem;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+  .bento-split {
+    margin: 0 0 0.85rem;
+    font-size: 0.82rem;
+    color: var(--ink-2);
+    line-height: 1.45;
+  }
+  .bento-split strong {
+    color: var(--accent);
+  }
+
+  @media (max-width: 960px) {
+    .spot-layout {
+      grid-template-columns: 1fr;
+    }
+    .gal-grid {
+      grid-template-columns: 1fr;
+    }
+    .bento-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .bento-card.hero {
+      grid-column: span 2;
+    }
+  }
+  @media (max-width: 600px) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+    }
+    .bento-card.hero {
+      grid-column: span 1;
+    }
+    .spot-credit {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

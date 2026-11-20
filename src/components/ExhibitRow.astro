@@ -16,7 +16,7 @@ const d = entry.data;
 const primary = d.embed?.url ?? d.links[0]?.url ?? 'https://github.com/arsindelve';
 ---
 
-<article class:list={['ex wrap', { flip }]} data-room={d.title}>
+<article id={`ex-${entry.id}`} class:list={['ex wrap', { flip }]} data-room={d.title}>
   <div class="ex-media">
     {
       d.cover ? (

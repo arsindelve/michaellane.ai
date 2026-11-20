@@ -1,0 +1,170 @@
+---
+import Base from '../layouts/Base.astro';
+import { person } from '../data/site';
+---
+
+<Base title="Contact · Michael Lane">
+  <section class="ct wrap">
+    <p class="label">Contact</p>
+    <h1>Get in touch</h1>
+    <p class="ct-sub">
+      {person.location} · {person.status}
+    </p>
+
+    <div class="ct-card">
+      <div class="ct-row">
+        <div>
+          <span class="ct-k">Email</span>
+          <a class="ct-email" href={`mailto:${person.email}`}>{person.email}</a>
+        </div>
+        <div class="ct-actions">
+          <button type="button" class="ct-copy" data-email={person.email}>Copy</button>
+          <a class="ct-btn" href={`mailto:${person.email}`}>Open mail app →</a>
+        </div>
+      </div>
+
+      <div class="ct-links">
+        <a class="ct-link" href={person.linkedin}>
+          <span class="ct-k">LinkedIn</span>
+          <span class="ct-v">linkedin.com/in/michaelnlane ↗</span>
+        </a>
+        <a class="ct-link" href={person.github}>
+          <span class="ct-k">GitHub</span>
+          <span class="ct-v">github.com/arsindelve ↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.ct-copy');
+  if (btn) {
+    let t: number | undefined;
+    btn.addEventListener('click', () => {
+      const email = btn.dataset.email ?? '';
+      navigator.clipboard?.writeText(email).then(() => {
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        window.clearTimeout(t);
+        t = window.setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1600);
+      });
+    });
+  }
+</script>
+
+<style>
+  .ct {
+    padding-top: 4.5rem;
+    padding-bottom: 6rem;
+    max-width: 780px;
+  }
+  .ct h1 {
+    margin: 0.4rem 0 0.6rem;
+    font-size: clamp(2.2rem, 4.5vw, 3.25rem);
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+  .ct-sub {
+    margin: 0 0 2.5rem;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+  .ct-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .ct-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.25rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .ct-k {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.35rem;
+  }
+  .ct-email {
+    font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  .ct-email:hover {
+    color: var(--accent);
+  }
+  .ct-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+  }
+  .ct-copy {
+    background: transparent;
+    color: var(--ink-2);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    font: 500 0.88rem/1 var(--font-sans);
+    cursor: pointer;
+    transition: border-color 140ms ease, color 140ms ease;
+  }
+  .ct-copy:hover,
+  .ct-copy.copied {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .ct-btn {
+    background: #fff;
+    color: #090a0d;
+    border-radius: 10px;
+    padding: 0.62rem 1.05rem;
+    font: 600 0.88rem/1 var(--font-sans);
+    text-decoration: none;
+  }
+  .ct-btn:hover {
+    background: var(--accent);
+  }
+  .ct-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .ct-link {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem;
+    text-decoration: none;
+    transition: border-color 140ms ease;
+  }
+  .ct-link:hover {
+    border-color: var(--accent);
+  }
+  .ct-v {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+  @media (max-width: 640px) {
+    .ct-links {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

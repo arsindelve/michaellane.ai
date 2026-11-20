@@ -15,7 +15,6 @@ embed:
   label: Play Zork
 links:
   - { label: newzork.ai, url: "https://newzork.ai", short: NewZork }
-  - { label: planetfall.ai, url: "https://planetfall.ai", short: Planetfall }
   - { label: Source on GitHub, url: "https://github.com/arsindelve/ZorkAI" }
 stats:
   - { n: "3,400+", label: "tests pinning down original behavior" }

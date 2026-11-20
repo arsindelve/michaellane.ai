@@ -13,10 +13,6 @@ frameUrl: https://www.orderease.com/
 slides:
   - { src: ../../assets/shots/linkgreen/orderease-home.png, path: "", caption: "OrderEase today: B2B order management platform", alt: "OrderEase’s modern home page and dashboard preview: Take orders everywhere. Rekey nothing." }
   - { src: ../../assets/shots/linkgreen/home-2015.png, path: "", caption: "2015: “Your link to the green industry”", alt: "LinkGreen’s 2015 home page for the horticulture industry, with an explainer video of a garden center." }
-  - { src: ../../assets/shots/linkgreen/home-2016.png, path: "", caption: "2016: one interface, from order placement to fulfillment", alt: "LinkGreen’s 2016 banners: a single interface connecting wholesale suppliers and buyers, and place orders with all your suppliers on demand." }
-  - { src: ../../assets/shots/linkgreen/mobile-2017.png, path: "/mobile", caption: "LinkGreen Mobile: build orders on the sales floor", alt: "LinkGreen Mobile, the wholesale ordering app, with an order on a phone." }
-  - { src: ../../assets/shots/linkgreen/mobile-order.png, path: "/mobile", caption: "The Ionic app I built: one codebase, iPhone and Android", alt: "Close-up of the LinkGreen Mobile app’s order screen, with Done and Save buttons and a running total." }
-  - { src: ../../assets/shots/linkgreen/about-cto.png, path: "/about.php", caption: "The 2016 About page, reformatted: archived text, lost styling", alt: "LinkGreen’s 2016 About page entry for Michael Lane, Chief Technology Officer, with his photo." }
 links:
   - { label: "LinkGreen About page, 2016", url: "https://web.archive.org/web/20160211135421/http://linkgreen.ca/about.php", short: "About, 2016" }
   - { label: "OrderEase today", url: "https://www.orderease.com/", short: OrderEase }

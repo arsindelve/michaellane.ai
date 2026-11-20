@@ -48,6 +48,8 @@ const workCompany: Record<string, string> = {
   sesami: 'Sesami',
   'premier-dvtd': 'Premier Designs',
   linkgreen: 'OrderEase',
+  kobo: 'Kobo',
+  toolbox: 'Toolbox',
   'logitech-revue': 'Logitech',
 };
 const linkedCompanies = new Set(Object.values(workCompany));
@@ -97,7 +99,8 @@ const linkedCompanies = new Set(Object.values(workCompany));
     <div class="work-head">
       <p class="label">The day job</p>
       <h2 class="sec-title">Work I’ve led</h2>
-      <p class="intro">What I built with a team.</p>
+      <hr class="work-rule" />
+      <p class="intro">Teams I led and systems we shipped.</p>
     </div>
     <div class="cards-wrap">
       <button type="button" class="cards-btn prev" aria-label="Previous">
@@ -334,6 +337,20 @@ const linkedCompanies = new Set(Object.values(workCompany));
     wrap.addEventListener('focusin', () => (paused = true));
     wrap.addEventListener('focusout', () => (paused = false));
     restart();
+  }
+
+  // Enable native mandatory scroll-snap only while browsing #exhibits so you don't blow past cards.
+  const exSection = document.getElementById('exhibits');
+  if (exSection && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const snapIo = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          document.documentElement.toggleAttribute('data-ex-snap', entry.isIntersecting);
+        }
+      },
+      { rootMargin: '-20% 0px -20% 0px' },
+    );
+    snapIo.observe(exSection);
   }
 </script>
 

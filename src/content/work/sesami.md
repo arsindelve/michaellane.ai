@@ -2,7 +2,7 @@
 title: Modernization at Sesami
 kind: work
 order: 6.3
-kicker: Rewriting the WPF front end, launching the TR400, and moving a 20-year-old Subversion codebase to Git and CI/CD
+kicker: Led 18 engineers to decouple UI from backend services, rewrite the WPF front end, and ship the TR400
 summary: As Director of Software Engineering for the Tidel Division, I led 16 engineers and 2 managers—rewriting the front end in WPF with clean separation between UI and backend services, launching the TR400 cash recycler on it, and migrating a two-decade-old Subversion codebase to Git and Azure DevOps with CI/CD, automated testing, real code review, and Scrum.
 years: 2021 – 2022
 role: Director of Software Engineering, Tidel Division
@@ -13,8 +13,9 @@ frameUrl: https://www.sesami.io/products/tr400
 links:
   - { label: sesami.io/products/tr400, url: "https://www.sesami.io/products/tr400" }
 stats:
-  - { n: "20 yrs", label: "of Subversion history migrated to Git & Azure DevOps" }
+  - { n: "20 yrs", label: "of legacy codebase modernized" }
   - { n: "18", label: "people led (16 engineers and 2 managers)" }
+  - { n: "TR400", label: "cash recycler launched on a rewritten WPF UI" }
 ---
 
 ## The situation
